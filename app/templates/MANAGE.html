@@ -1,0 +1,464 @@
+<link rel="stylesheet" href="../static/css/manage.css">
+<link rel="stylesheet" href="../static/css/wallet.css">
+<link rel="stylesheet" href="/static/css/list_dice_room.css">
+<link rel="stylesheet" href="/static/css/list_game.css">
+<script src="/static/css/input_number.js"></script>
+
+<link rel="stylesheet" href="/static/css/switch_tag.css">
+{% extends "index.html" %}
+
+{% block app_content %}
+
+<div class="game-title title_ab" style="position: unset">ADMIN MANAGE</div>
+
+<div class="game-container" style="overflow-y: scroll; overflow-x: hidden; display: block">
+
+        <div class="tab_bar">
+            <div class="tab_box">
+                <div class="tab tab_btn tab_btn_select" id='btn-tab-amount' onclick="switch_tab('tab', 'tab-amount')">
+                    <div class="tab_btn_text">AMOUNT</div>
+                </div>
+                <div class="tab tab_btn" id='btn-tab-exp' onclick="switch_tab('tab', 'tab-exp')">
+                    <div class="tab_btn_text">EXP</div>
+                </div>
+                <div class="tab tab_btn" id='btn-tab-mkt' onclick="switch_tab('tab', 'tab-mkt')">
+                    <div class="tab_btn_text">MKT</div>
+                </div>
+                <div class="tab tab_btn" id='btn-tab-baucua' onclick="switch_tab('tab', 'tab-baucua')">
+                    <div class="tab_btn_text">BAU CUA</div>
+                </div>
+                <div class="tab tab_btn" id='btn-tab-withdrawal' onclick="switch_tab('tab', 'tab-withdrawal')">
+                    <div class="tab_btn_text">RÚT</div>
+                </div>
+            </div>
+        </div>
+        <div class="tab_bar">
+            <div class="tab_box">
+                <div class="tab tab_btn" id='btn-tab-promotion' onclick="switch_tab('tab', 'tab-promotion')">
+                    <div class="tab_btn_text">PROMOTION</div>
+                </div>
+                <div class="tab tab_btn" id='btn-tab-week-lotte' onclick="switch_tab('tab', 'tab-week-lotte')">
+                    <div class="tab_btn_text">LOTTE</div>
+                </div>
+            </div>
+        </div>
+
+    <div id="tab-content-noborder">
+        <div id="tab-amount" class="tab_select popup">
+            <h4 class="h4_title">AMOUNT MANAGE</h4>
+            <div class="form-create-room">
+                <label>ID</label><input data="-id-" value="" id="amount_user_id">
+                <label>Name:</label><input type="text" id="amount_user_name" disabled>
+                <label>Amount:</label><input type="text" id="amount_user_amount" disabled>
+                <label>Deposit:</label><input type="number" value="" id="amount_deposit">
+                <p class='alert' id="amount_alert"></p>
+                <div style="justify-content: right; display: flex; width: calc(100% - 2px);">
+                    <button id="" onclick="fn_amount_deposit()" style="width: calc(100% - 80px)"><div>Xác nhận</div></button>
+                </div>
+            </div>
+        </div>
+        <div id="tab-exp" class="tab-over popup">
+            <h4 class="h4_title">EXP</h4>
+            <div class="form-create-room">
+                <label>ID</label><input data="-id-" value="" id="exp_user_id">
+                <label>Name:</label><input type="text" id="exp_user_name" disabled>
+                <label>Amount:</label><input type="text" id="exp_user_exp" disabled>
+                <label>Deposit:</label><input type="number" value="" id="exp_deposit">
+                <p class='alert' id="exp_alert"></p>
+                <div style="justify-content: right; display: flex; width: calc(100% - 2px);">
+                    <button onclick="fn_exp_deposit()" style="width: calc(100% - 80px)"><div>Xác nhận</div></button>
+                </div>
+            </div>
+        </div>
+        <div id="tab-mkt" class="tab-over popup">
+            <h4 class="h4_title">MKT</h4>
+            <div class="form-create-room">
+                <label>UID</label><input data="-id-" value="" id="mkt_user_id">
+                <label>Name:</label><input type="text" id="mkt_user_name" disabled>
+                <label>MKT:</label><input type="text" id="mkt_user_mkt" disabled>
+                <label>NEW MKT:</label><input type="number" value="" id="new_mkt">
+                <p class='alert' id="mkt_alert"></p>
+                <div style="justify-content: right; display: flex; width: calc(100% - 2px);">
+                    <button onclick="fn_mkt_change()" style="width: calc(100% - 80px)"><div>Xác nhận</div></button>
+                </div>
+            </div>
+        </div>
+        <div id="tab-baucua" class="tab-over popup">
+            <h4 class="h4_title">BẦU CUA</h4>
+            <div class="form-create-room">
+                <label>ID</label><input data="-id-" type="number" id="baucua_user_id">
+                <label>ROOM ID:</label><input type="text" id="baucua_room_id" disabled>
+                <label>Room Amount:</label><input type="text" id="baucua_room_amount" disabled>
+                <label>Round:</label><input type="text" id="baucua_room_round" disabled>
+                <label>Result:</label><input type="number" value="" id="baucua_result">
+                <p class='alert' id="baucua_alert"></p>
+                <div style="justify-content: right; display: flex; width: calc(100% - 2px);">
+                    <button onclick="fn_set_baucua_result()" style="width: calc(100% - 80px)"><div>Xác nhận</div></button>
+                </div>
+            </div>
+        </div>
+        <div id="tab-withdrawal" class="tab-over popup">
+            <h4 class="h4_title">WITHDRAWAL MANAGE</h4>
+            <div id="withdrawal-data"></div>
+        </div>
+        <div id="tab-promotion" class="tab-over popup">
+            <h4 class="h4_title">PROMOTION</h4>
+            <div class="form-create-room">
+                <label>STT</label></label>
+                    <select name="type" id="prmt_stt">
+                        <option name="ADD">ADD</option>
+                    </select>
+                <label>Name</label></label><input type="text" id="prmt_name">
+                <label>UID</label></label><input type="number" id="prmt_uid">
+                <label>Type</label>
+                    <select name="type" id="prmt_type">
+                        <option value="ONLY">Duy nhất</option>
+                        <option value="EVENT">Sự kiện</option>
+                    </select>
+                <label>Game:</label>
+                    <select name="game" id="prmt_game">
+                        <option value="WINGO">WINGO</option>
+                    </select>
+                <label>Amount From:</label><input type="number" id="prmt_amount_from">
+                <label>Amount To:</label><input type="number" value="" id="prmt_amount_to">
+                <label>Bonus:</label><input type="number" value="" id="prmt_bonus">
+                <label>Event from Date:</label><input type="date" value="" id="prmt_event_from">
+                <label>Event to Date:</label><input type="date" value="" id="prmt_event_to">
+                <label>Required Order:</label><input type="number" value="" id="prmt_required_order">
+                <label>Required Profit:</label><input type="number" value="" id="prmt_required_profit">
+                <label>Status:</label>
+                    <select name="type" id="prmt_status">
+                        <option value="0">Bật</option>
+                        <option value="1">Tắt</option>
+                    </select>
+                <p class='alert' id="prmt_alert"></p>
+                <div style="justify-content: right; display: flex; width: calc(100% - 2px);">
+                    <button onclick="fb_promotion()" style="width: calc(100% - 80px)"><div>Xác nhận</div></button>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="tab-week-lotte" class="tab-over popup">
+            <h4 class="h4_title">Week lotte</h4>
+            <div class="form-create-room">
+                <label>roundnumber:</label><input type="number" id="lotte-roundnumber">
+                <label>prize 1:</label><input type="number" value="" id="lotte-prize-1">
+                <label>prize 2:</label><input type="number" value="" id="lotte-prize-2">
+                <label>prize 3:</label><input type="number" value="" id="lotte-prize-3">
+                <label>prize 4:</label><input type="number" value="" id="lotte-prize-4">
+                <label>prize 5:</label><input type="number" value="" id="lotte-prize-5">
+                <label>prize 6:</label><input type="number" value="" id="lotte-prize-6">
+                <label>prize 7:</label><input type="number" value="" id="lotte-prize-7">
+                <label>prize 8:</label><input type="number" value="" id="lotte-prize-8">
+                <label>prize 9:</label><input type="number" value="" id="lotte-prize-9">
+                <label>prize 10:</label><input type="number" value="" id="lotte-prize-10">
+                <label>ID 1:</label><input type="number" value="" id="lotte-id-1">
+                <label>ID 2:</label><input type="number" value="" id="lotte-id-2">
+                <label>ID 3:</label><input type="number" value="" id="lotte-id-3">
+                <label>ID 4:</label><input type="number" value="" id="lotte-id-4">
+                <label>ID 5:</label><input type="number" value="" id="lotte-id-5">
+                <label>ID 6:</label><input type="number" value="" id="lotte-id-6">
+                <label>ID 7:</label><input type="number" value="" id="lotte-id-7">
+                <label>ID 8:</label><input type="number" value="" id="lotte-id-8">
+                <label>ID 9:</label><input type="number" value="" id="lotte-id-9">
+                <label>ID 10:</label><input type="number" value="" id="lotte-id-10">
+                <label>Total Tickets:</label><input type="number" value="" id="lotte-total-tickets">
+                <p class='alert' id="lotte_alert"></p>
+                <li class="btn-area" style=" height: auto !important; gap: 5px; grid-template-columns: 35% 65% !important; display: inline-grid; width: 100%;">
+                    <button class="delete" style="width: 100%;"><div>Huỷ</div></button>
+                    <button style="width: 100%;" disabled><div>Rút tiền</div></button>
+                </li>
+                <script>
+                    var lotte_roundnumber = document.getElementById('lotte-roundnumber');
+                    var prize_1 = document.getElementById('lotte-prize-1');
+                    var prize_2 = document.getElementById('lotte-prize-2');
+                    var prize_3 = document.getElementById('lotte-prize-3');
+                    var prize_4 = document.getElementById('lotte-prize-4');
+                    var prize_5 = document.getElementById('lotte-prize-5');
+                    var prize_6 = document.getElementById('lotte-prize-6');
+                    var prize_7 = document.getElementById('lotte-prize-7');
+                    var prize_8 = document.getElementById('lotte-prize-8');
+                    var prize_9 = document.getElementById('lotte-prize-9');
+                    var prize_10 = document.getElementById('lotte-prize-10');
+                    var id_1 = document.getElementById('lotte-id-1');
+                    var id_2 = document.getElementById('lotte-id-2');
+                    var id_3 = document.getElementById('lotte-id-3');
+                    var id_4 = document.getElementById('lotte-id-4');
+                    var id_5 = document.getElementById('lotte-id-5');
+                    var id_6 = document.getElementById('lotte-id-6');
+                    var id_7 = document.getElementById('lotte-id-7');
+                    var id_8 = document.getElementById('lotte-id-8');
+                    var id_9 = document.getElementById('lotte-id-9');
+                    var id_10 = document.getElementById('lotte-id-10');
+                    var total_tickets = document.getElementById('lotte-total-tickets');
+
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var amount_user_id = document.getElementById('amount_user_id');
+    var amount_user_name = document.getElementById('amount_user_name');
+    var amount_deposit = document.getElementById('amount_deposit');
+    amount_user_id.addEventListener('change', amount_check_user_id);
+    amount_user_id.addEventListener('input', (evt) => remove_all_input('amount_user_id'));
+
+
+    var exp_user_id = document.getElementById('exp_user_id');
+    var exp_user_name = document.getElementById('exp_user_name');
+    var exp_deposit = document.getElementById('exp_deposit');
+    exp_user_id.addEventListener('change', exp_check_user_id);
+    exp_user_id.addEventListener('input', (evt) => remove_all_input('exp_user_id'));
+
+    function remove_all_input(self){
+        var alert = document.getElementsByClassName('alert');
+        for(var a = 0; a < alert.length; a++){
+            alert[a].innerHTML = '';
+        }
+        var input_tag = document.getElementsByTagName('input');
+        for(var b = 0; b < input_tag.length; b++){
+            if(input_tag[b].id !== self){
+                input_tag[b].value = '';
+            }
+        }
+    }
+    function amount_check_user_id(){
+        socket.emit('socketio_admin_user_id',
+            {'chat_id': amount_user_id.value,
+             'channel': 'amount'});
+    }
+
+    function fn_amount_deposit(){
+        socket.emit('socketio_admin_deposit',
+            {'chat_id':amount_user_id.value,
+             'deposit_amount': amount_deposit.value,
+                'channel': 'amount'
+             }
+         );
+    }
+
+    function exp_check_user_id(){
+        socket.emit('socketio_admin_user_id',
+            {'chat_id': exp_user_id.value,
+             'channel': 'exp'});
+    }
+
+    function fn_exp_deposit(){
+        socket.emit('socketio_admin_exp',
+            {'chat_id':exp_user_id.value,
+             'exp': exp_deposit.value,
+             'channel': 'exp'
+             }
+         );
+    }
+
+
+</script>
+<script>
+    var mkt_user_id = document.getElementById('mkt_user_id');
+    var mkt_user_name = document.getElementById('mkt_user_name');
+    var mkt_user_mkt = document.getElementById('mkt_user_mkt');
+    var new_mkt = document.getElementById('new_mkt');
+    mkt_user_id.addEventListener('change', mkt_check_user_id);
+    mkt_user_id.addEventListener('input', (evt) => remove_all_input('mkt_user_id'));
+
+    function mkt_check_user_id(){
+        socket.emit('socketio_admin_user_id',
+            {'chat_id': mkt_user_id.value,
+             'channel': 'mkt'});
+    }
+
+    function fn_mkt_change(){
+        socket.emit('socketio_admin_mkt',
+            {'chat_id': mkt_user_id.value,
+             'mkt': new_mkt.value,
+            'channel': 'mkt'
+             }
+         );
+    }
+
+
+
+</script>
+
+<script>
+
+    var socket = io('{{ SOCKETIO_URL }}');
+    socket.on('return_admin_user_id', function(msg, cb){
+        if(msg.status){
+            document.getElementById(msg.channel + '_user_name').value = msg.data.full_name;
+            console.log(msg)
+            if(msg.channel === 'amount'){
+                document.getElementById(msg.channel + '_user_amount').value = msg.data.real_amount;
+            }
+            if(msg.channel === 'exp'){
+                document.getElementById(msg.channel + '_user_exp').value = msg.data.exp;
+            }
+            if(msg.channel === 'mkt'){
+                mkt_user_mkt.value = msg.data.is_mkt;
+            }
+        }
+        else{
+            document.getElementById(msg.channel + '_alert').innerHTML = 'ID not correct';
+        }
+    });
+    socket.on('return_admin_request', function(msg, cb){
+        if(msg.status){
+            remove_all_input('');
+            var rt = '--';
+            if(msg.channel === 'amount'){rt = 'New balance: ' +  msg.data.real_amount}
+            if(msg.channel === 'exp'){rt = 'New exp: ' +  msg.data.exp}
+            if(msg.channel === 'mkt'){rt = 'New mkt: ' +  msg.data.is_mkt}
+            document.getElementById(msg.channel + '_alert').innerHTML = rt;
+        }
+        else{
+            document.getElementById(msg.channel + '_alert').innerHTML = msg.msg;
+        }
+    });
+
+</script>
+<script> //bau cua result
+    var baucua_user_id = document.getElementById('baucua_user_id');
+    var baucua_alert = document.getElementById('baucua_alert');
+    var baucua_room_id = document.getElementById('baucua_room_id');
+    var baucua_room_amount = document.getElementById('baucua_room_amount');
+    var baucua_room_round = document.getElementById('baucua_room_round');
+    var baucua_result = document.getElementById('baucua_result');
+    baucua_user_id.addEventListener('change', baucua_check_user_id);
+    baucua_user_id.addEventListener('input', (evt) => remove_all_input('baucua_user_id'));
+    function baucua_check_user_id(){
+      socket.emit('socketio_baucua_room_data',
+                 {'chat_id': baucua_user_id.value, 'load_dice': false, 'admin': true});
+    }
+    socket.on('return_baucua_room_data_admin', function(msg, cb){
+        console.log(msg.room)
+          if(msg.room !== null){
+            baucua_room_id.value = msg.room.room_id;
+            baucua_room_amount.value = msg.room.room_amount;
+            baucua_room_round.value = msg.room.round_number + '(' + msg.room.dice_next + ')';
+
+          }
+          else{
+              baucua_alert.innerHTML = msg.msg;
+          }
+
+      });
+    function fn_set_baucua_result(){
+        socket.emit('socketio_admin_set_baucua_result',
+                 {'chat_id': baucua_user_id.value, 'admin': true, 'result': baucua_result.value});
+
+    }
+</script>
+<script> //promotion
+    var LIST_PROMOTION = [];
+    const prmt_stt = document.getElementById('prmt_stt');
+    const prmt_name = document.getElementById('prmt_name');
+    const prmt_uid = document.getElementById('prmt_uid');
+    const prmt_type = document.getElementById('prmt_type');
+    const prmt_game = document.getElementById('prmt_game');
+    const prmt_amount_from = document.getElementById('prmt_amount_from');
+    const prmt_amount_to = document.getElementById('prmt_amount_to');
+    const prmt_bonus = document.getElementById('prmt_bonus');
+    const prmt_event_from = document.getElementById('prmt_event_from');
+    const prmt_event_to = document.getElementById('prmt_event_to');
+    const prmt_required_order = document.getElementById('prmt_required_order');
+    const prmt_required_profit = document.getElementById('prmt_required_profit');
+    const prmt_status = document.getElementById('prmt_status');
+    const prmt_alert = document.getElementById('prmt_alert');
+    // Lấy tất cả các nhóm input
+    const promotioninput = document.querySelectorAll('#tab-promotion input');
+    const handleGroup2Change = (event) => {
+        prmt_alert.innerHTML = '';
+    };
+    promotioninput.forEach(input => {
+      input.addEventListener('input', handleGroup2Change);
+    });
+
+    function fb_promotion(){
+        socket.emit('socketio_add_promotion',
+            {'stt': prmt_stt.value,
+             'uid': prmt_uid.value,
+            'name': prmt_name.value,
+            'type': prmt_type.value,
+            'game': prmt_game.value,
+            'amount_from': prmt_amount_from.value,
+            'amount_to': prmt_amount_to.value,
+            'bonus': prmt_bonus.value,
+            'event_from': prmt_event_from.value,
+            'event_to': prmt_event_to.value,
+            'required_order': prmt_required_order.value,
+            'required_profit': prmt_required_profit.value,
+            'status': prmt_status.value});
+    }
+    socket.on('result_add_promotion', function(msg, cb){
+        console.log(msg)
+        if(msg.status){
+
+        }
+        else{
+
+        }
+        prmt_alert.innerHTML = msg.msg;
+    })
+
+    socket.emit('socketio_list_promotion', {'chat_id': 'ADMIN'});
+    socket.on('result_list_promotion', function(msg, cb){
+        LIST_PROMOTION = msg.data;
+        prmt_stt.innerHTML = '';
+        var option = document.createElement("option");
+          option.text = "ADD";
+
+        prmt_stt.add(option);
+        for(var i = 0; i < msg.data.length; i++){
+            prmt_stt.add(new Option(msg.data[i].stt));
+        }
+    })
+    prmt_stt.addEventListener('change', function () {
+        for(var j = 0; j < LIST_PROMOTION.length; j++){
+            console.log(LIST_PROMOTION[j])
+            if(LIST_PROMOTION[j].stt == prmt_stt.value){
+                console.log(LIST_PROMOTION[j])
+                if(LIST_PROMOTION[j].event_from == null){prmt_event_from.value = '';}
+                else{
+                    prmt_event_from.value = LIST_PROMOTION[j].event_from.substring(0, 10);
+                }
+                if(LIST_PROMOTION[j].event_to == null){prmt_event_to.value = '';}
+                else{
+                    prmt_event_to.value = LIST_PROMOTION[j].event_to.substring(0, 10);
+                }
+                prmt_uid.value = LIST_PROMOTION[j].uid;
+                prmt_type.value = LIST_PROMOTION[j].promotion_type;
+                prmt_game.value = LIST_PROMOTION[j].game;
+                prmt_amount_from.value = LIST_PROMOTION[j].amount_from;
+                prmt_amount_to.value = LIST_PROMOTION[j].amount_to;
+                prmt_bonus.value = LIST_PROMOTION[j].bonus;
+                prmt_required_order.value = LIST_PROMOTION[j].required_order;
+                prmt_required_profit.value = LIST_PROMOTION[j].required_profit;
+                prmt_status.value = LIST_PROMOTION[j].status;
+                prmt_name.value = LIST_PROMOTION[j].name;
+            }
+        }
+    })
+</script>
+<script>
+    var withdrawal_data = document.getElementById('withdrawal-data');
+    socket.emit('socketio_pending_withdrawal', {'chat_id': 'ADMIN'});
+    socket.on('result_pending_withdrawal', function(msg, cb){
+        const data = msg.data;
+        console.log(data)
+        withdrawal_data.innerHTML = '';
+        for(let i = 0; i < data.length; i ++){
+            withdrawal_data.innerHTML += "<li class='wdata'>" +
+                "<span>" + data[i].chat_id + "</span>" +
+                "<span>" + data[i].to_id + "</span>" +
+                "<span>" + data[i].amount + "</span>" +
+                "<span>" + 'OK' + "</span>" +
+                "<span>" + 'Deni' + "</span>" +
+                "</li>";
+        }
+    })
+</script>
+{% endblock %}

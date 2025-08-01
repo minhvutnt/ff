@@ -1,0 +1,340 @@
+<script src="../static/js/page_split.js"></script>
+<script src="/static/js/baucua_js.js"></script>
+<script src="../static/js/date_convert.js"></script>
+<link rel="stylesheet" href="../static/css/list_game.css">
+<script src="/static/css/input_number.js"></script>
+<link rel="stylesheet" href="/static/css/list_dice_room.css">
+{% extends "index.html" %}
+
+{% block app_content %}
+<div class="game-title title_ab" style="position: unset;">PHÒNG BẦU CUA</div>
+<div style="gap: 14px; width: calc(100% - 20px); margin: 20px auto;" >
+    <div class="content-box" onclick="select_room(0);" id="my_room" style="display:none;">
+        <div class="content-box-title" id="my_room_id">
+            Phòng -
+        </div>
+        <div>
+            <li class="two_col_grid"><a>Tên phòng:</a><a id="my_room_name"></a></li>
+            <li class="two_col_grid"><a>Số dư: </a><a id="my_room_balance"></a></li>
+            <li class="two_col_grid"><a>Lợi nhuận: </a><a id="my_room_profit"></a></li>
+            <li class="two_col_grid" style="display: none;"><a>Mật khẩu: </a><a id="my_room_password"></a></li>
+            <li class="two_col_grid"><a>Thời hạn: </a><a id="my_room_end_time"></a></li>
+            <li class="two_col_grid"><a>Tổng giao dịch: </a><a id="my_room_total_trade"></a></li>
+            <li class="two_col_grid"><a>Lượt xổ trước: </a><a id="my_room_last_dice"></a></li>
+        </div>
+        <div class="mcicd99d">
+            <div class="two_col_grid">
+                <button class='delete' onclick="close_my_room()" >
+                    <div class="two_col_grid two_col_grid_btn_emoji">
+                        <svg><svg class="outline"><svg viewBox="0 0 86.29 100"><path d="M75 100H11.32C8.9 93.78 7 89.76 6.89 82.9Q6.73 73 6.72 63c0-13.43.05-26.86.05-40.29H79.5c0 14-.22 28-.13 42C79.46 77.58 80.5 88.09 75 100zM25.8 86V32h-9v54zm22 0V32h-9v54zm13-54v54h9V32z"></path><path d="M0 4.66C10.8 4 21.12 7 29.64 0h27c8.51 7 18.87 4 29.66 4.66L85.76 18H.53z"></path></svg></svg><svg class="icon"><svg viewBox="0 0 86.29 100"><path d="M75 100H11.32C8.9 93.78 7 89.76 6.89 82.9Q6.73 73 6.72 63c0-13.43.05-26.86.05-40.29H79.5c0 14-.22 28-.13 42C79.46 77.58 80.5 88.09 75 100zM25.8 86V32h-9v54zm22 0V32h-9v54zm13-54v54h9V32z"></path><path d="M0 4.66C10.8 4 21.12 7 29.64 0h27c8.51 7 18.87 4 29.66 4.66L85.76 18H.53z"></path></svg></svg></svg>
+                        <span>Đóng</span>
+                    </div>
+
+                </button>
+
+                <button id="" onclick="join_room(0);"><div>Vào Phòng</div></button>
+            </div>
+        </div>
+    </div>
+    <div class="content-box" id="achbe" style="display: block;">
+        <div class="content-box-title">
+            Mở Phòng
+        </div>
+        <div class="form-create-room">
+            <label>Tên phòng:</label><input value="" id="room_name" disabled>
+            <label>Ký quỹ:</label><input type="number" value="0" id="room_amount">
+            <label style="display: none;">Mật khẩu:</label><input type="password" placeholder="Không yêu cầu" id="room_password" style="display: none;">
+            <label>Thời hạn:</label><input type="text" value="6:00:00" id="licence" disabled>
+            <p id="create_room_alert"></p>
+            <button id="create_room" onclick="create_room()" style="width: 100%"><div>Xác nhận</div></button>
+        </div>
+    </div>
+
+
+    <div class="content-box">
+        <div class="content-box-title">
+            Danh sách phòng
+        </div>
+
+<!--        <div class="search_game">-->
+<!--            <input class=" input_search icon_search" type="text" id="search_baucua_room" placeholder="Tìm ID Phòng">-->
+<!--        </div>-->
+        <div><div id="list_dice_room"></div></div>
+        <div style="width: 100%">
+            <div class="select-page">
+                <a onclick="list_room_select_page('1');"><img src="/static/image/x.gif" class="first-page" id="list_room_first_page"></a>
+                <a onclick="list_room_select_page('-1');"><img src="/static/image/x.gif" class="back-page" id="list_room_back_page"></a>
+                <div id="no_page"></div>
+                <a onclick="list_room_select_page('+1');"><img src="/static/image/x.gif" class="next-page" id="list_room_next_page"></a>
+                <a onclick="list_room_select_page('');"><img src="/static/image/x.gif" class="last-page" id="list_room_last_page"></a>
+            </div>
+        </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    var el = $('.room_name');
+    if (el.get(0).scrollWidth > el.width()) {}
+</script>
+<script>
+    <!--    page for list -->
+    var list_room_max_page = 0;
+    var this_room_page = 0;
+    function list_room_select_page(p){
+            var page_s = 0;
+            if(p === ''){page_s = list_room_max_page - 1;}
+            if(p === '1'){page_s = 0;}
+            if(p === '+1'){page_s = this_room_page;}
+            if(p === '-1'){page_s = this_room_page - 2;}
+            socket.emit('socketio_list_baucua_room',
+                {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                 'page': page_s});
+        }
+
+</script>
+<script>
+
+    function close_my_room(){
+        Telegram.WebApp.showPopup({
+                title  : 'Close Room',
+                message: 'Xác nhận đóng phòng!\n' +
+                    '- Phòng của bạn sẽ được đóng, và hoàn trả các cược chưa có kết quả của người chơi.',
+                buttons: [
+                    {id: 'close', type: 'destructive', text: 'Đóng phòng'},
+                    {type: 'cancel'},
+                ]
+            }, function (buttonId) {
+                if (buttonId === 'close') {
+                    socket.emit('socketio_close_baucua_room',
+                                {'chat_id': Telegram.WebApp.initDataUnsafe.user.id});
+                }
+            }
+        );
+    }
+
+    function join_room(chat_id){
+        var text = '';
+        var chat_id_room = chat_id;
+        if(chat_id === 0){
+            text = 'Xác nhận vào phòng của bạn';
+            chat_id_room = Telegram.WebApp.initDataUnsafe.user.id;
+        }else{
+            text = '- Tổng đặt cược tối đa bằng ký quỹ của phòng\n- Nếu tiền thắng nhiều hơn ký quỹ, số tiền nhận được sẽ được chia bình quân theo số tiền đặt';
+
+        }
+        Telegram.WebApp.showPopup({
+                title  : 'Vào phòng',
+                message: text,
+                buttons: [
+                    {id: 'join', type: 'destructive', text: 'Accept'},
+                    {type: 'cancel'},
+                ]
+            }, function (buttonId) {
+                if (buttonId === 'join') {
+                    load_page("{{ url_for('html_select_game_bau_cua', admin='') }}" + chat_id_room);
+                }
+            }
+        );
+    }
+</script>
+<script>
+    document.getElementById('room_name').value = Telegram.WebApp.initDataUnsafe.user.first_name + ' ' + Telegram.WebApp.initDataUnsafe.user.last_name;
+    function create_room(){
+        Telegram.WebApp.showPopup({
+                title  : 'Open Room',
+                message: 'Xác nhận mở phòng!\n' +
+                    'Tên phòng: ' + Telegram.WebApp.initDataUnsafe.user.first_name + ' ' + Telegram.WebApp.initDataUnsafe.user.last_name + "\n" +
+                    "Ký quỹ: " + document.getElementById('room_amount').value + '\n' +
+                    'Thời hạn: ' + document.getElementById('licence').value,
+                buttons: [
+                    {id: 'open', type: 'destructive', text: 'Accept'},
+                    {type: 'cancel'},
+                ]
+            }, function (buttonId) {
+                if (buttonId === 'open') {
+                    $('.form-create-room').find('input, textarea, button, select').attr('disabled','disabled');
+                    socket.emit('socketio_create_baucua_room',
+                    {'chat_id':Telegram.WebApp.initDataUnsafe.user.id,
+                     'data':{
+                        'room_name': document.getElementById('room_name').value,
+                         'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                         'room_amount': document.getElementById('room_amount').value,
+                         'password': document.getElementById('room_password').value,
+                         'licence': document.getElementById('licence').value
+                     }});
+                }
+            }
+        );
+    }
+</script>
+<script>
+    function select_room(e){
+        console.log(e);
+    }
+</script>
+<script>
+    $('.form-create-room').keyup(function(){
+            $("#create_room_alert").slideUp();
+    })
+    var dice_balance_input = document.getElementById('room_amount');
+    input_2digit(dice_balance_input);
+
+
+</script>
+<script>
+    var list_dice_room = document.getElementById('list_dice_room');
+    var list_room_first_page = document.getElementById('list_room_first_page');
+    var list_room_back_page = document.getElementById('list_room_back_page');
+    var list_room_next_page = document.getElementById('list_room_next_page');
+    var list_room_last_page = document.getElementById('list_room_last_page');
+    var no_page = document.getElementById('no_page');
+
+    var socket = io('{{ SOCKETIO_URL }}');
+    socket.emit('socketio_list_baucua_room',
+        {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+         'page': 0});
+    socket.on('return_list_baucua_room_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb) {
+        console.log(msg)
+        if(msg.my_room !== null) {
+            console.log('my room');
+            console.log(msg.my_room);
+            $("#achbe").slideUp();
+            $("#my_room").slideDown();
+            $("#my_room_id").text('Phòng ' + msg.my_room.room_id);
+            $("#my_room_name").text(msg.my_room.room_name);
+            $("#my_room_balance").text(msg.my_room.room_amount + ' đ');
+            $("#my_room_profit").text(msg.my_room.profit);
+            $("#my_room_password").text(msg.my_room.password);
+            $("#my_room_end_time").text(countdown_return(msg.my_room.licence));
+            $("#my_room_total_trade").text(msg.my_room.total_trade);
+
+            var dice_1 = number_to_baucua(1);
+            var dice_2 = number_to_baucua(2);
+            var dice_3 = number_to_baucua(3);
+            if(msg.my_room.last_dice !== null) {
+                dice_1 = number_to_baucua(msg.my_room.last_dice[0]);
+                dice_2 = number_to_baucua(msg.my_room.last_dice[1]);
+                dice_3 = number_to_baucua(msg.my_room.last_dice[2]);
+            }
+
+            var his = dice_1 + dice_2 + dice_3;
+            $("#my_room_last_dice").html(his);
+
+            setInterval(function () {
+                $("#my_room_end_time").text(countdown_return(msg.my_room.licence));
+            }, 1000);
+        } else {
+            $("#achbe").slideDown();
+            $("#my_room").slideUp();
+        }
+        list_dice_room.innerHTML = '';
+        for(var a = 0; a < msg.result.length; a++){
+            var html_line = html_room_data(msg.result[a]);
+            list_dice_room.innerHTML += html_line;
+        }
+
+        list_room_max_page = msg.max_page;
+        this_room_page = msg.page;
+        no_page.innerHTML = "<a><span class='number disabled'>" + msg.page + "/" + msg.max_page + "</span></a>";
+        if (msg.page == 1) {
+            list_room_first_page.classList.add('disabled');
+            list_room_back_page.classList.add('disabled');
+            list_room_next_page.classList.remove('disabled');
+            list_room_last_page.classList.remove('disabled');
+        } else {
+            if (msg.page == msg.max_page) {
+                list_room_first_page.classList.remove('disabled');
+                list_room_back_page.classList.remove('disabled');
+                list_room_next_page.classList.add('disabled');
+                list_room_last_page.classList.add('disabled');
+            } else {
+                list_room_first_page.classList.remove('disabled');
+                list_room_back_page.classList.remove('disabled');
+                list_room_next_page.classList.remove('disabled');
+                list_room_last_page.classList.remove('disabled');
+            }
+        }
+        // list_page_data(msg.list, dice_page);
+        // select_page(1, dice_page, 'page_no', 'list_room', 'list_dice_room');
+    });
+
+    socket.on('return_create_baucua_room_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb) {
+        if (msg.status) {
+            socket.emit('socketio_list_baucua_room',
+                    {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                     'page': 0});
+        }
+        else{
+            document.getElementById("create_room_alert").innerText = msg.msg;
+            $("#create_room_alert").slideDown();
+            $('#room_amount').removeAttr("disabled");
+            $('#create_room').removeAttr("disabled");
+            $('#room_password').removeAttr("disabled");
+
+        }
+    });
+
+    socket.on('return_room_closed_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb) {
+        if (msg.status) {
+            location.reload();
+        }
+        else{
+
+        }
+    });
+</script>
+<script>
+    var room_per_page = 10;
+    var current_dice_page = 1;
+    var dice_page = [];
+    var list_dice_room = document.getElementById('list_dice_room');
+    var page_no = document.getElementById('page_no');
+    var first_page = document.getElementById('first_page');
+    var back_page = document.getElementById('back-page');
+    var next_page = document.getElementById('next-page');
+    var last_page = document.getElementById('last-page');
+    var search_baucua_room = document.getElementById('search_baucua_room');
+
+
+    function html_room_data(r_data){
+        var dice_1 = number_to_baucua(1);
+        var dice_2 = number_to_baucua(2);
+        var dice_3 = number_to_baucua(3);
+        if(r_data.last_dice !== null){
+            dice_1 = number_to_baucua(r_data.last_dice[0]);
+            dice_2 = number_to_baucua(r_data.last_dice[1]);
+            dice_3 = number_to_baucua(r_data.last_dice[2]);
+        }
+        var his = dice_1 + dice_2 + dice_3;
+        return "<li><a class='list_dice_des' onclick='openclose_switch(\"btn_room_" + r_data.room_id + "\", \"description_room_" + r_data.room_id + "\", \"dice\");'>" +
+            "<span class='openclose_switch openswitch' id='btn_room_" + r_data.room_id + "'></span><span>" + r_data.room_id + "</span><span>" + r_data.room_name + "</span><span >" + r_data.room_amount + "</span></a></li>" +
+            "<div class='dice-game-room-mini-data' id='description_room_" + r_data.room_id + "'  style='display: none;'>" +
+            "<div>" +
+                '<li class="two_col_grid"><a>Tên phòng:</a><a>' + r_data.room_name + '</a></li>' +
+                '<li class="two_col_grid"><a>Số dư: </a><a>' + r_data.room_amount + ' đ</a></li>' +
+                '<li class="two_col_grid"><a>Thời hạn: </a><a>' + countdown_return(r_data.licence) + '</a></li>' +
+                '<li class="two_col_grid"><a>Tổng giao dịch: </a><a>' + r_data.total_trade + '</a></li>' +
+                '<li class="two_col_grid"><a>Lượt xổ trước: </a><a>' + his + '</a></li>' +
+            '</div>' +
+            "<div class='gold-btn' onclick='join_room(" + r_data.chat_id + ")'>Tham gia</div></div>";
+    }
+
+    search_baucua_room.addEventListener("input", search_room_id);
+    function search_room_id(){
+        var findid = search_baucua_room.value;
+        var search_dice_page = [];
+        for(var i = 0; i < dice_page.length; i++){
+            for(var j = 0; j < dice_page[i].length; j++){
+                var rid = dice_page[i][j].room_id;
+                if(rid.toString().includes(findid.toString())){
+                    search_dice_page.push(dice_page[i][j]);
+                }
+            }
+        }
+        var ds = [];
+        list_page_data(search_dice_page, ds);
+        select_page(1, ds, 'page_no', 'list_room', 'list_dice_room');
+    }
+</script>
+{% endblock %}

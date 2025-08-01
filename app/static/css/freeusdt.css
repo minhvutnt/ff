@@ -1,0 +1,206 @@
+.lottery-week-end{
+    min-width: 250px;
+    height: 49px;
+    padding: 10px 0 0;
+    border: 1px solid #ccc;
+    /*background-color: #eee;*/
+    margin: auto;
+}
+.bold{
+    text-align: center;
+    font-size: larger;
+    font-weight: 700;
+
+}
+.show4{
+    display: block;
+    width: 24.5%;
+    float: left;
+    text-align: center;
+    font-weight: bolder;
+    font-size: 22px;
+    color: rgb(var(--secondary-rgb))!important;
+}
+.show-title{
+    font-size: 75%;
+    font-weight: normal !important;
+}
+.ticket-strategy{
+    margin-top: 10px;
+    height: 97px;
+}
+.buy-ticket-area{
+    margin-top: 10px;
+    height: 310px;
+}
+
+/*input[type=text], select {*/
+/*    width: 90%;*/
+/*    padding: 10px 20px;*/
+/*    border: 1px solid #ccc;*/
+/*    border-radius: 4px;*/
+/*    box-sizing: border-box;*/
+/*    text-align: center;*/
+/*    display: block;*/
+/*    margin: auto;*/
+
+/*}*/
+
+/*input[type=submit] {*/
+/*    width: 90%;*/
+/*    padding: 10px 20px;*/
+/*    border: 1px solid #ccc;*/
+/*    border-radius: 4px;*/
+/*    box-sizing: border-box;*/
+/*    text-align: center;*/
+/*    display: block;*/
+/*    background-color: gold;*/
+/*    font-weight: 700;*/
+/*    margin: 10px auto;*/
+/*}*/
+/*label{*/
+/*    margin-top: 10px;*/
+/*}*/
+.text-center{
+    text-align: center;
+}
+.prize-area{
+    height: 410px;
+    margin-top: 10px;
+}
+.count-prize-weekly{
+    text-align: center;
+    align-content: center;
+    width: 300px;
+    height: 40px;
+    margin: auto;
+}
+.top-height{
+    height: 40px;
+}
+.top-left{
+    float: left;
+    height: 40px;
+    padding: 9px;
+    font-weight: bold;
+    position: relative;
+    width: 25%;
+    text-align: center;
+}
+.top-right{
+    position: relative;
+    width: 75%;
+    height: 40px;
+    padding: 9px;
+    font-weight: bold;
+    background: #002b3a;
+    text-align: center;
+    float: right;
+}
+.top-gold-right{
+    border-bottom: 1px solid #f3cd00;
+    color: #f3cd00;
+}
+.top-gold-left{
+    background-color: gold;
+    background: linear-gradient(to bottom, #ffe766 5%, #ffd700 100%);
+    border-bottom: 1px solid #f3cd00;
+}
+
+.top-silver-right{
+    border-bottom: 1px solid #e8e8e8;
+    color: #e8e8e8;
+}
+.top-silver-left{
+    background-color: #e8e8e8;
+    background: linear-gradient(to bottom, #e8e8e8 5%, #c0c0c0 100%);
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.top-bronze-right{
+    border-bottom: 1px solid #ff9a36;
+    color: #ff9a36;
+}
+.top-bronze-left{
+    background-color: #ff9a36;
+    background: linear-gradient(to bottom, #ff9a36 5%, #cd7f32 100%);
+    border-bottom: 1px solid #ff9a36;
+}
+
+.top-green-right{
+    border-bottom: 1px solid #40ff7f;
+    color: #40ff7f;
+}
+.top-green-left{
+    background-color: #40ff7f;
+    background: linear-gradient(to bottom, #40ff7f 5%, #2eb85c 100%);
+    border-bottom: 1px solid #40ff7f;
+}
+
+.new_history_color{
+    animation: animation-new_history_color 2s forwards 1;
+}
+
+@keyframes animation-new_history_color {
+    0%{
+        background-color: #e8e8e8;
+    }
+    50% {
+        #background-color: gold;
+    }
+    100% {
+        #background-color: #e8e8e8;
+    }
+}
+
+.week-history{
+    display: grid;
+    grid-template-columns: 30px calc(33% - 10px) calc(33% - 10px) calc(33% - 10px);
+    position: relative;
+    font-size: 13px;
+    color: #333333;
+    width: 100%;
+    background-color: #fdfbec;
+    text-align: center;
+    font-family: sans-serif;
+    padding: 5px;
+}
+.week-history:nth-child(1){
+    background: linear-gradient(to bottom, #ffe766 5%, #ffd700 100%);
+}
+.week-history:nth-child(2),
+.week-history:nth-child(3){
+    background: linear-gradient(to bottom, #e8e8e8 5%, #c0c0c0 100%);
+}
+.week-history:nth-child(4),
+.week-history:nth-child(5),
+.week-history:nth-child(6){
+    background: linear-gradient(to bottom, #ff9a36 5%, #cd7f32 100%);
+}
+.week-history:nth-child(7),
+.week-history:nth-child(8),
+.week-history:nth-child(9),
+.week-history:nth-child(10){
+    background: linear-gradient(to bottom, #40ff7f 5%, #2eb85c 100%);
+}
+.week-history:nth-child(10){
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+.week-history span:nth-child(3){
+/*    color: #18b660;*/
+    text-align: right;
+    font-weight: bolder;
+}
+.week-history span:nth-child(4){
+    text-align: right;
+}
+#last_week_history{
+    padding: 0 0px;
+    background-color: #fdfbec;
+    border-radius: 6px;
+}
+input{
+    width: calc(100% - 20px) !important;
+    margin-bottom: 10px !important;
+}

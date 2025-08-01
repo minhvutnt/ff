@@ -1,0 +1,633 @@
+<script src="../static/js/bo.js"></script>
+<script src="../static/css/input_number.js"></script>
+<link rel="stylesheet" href="../static/css/bet-container.css">
+<link rel="stylesheet" href="../static/css/bo.css">
+<script src="../static/js/date_convert.js"></script>
+{% extends "index.html" %}
+
+{% block app_content %}
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<div class="content-box " style="width: calc(100% - 60px);margin: 50px auto 5px; position: relative;">
+    <div id="chart" style="position: relative;"></div>
+</div>
+<div class="content-box center center-his" style="width: calc(100% - 60px);margin: 5px auto; position: relative;">
+    <div class="grid-his">
+        <canvas id="canvas1" ></canvas>
+        <canvas id="canvas2" ></canvas>
+        <canvas id="canvas3" ></canvas>
+        <canvas id="canvas4" ></canvas>
+        <canvas id="canvas5" ></canvas>
+    </div>
+</div>
+
+<div class="content-box" style="width: calc(100% - 60px);margin: 5px auto; position: relative;">
+    <div id="black-area-countdown">
+        <div id="show-countdown-second-1">0</div>
+        <div id="show-countdown-second-2">0</div>
+    </div>
+    <div id="time-status">
+
+    </div>
+    <div id="bigsmall-area">
+        <div class="btn-bet bg-small" id="bet-small" onclick="container_bet_show(1);">Giảm</div>
+        <div class="btn-bet bg-big" id="bet-big" onclick="container_bet_show(0);">Tăng</div>
+    </div>
+    <div class="line-strategy">
+        <div id="line-strategy-small"></div>
+        <div id="line-strategy-big"></div>
+    </div>
+</div>
+
+
+<div class="content-box" style="width: calc(100% - 60px);margin: 5px auto; position: relative;">
+    <div class="content-box-title">
+        LỊCH SỬ
+    </div>
+    <div id="my_bo_his_data">
+      </div>
+        <div style="width: 100%">
+            <div class="select-page">
+                <a onclick="my_select_page('1');"><img src="/static/image/x.gif" class="first-page" id="my_first_page"></a>
+                <a onclick="my_select_page('-1');"><img src="/static/image/x.gif" class="back-page" id="my_back_page"></a>
+                <div id="my_no"></div>
+                <a onclick="my_select_page('+1');"><img src="/static/image/x.gif" class="next-page" id="my_next_page"></a>
+                <a onclick="my_select_page('');"><img src="/static/image/x.gif" class="last-page" id="my_last_page"></a>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div id="disable-bet-area"></div>
+  <div id="bet-container" class="">
+    <div id="bet-container-img"><div id="bet-container-value-img"></div></div>
+    <div id="bet-information">
+      Kỳ xổ <span id="bet_round_number"></span> đang đặt <span id="select_dice_type_name"></span> $<span id="amount_bet_done">0</span> <span id="add_bet_amount_value"></span>
+    </div>
+    <div class="amount-bet">
+      <label>BET</label><input class="icon" value="0" type="number" step="0.01" id="bet_amount" min="0">
+    </div>
+    <div class="add_amount">
+      <div class="col-3" onclick="click_change_amount(1);" ><div class="add-amount-btn">+1</div></div>
+      <div class="col-3" onclick="click_change_amount(10);"><div class="add-amount-btn">+10</div></div>
+      <div class="col-3" onclick="click_change_amount(100);"><div class="add-amount-btn">+100</div></div>
+      <div class="col-3" onclick="click_change_amount(1000);"><div class="add-amount-btn">+1000</div></div>
+      <div class="col-3" onclick="click_change_amount(-1);"><div class="add-amount-btn">-1</div></div>
+      <div class="col-3" onclick="click_change_amount(-10);"><div class="add-amount-btn">-10</div></div>
+      <div class="col-3" onclick="click_change_amount(-100);"><div class="add-amount-btn">-100</div></div>
+      <div class="col-3" onclick="click_change_amount(-1000);"><div class="add-amount-btn">-1000</div></div>
+      <div class="col-6" onclick="click_change_amount('ZERO');"><div class="add-amount-btn">ZERO</div></div>
+      <div class="col-6" onclick="click_change_amount('ALL');"><div class="add-amount-btn">ALL</div></div>
+    </div>
+    <div id="area-submit-bet"><div class="submit-btn">SEND</div></div>
+  </div>
+<script>
+    var bet_big = document.getElementById('bet-big');
+    var bet_small = document.getElementById('bet-small');
+    var time_status = document.getElementById('time-status');
+    var second_1 = document.getElementById('show-countdown-second-1');
+    var second_2 = document.getElementById('show-countdown-second-2');
+    var bet_amount = document.getElementById('bet_amount');
+    var bet_round_number = document.getElementById('bet_round_number');
+    var bet_select = null;
+
+    input_2digit(bet_amount);
+</script>
+<script>
+
+    function type_to_string(bettype){
+        if(bettype == 'DOWN'){return 'Giảm'}
+        else{if(bettype == 'UP'){return 'Tăng'}
+        }
+    }
+
+    var submit_btn = document.getElementById('area-submit-bet');
+    submit_btn.addEventListener('click' , function () {
+        var r = bet_round_number.innerHTML;
+        var am = bet_amount.value;
+        var bt = bet_select;
+
+        Telegram.WebApp.showPopup({
+            title  : 'Đặt cược BO',
+            message: '- Kỳ xổ số ' + r + '\n' +
+                     '- Chọn: ' + type_to_string(bt) + '\n' +
+                     '- Số tiền: $' + am,
+            buttons: [
+                {id: 'access', type: 'destructive', text: 'Xác nhận'},
+                {type: 'cancel'},
+            ]
+        }, function (buttonId) {
+            if (buttonId === 'access') {
+                socket.emit('socketio_bo_bet',
+                            {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                            'bet_value': bt,
+                            'bet_amount': am,
+                            'roundnumber': r,
+                            'wallet': localStorage.getItem('balance')});
+            }
+        }
+    );
+    })
+</script>
+<script>
+    var TRADE_STATUS = false;
+    var btcusdt_data = [[0, 0, 0, 0, 0, 0]];
+    function generateSampleData() {
+        let data = [];
+        for (let i = 0; i < btcusdt_data.length; i++) {
+            data.push({
+                x: timeConverter_minute_secon(btcusdt_data[i][0]),
+                open: btcusdt_data[i][1],
+                close: btcusdt_data[i][4],
+                high: btcusdt_data[i][2],
+                low: btcusdt_data[i][3],
+                trade: btcusdt_data[i][5]
+            });
+        }
+        return data;
+    }
+
+    function createCandlestickChart(data) {
+        const chartWidth = document.getElementById('chart').offsetWidth;
+        const candleWidth = 10;
+        const numCandles = Math.floor(chartWidth / candleWidth);
+
+        let trace = {
+            x: data.slice(-numCandles).map(d => d.x),
+            close: data.slice(-numCandles).map(d => d.close),
+            high: data.slice(-numCandles).map(d => d.high),
+            low: data.slice(-numCandles).map(d => d.low),
+            open: data.slice(-numCandles).map(d => d.open),
+            type: 'candlestick',
+            increasing: { line: {color: '#18b660', width: 1 }, fillcolor: '#18b660' },
+            decreasing: { line: {color: '#fb5b5b', width: 1 }, fillcolor: '#fb5b5b' },
+            hoverinfo: 'x+open+high+low+close',
+            hovertemplate: `
+                <b>Date:</b> %{x}<br>
+                <b>Open:</b> %{open}<br>
+                <b>High:</b> %{high}<br>
+                <b>Low:</b> %{low}<br>
+                <b>Close:</b> %{close}<extra></extra>
+            `
+        };
+        var currentOpen = data[data.length -1].open;
+        var currentHigh = data[data.length -1].high;
+        var currentLow = data[data.length -1].low;
+        var currentClosee = data[data.length -1].close;
+        const currentClose = data[data.length - 1].close;
+
+        let layout = {
+            // title: 'Realtime Candlestick Chart',
+            paper_bgcolor: 'transparent',
+            plot_bgcolor: 'transparent',
+            height: 200,
+            xaxis: {
+                showline: true,
+                linecolor: '#4deeea99',
+                gridcolor: '#ffffff1a',
+                linewidth: 1,
+                type: 'category',
+                rangeslider: {
+                    visible: false
+                },
+                tickmode: 'linear',
+                font: {
+                    size: 8,
+                    color: '4deeea99'
+                }
+            },
+            yaxis: {
+                showline: true,
+                linecolor: '#4deeea99',
+                gridcolor: '#ffffff1a',
+                linewidth: 1,
+                side: 'right',
+                autorange: true,
+
+                nticks: 10,
+                tickformat: 'd'
+            },
+            font: {
+                family: 'Font Awesome 5 Free',
+                size: 8,
+                color: '#4deeea99'
+            },
+            margin: {
+                l: 7,
+                r: 40,
+                t: 10,
+                b: 35
+            },
+            showlegend: false,
+            shapes: [
+                {
+                    type: 'line',
+                    x0: 0,
+                    x1: 1,
+                    y0: currentClose,
+                    y1: currentClose,
+                    xref: 'paper',
+                    yref: 'y',
+                    line: {
+                        color: 'red',
+                        width: 1,
+                        dash: 'dashdot'
+                    }
+                }
+            ],
+            // images: [
+            //     {
+            //         source: `data:image/svg+xml;base64,${btoa(svgLogo)}`,
+            //         x: 0.5,
+            //         y: 0.5,
+            //         xref: 'paper',
+            //         yref: 'paper',
+            //         sizex: 0.2,
+            //         sizey: 0.2,
+            //         xanchor: 'center',
+            //         yanchor: 'middle',
+            //         layer: 'below'
+            //     }
+            // ],
+            annotations: [
+                {
+                    x: 1,
+                    y: currentClose,
+                    xref: 'paper',
+                    yref: 'y',
+                    text: currentClose.toFixed(2) + '    ',
+                    showarrow: false,
+                    xanchor: 'left',
+                    align: 'left',
+                    bgcolor: 'rgb(241, 75, 75, 0.3)',
+                    bordercolor: 'red',
+                    font: {
+                        size: 8,
+                        color: 'white'
+                    },
+                borderwidth: 1,
+                    pad: {
+                        r: 10
+                    }
+                },
+                {
+                    x: 0.5,
+                    y: 0.5,
+                    xref: 'paper',
+                    yref: 'paper',
+                    text: 'BTCUSDT',
+                    showarrow: false,
+                    font: {
+                        size: 20,
+                        color: '#16a5359e'
+                    },
+                    layer: 'below'
+                },
+                // {
+                //     x: 0,
+                //     y: 1.,  // Đặt nhãn trên góc trên bên trái
+                //     xref: 'paper',
+                //     yref: 'paper',
+                //     text: `O: ${currentOpen} H: ${currentHigh} L: ${currentLow} C: ${currentClosee}`,
+                //     showarrow: false,
+                //     align: 'left',
+                //     font: {
+                //         size: 8,
+                //         color: '#16a5359e',
+                //
+                //     },
+                //     bgcolor: 'rgba(255,255,255,0.6)',
+                //     bordercolor: 'black'
+                // }
+            ],
+            dragmode: false
+        };
+
+        const config = {
+            scrollZoom: false,
+            displayModeBar: false,
+            doubleClick: false,
+            staticPlot: false
+        };
+
+        Plotly.newPlot('chart', [trace], layout, config);
+    }
+
+    let sampleData = generateSampleData();
+    createCandlestickChart(sampleData);
+
+
+    let currentCandle = {
+        x: null,
+        open: null,
+        close: null,
+        high: null,
+        low: null,
+        trade: null
+    };
+    let last_close = 0;
+    setInterval(function() {
+        let sampleData = generateSampleData();
+        currentCandle = sampleData[sampleData.length - 1];
+        if (last_close === 0) { last_close = sampleData[sampleData.length - 1].close; }
+
+        const currentPrice = sampleData[sampleData.length - 1].close;
+
+        let per_close = Math.abs(currentPrice - last_close) / 10;
+        let count = 0;
+        let animation_update = setInterval(function() {
+            count++;
+            if(currentPrice > last_close){
+                if(currentPrice <= currentCandle.close){
+                    currentCandle.close = last_close + per_close;
+                }else{
+                    currentCandle.close = currentPrice;
+                }
+            }else{
+                if(currentPrice < last_close){
+                    if(currentPrice >= currentCandle.close){
+                        currentCandle.close = last_close - per_close;
+                    }else{
+                        currentCandle.close = currentPrice;
+                    }
+            }}
+            last_close = currentCandle.close;
+            currentCandle.high = sampleData[sampleData.length - 1].high;
+            currentCandle.low = sampleData[sampleData.length - 1].low;
+
+            if (sampleData.length === 50) {
+                sampleData.push(currentCandle);
+            } else {
+                sampleData[sampleData.length - 1] = currentCandle;
+            }
+            createCandlestickChart(sampleData);
+            if (count >= 9 || last_close == currentPrice) {
+                last_close = currentPrice;
+                clearInterval(animation_update);
+            }
+        }, 90);
+        if(currentCandle.trade == 1){
+            bet_big.classList = 'btn-bet bg-disable';
+            bet_small.classList = 'btn-bet bg-disable';
+            time_status.innerHTML = 'Chờ kết quả';
+            TRADE_STATUS = false;
+            container_bet_hide();
+            document.getElementById('show-countdown-second-1').style.backgroundColor = 'gray';
+            document.getElementById('show-countdown-second-2').style.backgroundColor = 'gray';
+        }
+        else{
+            bet_big.classList = 'btn-bet bg-big';
+            bet_small.classList = 'btn-bet bg-small';
+            time_status.innerHTML = 'Đặt cược';
+            TRADE_STATUS = true;
+        }
+    }, 1000);
+
+    // setInterval(function() {
+    //     let sampleData = generateSampleData();
+    //     if (sampleData.length > 50) {
+    //         sampleData.shift();
+    //     }
+    //     createCandlestickChart(sampleData);
+    // }, 1000);
+
+    window.addEventListener('resize', function() {
+        createCandlestickChart(sampleData);
+    });
+
+</script>
+<script>
+    function startCountdown() {
+      setInterval(() => {
+        const now = new Date();
+        const seconds = now.getSeconds();
+
+        let displaySecond;
+        if (seconds >= 30) {
+          displaySecond = 59 - seconds;
+        } else {
+          displaySecond = 29 - seconds;
+        }
+        const tens = Math.floor(displaySecond / 10);
+        const units = displaySecond % 10;
+        second_1.innerHTML = tens;
+        second_2.innerHTML = units;
+        second_1.classList.remove('countdown-red');
+        second_2.classList.remove('countdown-red');
+        if(displaySecond <= 5){
+            void second_1.offsetWidth;
+            void second_2.offsetWidth;
+            second_1.classList.add('countdown-red');
+            second_2.classList.add('countdown-red');
+        }
+        else{
+        }
+      }, 1000);
+    }
+    startCountdown();
+</script>
+<script>
+    function price_drawn(){
+        let rd = Math.floor(Math.random() * (90 - 50 + 1)) + 50;
+        if(btcusdt_data[btcusdt_data.length - 1][1] > btcusdt_data[btcusdt_data.length - 1][4]){
+            document.documentElement.style.setProperty('--strategy-small', rd + "%");
+            document.documentElement.style.setProperty('--strategy-big', (100 - rd) + '%');
+        }else{
+            document.documentElement.style.setProperty('--strategy-big', rd + "%");
+            document.documentElement.style.setProperty('--strategy-small', (100 - rd) + '%');
+        }
+        canvas_all();
+    }
+    var socket = io('{{ SOCKETIO_URL }}');
+    // socket.emit('socketio_list_baucua_room',
+    //     {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+    //      'page': 0});
+    socket.on('candlestick_BTCUSDT', function (msg, cb) {
+        btcusdt_data = msg;
+        bet_round_number.innerHTML = btcusdt_data[btcusdt_data.length - 1][6];
+        let rd = Math.floor(Math.random() * (90 - 50 + 1)) + 50;
+        if(btcusdt_data[btcusdt_data.length - 1][1] > btcusdt_data[btcusdt_data.length - 1][4]){
+            document.documentElement.style.setProperty('--strategy-small', rd + "%");
+            document.documentElement.style.setProperty('--strategy-big', (100 - rd) + '%');
+        }else{
+            document.documentElement.style.setProperty('--strategy-big', rd + "%");
+            document.documentElement.style.setProperty('--strategy-small', (100 - rd) + '%');
+        }
+        canvas_all();
+    })
+    socket.on('return_bo_bet_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb) {
+        if(msg.status){
+            Telegram.WebApp.showAlert('Đặt thành công');
+            socket.emit('socketio_my_bo_history',
+                         {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                         'page': 0});
+            container_bet_hide();
+          }
+          else{
+            Telegram.WebApp.showAlert(msg.msg);
+          }
+    })
+    socket.emit('socketio_bo_data',
+                 {'chat_id': Telegram.WebApp.initDataUnsafe.user.id});
+    socket.on('return_bo_data_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb) {
+
+    })
+
+    socket.emit('socketio_my_bo_history',
+                 {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                 'page': 0});
+    socket.on('return_my_bo_history_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+        get_my_bo_history(msg);
+    });
+</script>
+ <script>
+    const canvases = document.querySelectorAll('canvas');
+    const colorOptions = ['#fb5b5b', '#18b660', '#ffdf01', '#a9a9a978', '#18b6608a', '#fb5b5ba1'];
+    function drawCircles(canvas, entry) {
+        const ctx = canvas.getContext('2d');
+        const rows = 4; // Số hàng
+        const cols = 5; // Số cột
+        const radius = 20;
+        const gap = 10;
+
+        // Đảm bảo canvas đủ lớn
+        const canvasWidth = cols * (2 * radius + gap) + gap;
+        const canvasHeight = rows * (2 * radius + gap) + gap;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+        ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+        let count_dr = 0;
+
+        const now = new Date();
+        const minutes = now.getMinutes();
+        const second = now.getSeconds();
+        const remainder = 20 - (minutes % 10)*2 - Math.floor(second / 30);
+        for (let col = 0; col < cols; col++) {
+            for (let row = 0; row < rows; row++) {
+                let last = false
+                let color = colorOptions[2];
+                if(count_dr + entry * 20 < (100 - remainder)) {
+                    if (btcusdt_data[count_dr + entry * 20 + remainder - 1][1] > btcusdt_data[count_dr + entry * 20 + remainder - 1][4]) {
+                        color = colorOptions[0];
+                    }
+                    if (btcusdt_data[count_dr + entry * 20 + remainder - 1][1] < btcusdt_data[count_dr + entry * 20 + remainder - 1][4]) {
+                        color = colorOptions[1];
+                    }
+                }
+                else{
+                    color = colorOptions[3];
+                }
+                count_dr += 1;
+
+                const x = col * (2 * radius + gap) + radius + gap;
+                const y = row * (2 * radius + gap) + radius + gap;
+                draw3DCircle(ctx, x, y, radius, color, last);
+            }
+        }
+
+    }
+
+    function draw3DCircle(ctx, x, y, radius, color, last) {
+        const gradient = ctx.createRadialGradient(x - radius / 6, y - radius / 6, radius / 6, x, y, radius);
+        gradient.addColorStop(0, 'white');
+        gradient.addColorStop(0.5, color);
+        gradient.addColorStop(1, color);
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+        ctx.closePath();
+    }
+    function canvas_all(){
+        for(let i = 0; i < canvases.length; i++){
+            drawCircles(canvases[i], i)
+        }
+    }
+    canvas_all();
+
+</script>
+<script>
+    var bet_container = document.getElementById('bet-container');
+    var disable_bet_area =document.getElementById('disable-bet-area');
+
+    disable_bet_area.addEventListener('click', function (){container_bet_hide();})
+    function container_bet_show(trade) {
+        if(TRADE_STATUS){
+            var submit_btn = document.getElementById('submit-btn');
+            bet_container.className = '';
+            var list_bet_container_class = 'bet-container-fade-in ';
+            if (trade == 1) {
+                list_bet_container_class += 'bet_area_down';
+                bet_select = 'DOWN';
+            }
+            if (trade == 0) {
+                list_bet_container_class += 'bet_area_up';
+                bet_select = 'UP';
+            }
+
+            bet_container.classList = list_bet_container_class;
+            disable_bet_area.style.display = 'block';
+        }
+    }
+
+    function container_bet_hide() {
+        bet_container.classList.remove("bet-container-fade-out");
+        bet_container.classList.add("bet-container-fade-out");
+        disable_bet_area.style.display = 'none';
+        // bet_amount.value = 0;
+        // add_bet_amount_value.innerHTML = "";
+    }
+</script>
+<script>
+    var this_bo_history_page = 0;
+    var max_bo_history_page = 0;
+    var my_bo_his_data = document.getElementById('my_bo_his_data');
+    var my_first_page = document.getElementById('my_first_page');
+    var my_back_page = document.getElementById('my_back_page');
+    var my_next_page = document.getElementById('my_next_page');
+    var my_last_page = document.getElementById('my_last_page');
+
+    function get_my_bo_history(msg){
+        if(msg.status) {
+            this_wingo_history_page = msg.page;
+            max_wingo_history_page = msg.max_page;
+            bet_round_number.innerHTML = msg.next_roundnumber;
+            my_bo_history(msg.data, msg.last_page, msg.next_page, msg.max_page, msg.page, msg.last_result);
+      }
+    }
+    function my_select_page(p){
+            var page_s = 0;
+            if(p === ''){page_s = max_wingo_history_page - 1;}
+            if(p === '1'){page_s = 0;}
+            if(p === '+1'){page_s = this_wingo_history_page;}
+            if(p === '-1'){page_s = this_wingo_history_page - 2;}
+            socket.emit('socketio_my_bo_history',
+                 {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                 'page': page_s});
+        }
+</script>
+<script>
+    const URL_PRICE = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
+
+    const fetchBTCPrice = () => {
+      fetch(URL_PRICE)
+
+                // open: btcusdt_data[i][1],
+                // close: btcusdt_data[i][4],
+                // high: btcusdt_data[i][2],
+                // low: btcusdt_data[i][3],
+                // trade: btcusdt_data[i][5]
+        .then(response => response.json())
+        .then(data => {
+            btcusdt_data[btcusdt_data.length - 1][4] = data.price*1;
+            if(data.price*1 > btcusdt_data[btcusdt_data.length - 1][2]){btcusdt_data[btcusdt_data.length - 1][2] = data.price*1}
+            if(data.price*1 < btcusdt_data[btcusdt_data.length - 1][3]){btcusdt_data[btcusdt_data.length - 1][3] = data.price*1}
+            price_drawn();
+        })
+        .catch(error => {
+        });
+    };
+    setInterval(fetchBTCPrice, 1000);
+</script>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,89 @@
+2025-03-18 09:26:01,256 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 09:29:22,582 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 09:30:08,724 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 09:30:28,255 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 09:31:07,477 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 09:31:56,740 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 09:32:15,827 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 09:40:45,757 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 09:45:13,082 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 10:12:58,646 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 10:26:11,438 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 10:30:12,796 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 10:30:29,154 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 10:54:20,377 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 10:54:45,106 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 11:06:19,274 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 11:11:54,014 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 11:13:39,163 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 11:14:11,037 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 11:15:05,016 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 11:27:06,243 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 13:45:52,269 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-18 13:46:46,618 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 13:11:06,025 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 13:27:17,078 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:39:47,824 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:39:55,151 ERROR: Exception on /event-daily [GET] [in /Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py:1744]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 2528, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1825, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1823, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/routes.py", line 99, in html_event_daily
+    return render_template('event0daily.html',
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/templating.py", line 146, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/jinja2/environment.py", line 1081, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/jinja2/environment.py", line 1010, in get_template
+    return self._load_template(name, globals)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/jinja2/environment.py", line 969, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/jinja2/loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/templating.py", line 62, in get_source
+    return self._get_source_fast(environment, template)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/templating.py", line 98, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: event0daily.html
+2025-03-19 14:40:07,797 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:43:35,600 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:44:16,146 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:45:32,671 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:46:19,097 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:48:20,321 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:50:10,512 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:50:32,618 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:53:22,674 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:54:07,796 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:54:56,562 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:55:18,582 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:55:54,753 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:56:09,235 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 14:56:37,169 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 15:14:34,757 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 15:17:17,721 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 15:22:57,891 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 15:23:52,271 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-19 15:24:11,624 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-20 06:26:09,646 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-25 21:00:29,396 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]

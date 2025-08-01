@@ -1,0 +1,26 @@
+.panda{
+    background: url("/static/image/animation/anyrgb.com (2).png");
+    width: 183px;
+    height: 183px;
+    animation: walk 1s steps(14) infinite,
+               forwards 15s linear infinite;
+}
+@keyframes walk {
+    0%{
+        background-position: 0px;
+    }
+    100%{
+
+        background-position: 2562px;
+    }
+}
+
+@keyframes forwards {
+    0%{
+        transform: translateY(0);
+    }
+    100%{
+
+        transform: translateY(500px);
+    }
+}

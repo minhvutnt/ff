@@ -1,0 +1,177 @@
+.tab_out_left{
+    position: relative;
+    animation: animation-tab-out-left .7s forwards 1;
+}
+.tab_out_right{
+    position: relative;
+    animation: animation-tab-out-right .7s forwards 1;
+}
+@keyframes animation-tab-out-left{
+    0%{
+        left: 0;
+    }
+    100%{
+        left: -120%;
+        display: none;
+        transform: scale(0.0);
+    }
+}
+
+@keyframes animation-tab-out-right{
+    0%{
+        right: 0;
+    }
+    100%{
+        right: -120%;
+        display: none;
+        transform: scale(0.0);
+    }
+}
+
+.tab_in_left{
+    position: relative;
+    animation: animation-tab-in-left .7s forwards 1;
+}
+.tab_in_right{
+    position: relative;
+    animation: animation-tab-in-right .7s forwards 1;
+}
+@keyframes animation-tab-in-left{
+    0%{
+        left: -100%;
+        transform: scale(1.0);
+    }
+    100%{
+        left: 0;
+    }
+}
+@keyframes animation-tab-in-right{
+    0%{
+        right: -100%;
+        transform: scale(1.0);
+    }
+    100%{
+        right: 0;
+    }
+}
+.tab-over{
+    display: none;
+    right: -100%;
+    position: absolute;
+    top: 0;
+    width: calc(100%);
+    display: none;
+}
+
+/*.tab_bar{*/
+/*    width: calc(100% - 8px);*/
+/*    background-color: #a58b6d;*/
+/*    background-image: linear-gradient(to top, #caa065 0, #876338 20%, #ba8f5b 54%, #f3ce8b 74%, #ecd9a5 92%);*/
+/*    border: solid 1px #34220d;*/
+/*    height: 30px;*/
+/*    padding: 2px;*/
+/*    left: 4px;*/
+/*    !* top: -9px; *!*/
+/*    box-sizing: border-box;*/
+/*    z-index: 36;*/
+/*    position: relative;*/
+/*    margin-top: 7px;*/
+/*}*/
+.tab_box{
+
+    width: 100%;
+    height: 40px;
+    padding-top: 11px;
+    margin-top: -11px;
+    overflow: hidden;
+    display: flex;
+    box-sizing: border-box;
+    position: relative;
+}
+.tab_btn{
+    height: 100%;
+    position: relative;
+    z-index: 1;
+        flex: 1 1 auto;
+    display: inline-block;
+    text-transform: uppercase;
+}
+.tab_btn:after{
+    /*position: absolute;*/
+    /*content: "";*/
+    /*width: 80%;*/
+    /*height: 1px;*/
+    /*top: 0;*/
+    /*background: linear-gradient(45deg, transparent, var(--primary03), var(--primary06), var(--primary06), var(--primary03), transparent);*/
+    /*inset-inline-start: 10%;*/
+    /*box-shadow: 0 8px 17px 0 var(--primary-color);*/
+}
+.tab_btn_select{
+    font-weight: bolder;
+    background-color: var(--primary02) !important;
+}
+.tab_btn_select:after{
+    position: absolute;
+    content: "";
+    width: 80%;
+    height: 1px;
+    top: 0;
+    background: linear-gradient(45deg, transparent, var(--primary03), var(--primary06), var(--primary06), var(--primary03), transparent);
+    inset-inline-start: 10%;
+    box-shadow: 0 8px 17px 0 var(--primary-color);
+}
+
+@keyframes animation-select-tab{
+    0%{
+        top: -10px;
+    }
+    50%{
+        top: -5px;
+    }
+    100%{
+        top: -10px;
+    }
+}
+
+.tab_btn_text{
+    width: 100%;
+    height: 30px;
+    color: rgb(var(--secondary-rgb))!important;
+    white-space: nowrap;
+    box-sizing: border-box;
+    cursor: pointer;
+    background-color: transparent;
+    text-align: center;
+    /* line-height: 42px; */
+    display: inline-block;
+    box-shadow: inset 0 -1px 12px 3px rgba(255, 255, 255, .05);
+    position: relative;
+    transition-duration: 150ms;
+    padding: 5px 0px;
+    border: 1px solid var(--bootstrap-card-border);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    direction: ltr;
+    font-size: 11px;
+}
+.tab-green{
+    background-color: #3a545c !important;
+}
+.tab_btn_text:before{
+    position: absolute;
+    content: "";
+    width: 80%;
+    height: 1px;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent, var(--primary03), var(--primary06), var(--primary06), var(--primary03), transparent);
+    inset-inline-start: 10%;
+}
+/*.tab_btn_text:after{*/
+/*        content: "";*/
+/*    width: 2px;*/
+/*    height: 100%;*/
+/*    position: absolute;*/
+/*    right: 0;*/
+/*    top: 0;*/
+/*    background-image: linear-gradient(#62493a 0, #d7b27a 12px, #e7c184 15px, #c6a871 20px, #c6a871 24px, #88663c 31px);*/
+/*}*/

@@ -1,0 +1,685 @@
+
+<link rel="stylesheet" href="../static/css/bet-container.css">
+<link rel="stylesheet" href="../static/css/list_dice_room.css">
+<link rel="stylesheet" href="../static/css/switch_tag.css">
+<script src="../static/js/switch_tab.js"></script>
+<script src="../static/js/page_split.js"></script>
+<script src="../static/js/sound.js"></script>
+<script src="../static/js/date_convert.js"></script>
+<script src="../static/js/gamebaucua.js"></script>
+<script src="/static/js/baucua_js.js"></script>
+<link rel="stylesheet" href="/static/css/dice-tomcua.css" id="INLINE_PEN_STYLESHEET_ID"/>
+<script src="/static/css/input_number.js"></script>
+{% extends "index.html" %}
+<!--https://codepen.io/jico/pen/wvMpgog?editors=1111-->
+{% block app_content %}
+<div style="width: calc(100% - 20px); margin: auto; margin-top: 0;">
+  <h4 class="title_ab center game-title" id="room_id">PHÒNG</h4>
+  <p id="dice_round_number">Kỳ xổ</p>
+
+  <div class="content-box dice-area">
+<!--    <div id="quest"><svg viewBox="0 0 12.24 20" class="help"><g class="outline">-->
+<!--          <path d="M3.73 13.1v-.52c0-2.8 1.47-3.8 2.89-4.76 1-.72 2.14-1.46 2.14-2.9s-1.13-2.55-3-2.55A5.39 5.39 0 0 0 2 4.12L0 2.61A8.15 8.15 0 0 1 6.24 0c3 0 6 1.4 6 4.52 0 2.42-1.4 3.38-2.88 4.4-1.33.91-2.7 1.85-2.7 3.82v.36zm3.61 4.8a2.09 2.09 0 0 0-2.1-2.07 2.09 2.09 0 0 0 0 4.17 2.1 2.1 0 0 0 2.1-2.1z"></path>-->
+<!--        </g><g class="icon">-->
+<!--          <path d="M3.73 13.1v-.52c0-2.8 1.47-3.8 2.89-4.76 1-.72 2.14-1.46 2.14-2.9s-1.13-2.55-3-2.55A5.39 5.39 0 0 0 2 4.12L0 2.61A8.15 8.15 0 0 1 6.24 0c3 0 6 1.4 6 4.52 0 2.42-1.4 3.38-2.88 4.4-1.33.91-2.7 1.85-2.7 3.82v.36zm3.61 4.8a2.09 2.09 0 0 0-2.1-2.07 2.09 2.09 0 0 0 0 4.17 2.1 2.1 0 0 0 2.1-2.1z"></path>-->
+<!--        </g></svg>-->
+<!--    </div>-->
+    <div class="dice-area-grid-2">
+      <p><span>Ký quỹ:</span><span id="room_balance">0 đ</span></p>
+      <p><span>Đang cược:</span><span id="room_trade">0 đ</span></p>
+    </div>
+    <div class="edit-info" id="room_info_open">
+      <a><img src="/static/image/svg/edit.svg" style="width: 30px; height: 30px"></a>
+    </div>
+    <div id="throw">
+      <div class="diceWrap col-4" style=" transform: scale(0.4);">
+        <div class="dice1 rolling">
+          <div class="diceFace front"></div>
+          <div class="diceFace up"></div>
+          <div class="diceFace left"></div>
+          <div class="diceFace right"></div>
+          <div class="diceFace bottom"></div>
+          <div class="diceFace back"></div>
+        </div>
+      </div>
+
+      <div class="diceWrap2 col-4" style=" transform: scale(0.6);">
+        <div class="dice2 rolling">
+          <div class="diceFace front"></div>
+          <div class="diceFace up"></div>
+          <div class="diceFace left"></div>
+          <div class="diceFace right"></div>
+          <div class="diceFace bottom"></div>
+          <div class="diceFace back"></div>
+        </div>
+      </div>
+      <div class="diceWrap3 col-4" style=" transform: scale(0.4);">
+        <div class="dice3 rolling">
+          <div class="diceFace front"></div>
+          <div class="diceFace up"></div>
+          <div class="diceFace left"></div>
+          <div class="diceFace right"></div>
+          <div class="diceFace bottom"></div>
+          <div class="diceFace back"></div>
+        </div>
+      </div>
+    </div>
+    <div id="admin_roll_dice_are">
+      <div class="dice-status-note-text" id="bue717">room licence</div>
+      <div id="dice_status" onclick="change_dice_status(Telegram.WebApp.initDataUnsafe.user.id, ROOM_ADMIN);">
+          <div class="dice_status-number" id="dice-status-number"></div>
+          <div class="dice_status-text" id="dice-status-text"></div>
+      </div>
+    </div>
+  </div>
+
+    <div class="dice-area-grid-3">
+        <div class="content-box dice-area-6" id="bet-tom" onclick="click_bet(1);">
+        <div class="dice-bet-img">
+          <div class="dice-cicle" style='background-image: url("/static/image/tom.png");'></div>
+        </div>
+        <div class="dice-bet-area-amount amount-area">
+          <img src="/static/image/svg/user.svg"/><span>đ</span><span style="float: right;white-space: nowrap;" id="my_bet_tom">0.00</span><br>
+          <img src="/static/image/svg/group.svg"/><span>đ</span><span style="float: right;white-space: nowrap; " id="all_bet_tom">0.00</span>
+        </div>
+        </div>
+        <div class="content-box dice-area-6" id="bet-cua" onclick="click_bet(2);">
+        <div class="dice-bet-img">
+          <div class="dice-cicle" style='background-image: url("/static/image/cua.png");'></div>
+        </div>
+        <div class="dice-bet-area-amount amount-area">
+          <img src="/static/image/svg/user.svg"/><span>đ</span><span style="float: right;white-space: nowrap;" id="my_bet_cua">0.00</span><br>
+          <img src="/static/image/svg/group.svg"/><span>đ</span><span style="float: right;white-space: nowrap;" id="all_bet_cua">0.00</span>
+        </div>
+        </div>
+        <div class="content-box dice-area-6" id="bet-bau" onclick="click_bet(3);">
+        <div class="dice-bet-img">
+          <div class="dice-cicle" style='background-image: url("/static/image/bau.png");'></div>
+        </div>
+        <div class="dice-bet-area-amount amount-area">
+          <img src="/static/image/svg/user.svg" /><span>đ</span><span style="float: right;white-space: nowrap;" id="my_bet_bau">0.00</span><br>
+          <img src="/static/image/svg/group.svg"/><span>đ</span><span style="float: right;white-space: nowrap;" id="all_bet_bau">0.00</span>
+        </div>
+        </div>
+        <div class="content-box dice-area-6" id="bet-ca" onclick="click_bet(4);">
+        <div class="dice-bet-img">
+          <div class="dice-cicle" style='background-image: url("/static/image/ca.png");'></div>
+        </div>
+        <div class="dice-bet-area-amount amount-area">
+          <img src="/static/image/svg/user.svg"/><span>đ</span><span style="float: right;white-space: nowrap;" id="my_bet_ca">0.00</span><br>
+          <img src="/static/image/svg/group.svg"/><span>đ</span><span style="float: right;white-space: nowrap;" id="all_bet_ca">0.00</span>
+        </div>
+        </div>
+        <div class="content-box dice-area-6" id="bet-nai" onclick="click_bet(5);">
+        <div class="dice-bet-img">
+          <div class="dice-cicle" style='background-image: url("/static/image/nai.png");'></div>
+        </div>
+        <div class="dice-bet-area-amount amount-area">
+          <img src="/static/image/svg/user.svg"/><span>đ</span><span style="float: right;white-space: nowrap;" id="my_bet_nai">0.00</span><br>
+          <img src="/static/image/svg/group.svg"/><span>đ</span><span style="float: right;white-space: nowrap;" id="all_bet_nai">0.00</span>
+        </div>
+        </div>
+        <div class="content-box dice-area-6" id="bet-ga" onclick="click_bet(6);">
+          <div class="dice-bet-img">
+            <div class="dice-cicle" style='background-image: url("/static/image/ga.png");'></div>
+          </div>
+          <div class="dice-bet-area-amount amount-area">
+            <img src="/static/image/svg/user.svg"/><span>đ</span><span style="float: right;white-space: nowrap;" id="my_bet_ga">0.00</span><br>
+            <img src="/static/image/svg/group.svg"/><span>đ</span><span style="float: right;white-space: nowrap;" id="all_bet_ga">0.00</span>
+          </div>
+        </div>
+    </div>
+  <div class="tab_bar">
+        <div class="tab_box">
+            <div class="tab tab_btn tab_btn_select" id='btn-tab-my-history' onclick="switch_tab('tab', 'tab-my-history')">
+                <div class="tab_btn_text">LỊCH SỬ</div>
+            </div>
+            <div class="tab tab_btn" id='btn-tab-room-history' onclick="switch_tab('tab', 'tab-room-history')">
+                <div class="tab_btn_text">KẾT QUẢ PHÒNG</div>
+            </div>
+            <div class="tab tab_btn" id='btn-tab-strategy' onclick="switch_tab('tab', 'tab-strategy')">
+                <div class="tab_btn_text">THÓNG KÊ</div>
+            </div>
+        </div>
+    </div>
+  <div style="position: relative; margin-bottom: 20px; border: 0;">
+    <div class="content-box absolute tab_select" id="tab-my-history" style="width: 100%;">
+      <div class="content-box-title">
+          Lịch sử
+      </div>
+      <div id="history_title">
+      </div>
+      <div id="history_data">
+      </div>
+        <div style="width: 100%">
+            <div class="select-page">
+                <a onclick="my_history_select_page('1');"><img src="/static/image/x.gif" class="first-page" id="my-first-page"></a>
+                <a onclick="my_history_select_page('-1');"><img src="/static/image/x.gif" class="back-page" id="my-back-page"></a>
+                <div id="my_history_no"></div>
+                <a onclick="my_history_select_page('+1');"><img src="/static/image/x.gif" class="next-page" id="my-next-page"></a>
+                <a onclick="my_history_select_page('');"><img src="/static/image/x.gif" class="last-page"  id="my-last-page"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-box absolute tab-over" id="tab-room-history" style="display: none;">
+      <div class="content-box-title">
+          Lịch sử phòng
+      </div>
+      <div id="room_history_title">
+      </div>
+      <div id="room_history_data">
+      </div>
+        <div style="width: 100%">
+            <div class="select-page">
+                <a onclick="room_history_select_page('1');"><img src="/static/image/x.gif" class="first-page" id="room-first-page"></a>
+                <a onclick="room_history_select_page('-1');"><img src="/static/image/x.gif" class="back-page" id="room-back-page"></a>
+                <div id="room_history_no"></div>
+                <a onclick="room_history_select_page('+1');"><img src="/static/image/x.gif" class="next-page" id="room-next-page"></a>
+                <a onclick="room_history_select_page('');"><img src="/static/image/x.gif" class="last-page"  id="room-last-page"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-box absolute tab-over" id="tab-strategy" style="display: none;">
+      <div class="content-box-title">
+          Thống kê
+      </div>
+      <div id="strategy_title">
+      </div>
+      <div id="strategy_data">
+      </div>
+        <div style="width: 100%">
+            <div class="select-page">
+                <a onclick="strategy_history_select_page('1');"><img src="/static/image/x.gif" class="first-page" id="strategy_first_page"></a>
+                <a onclick="strategy_history_select_page('-1');"><img src="/static/image/x.gif" class="back-page" id="strategy_back_page"></a>
+                <div id="strategy_no"></div>
+                <a onclick="strategy_history_select_page('+1');"><img src="/static/image/x.gif" class="next-page" id="strategy_next_page"></a>
+                <a onclick="strategy_history_select_page('');"><img src="/static/image/x.gif" class="last-page" id="strategy_last_page"></a>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div id="disable-bet-area"></div>
+  <div id="bet-container">
+    <div id="bet-container-img"><div id="bet-container-value-img"></div></div>
+<!--    <div class="bet-area-total">-->
+<!--      <div class="all-my-bet"><img src="/static/image/svg/user.svg"/><span>$</span><span style="float: right;white-space: nowrap;">0.00</span></div>-->
+<!--      <div class="all-value-bet"><img src="/static/image/svg/group.svg"/><span>$</span><span style="float: right;white-space: nowrap;">1021.20</span></div>-->
+<!--    </div>-->
+    <div id="bet-information">
+      Kỳ xổ <span id="bet_round_number"></span> đang đặt <span id="select_dice_type_name"></span> $<span id="amount_bet_done">0</span> <span id="add_bet_amount_value"></span>
+    </div>
+    <div class="amount-bet">
+      <label>BET</label><input class="icon" value="0" type="number" step="0.01" id="bet_amount" min="0">
+    </div>
+    <div class="add_amount">
+      <div class="col-3" onclick="click_change_amount(1000);" ><div class="add-amount-btn">+1k</div></div>
+      <div class="col-3" onclick="click_change_amount(10000);"><div class="add-amount-btn">+10k</div></div>
+      <div class="col-3" onclick="click_change_amount(100000);"><div class="add-amount-btn">+100k</div></div>
+      <div class="col-3" onclick="click_change_amount(1000000);"><div class="add-amount-btn">+1M</div></div>
+      <div class="col-3" onclick="click_change_amount('DOUBLE');"><div class="add-amount-btn">x2</div></div>
+      <div class="col-3" onclick="click_change_amount('HALF');"><div class="add-amount-btn">/2</div></div>
+      <div class="col-3" onclick="click_change_amount('ZERO');"><div class="add-amount-btn">Xoá</div></div>
+      <div class="col-3" onclick="click_change_amount('ALL');"><div class="add-amount-btn">Tất cả</div></div>
+    </div>
+    <div id="area-submit-bet"><div class="submit-btn">SEND</div></div>
+  </div>
+    <div id="black-area-room-info" class="black-background"></div>
+<div id="room_info_page" class=" dice-room-info-container">
+
+    <div class="level_container">
+        <div class="level_container_bg">
+            <div class="level_name">
+                <a class="close_btn" id="room_info_close">
+                    <img src="/static/image/svg/close.svg">
+                </a>
+                <ht class="title_ab" id="room_id_info"></ht>
+            </div>
+            <div class="level_info">
+                <div class="level_content_background">
+                    <div class="content_level_exp" style="display: block !important;">
+                        <div class="title">Thông tin</div>
+                        <div class="description" id="exp-table">
+                            <li class="two_col_grid"><a>Phòng: </a><a id="my_room_name"></a></li>
+                            <li class="two_col_grid"><a>Số dư: </a><a id="my_room_balance"></a></li>
+                            <li class="two_col_grid"><a>Lợi nhuận: </a><a id="my_room_profit"></a></li>
+                            <li class="two_col_grid"><a>Thời hạn: </a><a id="my_room_end_time"></a></li>
+                            <li class="two_col_grid"><a>Tổng giao dịch: </a><a id="my_room_total_trade"></a></li>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="level_content_background" id="manage-room">
+                    <div class="content_level_exp" style="display: block !important;">
+                        <div class="title">Quản lý</div>
+                        <div class="two_col_grid" style="margin-top: 10px;grid-template-columns: auto auto; justify-items: center; align-items: center;">
+                            <div>
+                                <input type="radio" id="WITHDRAWAL" name="change_amount" value="WITHDRAWAL" checked>
+                                <label for="WITHDRAWAL">Rút vốn</label><br>
+                            </div>
+                            <div>
+                                <input type="radio" id="DEPOSIT" name="change_amount" value="DEPOSIT">
+                                <label for="DEPOSIT">Nạp thêm</label>
+                            </div>
+                        </div>
+                        <div class="form-create-room">
+                            <input type="number" value="0" id="room_amount_change" style="width: 100%;">
+                            <p id="create_room_alert"></p>
+                        </div>
+                        <div class="two_col_grid" style="margin: 15px 0px;">
+                            <button class='delete' onclick="close_my_room()" >
+                                <div class="two_col_grid two_col_grid_btn_emoji">
+                                    <svg><svg class="outline"><svg viewBox="0 0 86.29 100"><path d="M75 100H11.32C8.9 93.78 7 89.76 6.89 82.9Q6.73 73 6.72 63c0-13.43.05-26.86.05-40.29H79.5c0 14-.22 28-.13 42C79.46 77.58 80.5 88.09 75 100zM25.8 86V32h-9v54zm22 0V32h-9v54zm13-54v54h9V32z"></path><path d="M0 4.66C10.8 4 21.12 7 29.64 0h27c8.51 7 18.87 4 29.66 4.66L85.76 18H.53z"></path></svg></svg><svg class="icon"><svg viewBox="0 0 86.29 100"><path d="M75 100H11.32C8.9 93.78 7 89.76 6.89 82.9Q6.73 73 6.72 63c0-13.43.05-26.86.05-40.29H79.5c0 14-.22 28-.13 42C79.46 77.58 80.5 88.09 75 100zM25.8 86V32h-9v54zm22 0V32h-9v54zm13-54v54h9V32z"></path><path d="M0 4.66C10.8 4 21.12 7 29.64 0h27c8.51 7 18.87 4 29.66 4.66L85.76 18H.53z"></path></svg></svg></svg>
+                                    <span>Đóng</span>
+                                </div>
+
+                            </button>
+                            <button id="btn-send-amount" onclick="send_room_balance();" disabled><div>Gửi</div></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="win-container">
+    <div class="wdata">
+        <div>BIGWIN</div>
+        <div id="win-amount">
+            <svg width="200px" height="50px">
+                <path id='curveDown' d="M 0 00 Q 100 50 200 0" fill="transparent" stroke="" stroke-width="1"/>
+                <text font-size="28px">
+                    <textPath href="#curveDown" fill="#fed23e" startOffset="50%" text-anchor="middle" id="win-profit">
+                        123000đ
+                    </textPath>
+                </text>
+            </svg>
+        </div>
+        <div class="win-data">
+            <div class="win-round">
+                <span>Kỳ xổ:</span><span style='text-align: right' id="win-round"></span>
+            </div>
+            <div>Kết quả</div>
+
+            <div class="win-result">
+                <div id="win-1"></div>
+                <div id="win-2"></div>
+                <div id="win-3"></div>
+            </div>
+        <div>
+    </div>
+    <div id="win-close"></div>
+</div>
+<script>
+    <!--  Win container  -->
+    const win_container = document.getElementById('win-container');
+    function close_win_container() {
+        win_container.style.display = 'none';
+    }
+    function html_dice(dice) {
+        if(dice === '1'){return "<div class='dice-tomcua-mini div-tom'></div>"}
+        if(dice === '2'){return "<div class='dice-tomcua-mini div-cua'></div>"}
+        if(dice === '3'){return "<div class='dice-tomcua-mini div-bau'></div>"}
+        if(dice === '4'){return "<div class='dice-tomcua-mini div-ca'></div>"}
+        if(dice === '5'){return "<div class='dice-tomcua-mini div-nai'></div>"}
+        if(dice === '6'){return "<div class='dice-tomcua-mini div-ga'></div>"}
+    }
+    function open_win_container(profit, round_number, result) {
+        if(profit !== 0){
+            document.getElementById('win-profit').innerHTML = profit + 'đ';
+            document.getElementById('win-round').innerHTML = round_number;
+
+            document.getElementById('win-1').innerHTML = html_dice(result[0]);
+            document.getElementById('win-2').innerHTML = html_dice(result[1]);
+            document.getElementById('win-3').innerHTML = html_dice(result[2]);
+
+
+            win_container.style.display = 'grid';
+            let timeLeft = 3;
+            const win_interval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft < 0) {
+                clearInterval(win_interval);
+                win_container.style.display = 'none';
+                }
+            }, 1000);
+        }
+
+    }
+    document.getElementById('win-close').addEventListener('click', function () {
+        close_win_container();
+    })
+</script>
+<script>
+    var manage_room = document.getElementById('manage-room');
+    var room_info_page = document.getElementById('room_info_page');
+    var room_info_close = document.getElementById('room_info_close');
+    var room_info_open = document.getElementById('room_info_open');
+    var black_area_room_info = document.getElementById('black-area-room-info');
+    room_info_open.addEventListener('click', fn_room_info_open)
+    function fn_room_info_open(){
+        room_info_page.classList.remove('room_info_close');
+        room_info_page.classList.add('room_info_open');
+        black_area_room_info.style.display = 'block';
+    }
+    room_info_close.addEventListener('click', fn_room_info_close)
+    function fn_room_info_close(){
+        room_info_page.classList.remove('room_info_open');
+        room_info_page.classList.add('room_info_close');
+        black_area_room_info.style.display = 'none';
+    }
+
+    function close_my_room(){
+        Telegram.WebApp.showPopup({
+                title  : 'Close Room',
+                message: 'Xác nhận đóng phòng!\n' +
+                    '- Phòng của bạn sẽ được đóng, và hoàn trả các cược chưa có kết quả của người chơi.',
+                buttons: [
+                    {id: 'close', type: 'destructive', text: 'Đóng phòng'},
+                    {type: 'cancel'},
+                ]
+            }, function (buttonId) {
+                if (buttonId === 'close') {
+                    socket.emit('socketio_close_baucua_room',
+                                {'chat_id': Telegram.WebApp.initDataUnsafe.user.id});
+                }
+            }
+        );
+    }
+    var room_amount_change = document.getElementById('room_amount_change');
+    var btn_send_amount = document.getElementById('btn-send-amount');
+    var WITHDRAWAL = document.getElementById('WITHDRAWAL');
+    var DEPOSIT = document.getElementById('DEPOSIT');
+    room_amount_change.addEventListener('input', room_amount_change_btn);
+    function room_amount_change_btn(){
+        if(room_amount_change.value*1 > 0){
+            btn_send_amount.disabled = false;
+        }
+        else{
+            btn_send_amount.disabled = true;
+        }
+
+    }
+    function send_room_balance(){
+        if(ROOM_ADMIN === Telegram.WebApp.initDataUnsafe.user.id && room_amount_change.value*1 > 0){
+            console.log(DEPOSIT.checked, WITHDRAWAL.checked)
+            var am = 0;
+            if(DEPOSIT.checked){am = room_amount_change.value*1}
+            if(WITHDRAWAL.checked){am = room_amount_change.value*-1}
+            socket.emit('socketio_dice_change_amount',
+                         {'chat_id': ROOM_ADMIN,
+                          'amount': am});
+        }
+    }
+</script>
+<script>
+
+    function click_change_amount(value){
+        if(value === 'ZERO'){bet_amount.value = 0;}
+        else{if(value === 'ALL'){
+            let divText = document.getElementById('amount').innerHTML;
+            let value = parseInt(divText); // chuyển về số
+            let rounded = Math.floor(value / 1000) * 1000;
+            bet_amount.value = rounded;
+            console.log(rounded)
+        }
+        else{if(value === 'DOUBLE'){bet_amount.value = parseInt(parseFloat(bet_amount.value.replace(",", "."))*2)}
+            else{if(value === "HALF"){bet_amount.value = parseInt(parseFloat(bet_amount.value.replace(",", ".")) / 2)}
+            else{
+            if(parseFloat(bet_amount.value) + value < 0){
+            bet_amount.value = 0;
+        }
+        else{
+            bet_amount.value = parseFloat(bet_amount.value) + value;
+        }
+        }}}}
+        if(bet_amount.value < 1000){bet_amount.value = 1000;}
+        update_bet_amount();
+    }
+
+
+</script>
+<script>
+  const arr_dice_type_name = ['Tôm', 'Cua', 'Bầu', 'Cá', 'Nai', 'Gà'];
+  var select_dice_type = -1;
+  var amount_done = 0;
+  var select_dice_type_name = document.getElementById('select_dice_type_name');
+  var bet_amount = document.getElementById('bet_amount');
+  var amount_bet_done = document.getElementById("amount_bet_done");
+  // amount_bet_done.innerHTML = amount_done;
+  var add_bet_amount_value = document.getElementById('add_bet_amount_value');
+
+  function disable_bet(){
+    document.getElementById("bet-container").classList.remove("bet-container-fade-in");
+    document.getElementById("bet-container").classList.add("bet-container-fade-out");
+    document.getElementById("disable-bet-area").style.display = 'none';
+    select_dice_type = -1;
+  }
+  function click_bet(dice_type){
+    select_dice_type = dice_type;
+    select_dice_type_name.innerHTML = arr_dice_type_name[select_dice_type - 1];
+    if(Telegram.WebApp.initDataUnsafe.user.id !== ROOM_ADMIN && TRUE_TRADE){
+    $("#bet-container-value-img").removeClass();
+      if(dice_type ===1){document.getElementById('bet-container-value-img').classList.add('div-tom');}
+      if(dice_type ===2){document.getElementById('bet-container-value-img').classList.add('div-cua');}
+      if(dice_type ===3){document.getElementById('bet-container-value-img').classList.add('div-bau');}
+      if(dice_type ===4){document.getElementById('bet-container-value-img').classList.add('div-ca');}
+      if(dice_type ===5){document.getElementById('bet-container-value-img').classList.add('div-nai');}
+      if(dice_type ===6){document.getElementById('bet-container-value-img').classList.add('div-ga');}
+      document.getElementById("bet-container").classList.remove("bet-container-fade-out");
+      document.getElementById("bet-container").classList.add("bet-container-fade-in");
+      document.getElementById("disable-bet-area").style.display = 'block';
+      add_bet_amount_value.innerHTML = '';
+      bet_amount.value = 0;
+      bet_round_number.innerHTML = NEXT_ROUND_NUMBER;
+      var true_set = false;
+      for(var i = 0; i < ROOM_DATA.history.length; i++){
+        if(ROOM_DATA.history[i][4] === -1 &&
+                ROOM_DATA.history[i][0] === NEXT_ROUND_NUMBER &&
+                ROOM_DATA.history[i][1] === Telegram.WebApp.initDataUnsafe.user.id &&
+                ROOM_DATA.history[i][2] === dice_type){
+          amount_bet_done.innerHTML = ROOM_DATA.history[i][3];
+          true_set = true;
+          break
+        }
+      }
+      if(!true_set){
+        amount_bet_done.innerHTML = 0;
+      }
+    }
+  }
+  $("#disable-bet-area").on("click", () => {
+    disable_bet();
+  })
+
+  bet_amount.addEventListener("input", update_bet_amount);
+  function update_bet_amount(){
+      input_2digit(bet_amount);
+      if(bet_amount.value >= amount_done){
+        add_bet_amount_value.innerHTML = " +" + (bet_amount.value - amount_done).toFixed(2);
+        add_bet_amount_value.style.color = "var(--color-buy)";
+      }else{
+        add_bet_amount_value.innerHTML = " -" + (amount_done - bet_amount.value).toFixed(2);
+        add_bet_amount_value.style.color = "var(--color-sell)";
+      }
+  };
+
+  var area_submit_bet = document.getElementById('area-submit-bet');
+  area_submit_bet.addEventListener('click', send_order);
+  function send_order(){
+        socket.emit('socketio_dice_send_order',
+                {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                'bet_value': select_dice_type,
+                'bet_amount': bet_amount.value,
+                'admin_id': ROOM_ADMIN,
+                'round_number': NEXT_ROUND_NUMBER,
+                'wallet': localStorage.getItem('balance')});
+  }
+</script>
+<script>
+    var my_page = 0;
+    var room_page = 0;
+    var strategy_page = 0;
+
+  var ROOM_ADMIN = {{ ADMIN }};
+  var ROLL_DICE = false;
+  var TRUE_TRADE = false;
+  var NEXT_ROUND_NUMBER = 0;
+  var ROOM_DATA = null
+  var dice_status_number = document.getElementById('dice-status-number');
+  var dice_status_text = document.getElementById('dice-status-text');
+  var bue717 = document.getElementById("bue717");
+  var room_balance = document.getElementById('room_balance');
+  var room_trade = document.getElementById('room_trade');
+  var dice_round_number = document.getElementById('dice_round_number');
+  var bet_round_number = document.getElementById('bet_round_number');
+  var room_id_info = document.getElementById('room_id_info');
+  function room_data_change(){
+    if(ROOM_DATA === null){
+      dice_status_number.innerHTML = 'ROOM CLOSED';
+      dice_status_text.innerHTML = '';
+      bue717.innerHTML = 'bue717';
+    }
+  }
+
+  setInterval(function () {
+      try{
+          var cdrlc = countdown_return(ROOM_DATA.licence);
+          if(cdrlc === 'Room closed'){
+
+              socket.emit('socketio_baucua_room_data',
+                         {'room_admin': ROOM_ADMIN,
+                         'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                             'load_dice': false,
+                         'my_page': my_page,
+                         'room_page': room_page,
+                 'strategy_page': strategy_page});
+          }else{
+            $("#bue717").text(countdown_return(ROOM_DATA.licence));
+            $("#my_room_end_time").text(countdown_return(ROOM_DATA.licence));
+        }
+      }catch (e) {}
+  }, 1000);
+</script>
+<script type="text/javascript" charset="utf-8">
+
+    var socket = io('{{ SOCKETIO_URL }}');
+      const setVal1 = num => {
+        $(".dice1").css("transform", `rotate3d(${perFace[num - 1]}, 180deg)`);
+      };
+      const setVal2 = num => {
+        $(".dice2").css("transform", `rotate3d(${perFace[num - 1]}, 180deg)`);
+      };
+      const setVal3 = num => {
+          $(".dice3").css("transform", `rotate3d(${perFace[num - 1]}, 180deg)`);
+        };
+      var room_id = document.getElementById('room_id');
+
+
+      socket.emit('socketio_baucua_room_data',
+                 {'room_admin': ROOM_ADMIN,
+                 'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                 'load_dice': false,
+                 'my_page': 0,
+                 'room_page': 0,
+                 'strategy_page': 0});
+      socket.on('return_baucua_room_data_' + ROOM_ADMIN, function(msg, cb){
+          if(msg.status){
+            ROOM_DATA = msg.room;
+            new_dice_status = msg.room.dice_status;
+            // if(msg.load_dice){
+              dice_roll_dice(msg.room.last_dice, msg.load_dice);
+            // }
+            room_balance.innerHTML = msg.room.room_amount + " đ";
+            if(ROOM_ADMIN === Telegram.WebApp.initDataUnsafe.user.id){
+              manage_room.style.display = 'block';
+              room_id.innerHTML = 'PHÒNG CỦA TÔI: ' + msg.room.room_id;
+              ROLL_DICE = true;
+              TRUE_TRADE = false;
+            }else{
+              manage_room.style.display = 'none';
+                room_id.innerHTML = 'PHÒNG: ' + msg.room.room_id;
+                ROLL_DICE = false;
+                TRUE_TRADE = true;
+            }
+            room_id_info.innerHTML = 'PHÒNG: ' + msg.room.room_id;
+            NEXT_ROUND_NUMBER = msg.room.round_number + 1;
+            dice_round_number.innerHTML = 'Kỳ xổ ' +  NEXT_ROUND_NUMBER;
+            dice_history();
+            dice_status_dice();
+            my_page = msg.my_page;
+            room_page = msg.room_page;
+            strategy_page = msg.strategy_page;
+          }
+          else{
+              TRUE_TRADE = false;
+              dice_status_number.innerHTML = 'PHÒNG ĐÃ ĐÓNG';
+            disable_view_dice(true);
+          }
+
+      });
+
+      socket.on('return_room_closed_' + ROOM_ADMIN, function (msg, cb) {
+          if (msg.status) {
+              TRUE_TRADE = false;
+              dice_status_number.innerHTML = 'PHÒNG ĐÃ ĐÓNG';
+            disable_view_dice(true);
+          }
+      });
+
+      socket.on('return_bet_dice_' + ROOM_ADMIN + '_' +  + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb) {
+          if (msg.status) {
+              sound_order_success();
+              Telegram.WebApp.showAlert('Đặt thành công ' + msg.bet_amount + 'đ vào ' + msg.bet_value + ' kỳ xổ ' + msg.round_number);
+              disable_bet();
+              socket.emit('socketio_baucua_room_data',
+                         {'room_admin': ROOM_ADMIN,
+                     'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                             'load_dice': false,
+                         'my_page': 0,
+                         'room_page': 0,
+                 'strategy_page': 0});
+          }
+          else{
+              Telegram.WebApp.showAlert(msg.msg);
+
+          }
+      });
+
+
+      socket.on('return_baucua_result_' + ROOM_ADMIN + '_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb) {
+          if (msg.status) {
+              open_win_container(msg.profit, msg.round_number, msg.result)
+          }
+      });
+
+
+      socket.on('return_room_closed_' + ROOM_ADMIN, function (msg, cb) {
+          if (msg.status) {
+              window.location.reload();
+          }
+      });
+
+      socket.on('return_baucua_room_amount_change_' + ROOM_ADMIN, function (msg, cb) {
+          if(ROOM_ADMIN === Telegram.WebApp.initDataUnsafe.user.id){
+              Telegram.WebApp.showAlert(msg.msg);
+          }
+          if (msg.status) {
+              socket.emit('socketio_baucua_room_data',
+                 {  'room_admin': ROOM_ADMIN,
+                     'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                     'load_dice': false,
+                     'my_page': ROOM_DATA.my_page,
+                         'room_page': ROOM_DATA.room_page,
+                     'strategy_page': ROOM_DATA.strategy_page});
+          }
+          else{}
+      });
+</script>
+{% endblock %}
+
+
+
+

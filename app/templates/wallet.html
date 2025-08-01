@@ -1,0 +1,937 @@
+<script src="../static/js/wallet.js"></script>
+<link rel="stylesheet" href="../static/css/wallet.css">
+<link rel="stylesheet" href="../static/css/switch_tag.css">
+<script src="../static/js/page_split.js"></script>
+<script src="../static/js/date_convert.js"></script>
+<script src="/static/css/input_number.js"></script>
+<link rel="stylesheet" href="/static/css/list_dice_room.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+{% extends "index.html" %}
+
+{% block app_content %}
+
+<div class="game-title title_ab center" style="position: unset;margin-top: 10px;">QUẢN LÝ VÍ</div>
+<div style="gap: 14px; width: calc(100% - 20px); margin: 20px auto;" >
+
+    <div class="content-box" id="achbe" style="padding: 10px;">
+        <li class='two_col_grid'><a>{{ LANG['name'][user_language] }}: </a><a id="my_name"></a></li>
+        <li class='two_col_grid'><a>UID: </a><a id="my_uid"></a></li>
+        <li class='two_col_grid'><a>{{ LANG['balance'][user_language] }}: </a><a id="my_balance"></a></li>
+        <li class='two_col_grid' style="display: none"><a>EXP: </a><a id="my_exp"></a></li>
+        <li class='two_col_grid'><a>Tỷ giá USDT: </a><a id="usdt_rate"></a></li>
+    </div>
+    <div class="tab_bar">
+        <div class="tab_box">
+<!--            <div class="tab tab_btn tab_btn_select" id='btn-tab-promotion' onclick="switch_tab('tab', 'tab-promotion')">-->
+<!--                <div class="tab_btn_text">{{ LANG['promotion'][user_language] }}</div>-->
+<!--            </div>-->
+<!--            <div class="tab tab_btn" id='btn-tab-transfer' onclick="switch_tab('tab', 'tab-transfer')">-->
+<!--                <div class="tab_btn_text">{{ LANG['internal'][user_language] }}</div>-->
+<!--            </div>-->
+            <div class="tab tab_btn tab_btn_select" id='btn-tab-chain' onclick="switch_tab('tab', 'tab-chain')">
+                <div class="tab_btn_text">{{ LANG['deposit_withdraw'][user_language] }}</div>
+            </div>
+            <div class="tab tab_btn" id='btn-tab-history' onclick="switch_tab('tab', 'tab-history')">
+                <div class="tab_btn_text">{{ LANG['history'][user_language] }}</div>
+            </div>
+            <div class="tab tab_btn" id='btn-tab-connect' onclick="switch_tab('tab', 'tab-connect')">
+                <div class="tab_btn_text">{{ LANG['connection'][user_language] }}</div>
+            </div>
+            <div class="tab tab_btn" id='btn-tab-restore' onclick="switch_tab('tab', 'tab-restore')">
+                <div class="tab_btn_text">{{ LANG['restore'][user_language] }}</div>
+            </div>
+        </div>
+    </div>
+
+  <div style="position: relative; margin-bottom: 20px; border: 0;">
+    <div class="content-box absolute  no-after" id="tab-promotion" style="display: none;
+    width: 100%;
+    border: 0;
+    box-shadow: none;">
+
+        <div class="tab_bar">
+            <div class="tab_box">
+                <div class="tab2 tab_btn tab_btn_select" id='btn-tab2-promotion-active' onclick="switch_tab('tab2', 'tab2-promotion-active')">
+                    <div class="tab_btn_text tab-green">{{ LANG['participating'][user_language] }}</div>
+                </div>
+                <div class="tab2 tab_btn" id='btn-tab2-promotion-packet' onclick="switch_tab('tab2', 'tab2-promotion-packet')">
+                    <div class="tab_btn_text tab-green">{{ LANG['promotion_package'][user_language] }}</div>
+                </div>
+                <div class="tab2 tab_btn" id='btn-tab2-promotion-guild' onclick="switch_tab('tab2', 'tab2-promotion-guild')">
+                    <div class="tab_btn_text tab-green">{{ LANG['guide'][user_language] }}</div>
+                </div>
+            </div>
+
+            <div class="tab-packet promotion-packet" id="tab2-promotion-active">
+                <div class=""></div>
+            </div>
+            <div class="tab-packet promotion-packet tab-over tab_out_right" id="tab2-promotion-packet">
+                <div class=""></div>
+            </div>
+            <div class="tab-packet promotion-packet tab-over tab_out_right" id="tab2-promotion-guild">
+                <div class="">
+                    <div class='packet-guild'>
+                        <li><span>{{ LANG['guide'][user_language] }}</span></li>
+                        <li>{{ LANG['promo_package_note_1'][user_language] }}</li>
+                        <li>{{ LANG['promo_package_note_2'][user_language] }}</li>
+                        <li>{{ LANG['promo_package_note_3'][user_language] }}</li>
+                        <li>{{ LANG['promo_package_note_4'][user_language] }}</li>
+                        <li>{{ LANG['promo_package_note_5'][user_language] }}</li>
+                        <li>{{ LANG['promo_package_note_6'][user_language] }}</li>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="content-box absolute " id="tab-transfer"  style="width: 100%; display: none;">
+        <div class="content-box-title">
+          {{ LANG['internal_transfer'][user_language] }}
+        </div>
+        <div class="form-create-room">
+            <label>{{ LANG['receiver_uid'][user_language] }}</label><input data="-id-" value="" id="receive_id">
+            <label>{{ LANG['name'][user_language] }}:</label><input type="text" id="receive_name" disabled>
+            <label>{{ LANG['transfer_amount'][user_language] }}:</label><input type="number" value="" id="amount_transfer">
+            <p class='alert' id="transfer_alert"></p>
+            <div style="justify-content: right; display: flex; width: calc(100% - 2px);">
+                <button id="" onclick="fn_amount_transfer()" style="width: 100%"><div>{{ LANG['confirm'][user_language] }}</div></button>
+            </div>
+        </div>
+    </div>
+    <div class="content-box absolute  " id="tab-chain"  style="width: 100%;">
+        <div class="content-box-title">
+            {{ LANG['crypto_wallet'][user_language] }}
+        </div>
+        <div class="center">
+            <li class="crypto-wallet"><span class="logo-usdt">USDT BEP20</span><span onclick="deposit('BEP20-USDT')">{{ LANG['deposit'][user_language] }}</span><span onclick="withdrawal('usdt')">{{ LANG['withdraw'][user_language] }}</span></li>
+        </div>
+    </div>
+
+    <div class="content-box absolute  tab-over" id="tab-history" style="display: none;width: 100%;">
+      <div class="content-box-title">
+            {{ LANG['history'][user_language] }}
+      </div>
+        <li><a class='history title'><span>{{ LANG['day'][user_language] }}</span><span>{{ LANG['content'][user_language] }}</span><span>{{ LANG['amount'][user_language] }}</span></a></li>
+        <div id="history_data">
+
+        </div>
+    </div>
+
+    <div class="content-box absolute  tab-over" id="tab-connect" style="display: none;width: 100%;">
+        <div class="content-box-title">
+            Kết nối bảo mật
+        </div>
+        <button onclick="requestPhoneNumber()" id='btn-connect' style="width: 100%">Kết nối số điện thoại</button>
+        <div id="connect_data" >
+            <div class="input-container">
+                <input type="text" placeholder=" " id="phone-number" class="withdrawal-input" disabled>
+                <label for="phone-number" class="withdrawal-label">Số điện thoại</label>
+            </div>
+            <div class="input-container">
+                <input type="password" placeholder=" " id="password" class="withdrawal-input">
+                <label for="password" class="withdrawal-label">Mật khẩu</label>
+            </div>
+            <div class="input-container">
+                <input type="password" placeholder=" " id="re-password" class="withdrawal-input">
+                <label for="re-password" class="withdrawal-label">Nhập lại mật khẩu</label>
+            </div>
+
+            <button id="btn-send-connect" onclick="connect_phone();" disabled>HOÀN TẤT
+<!--                <div id="password-weight"></div>-->
+            </button>
+            <div id="password-weight-point">
+                <li>Dài tối thiểu 8 ký tự</li>
+                <li>Có chữ cái in hoa</li>
+                <li>Có chữ cái in thường</li>
+                <li>Có số</li>
+                <li>Có ký tự đặc biệt</li>
+                <li>Mật khẩu trùng khớp</li>
+
+            </div>
+        </div>
+        <div id="change_password_connect" >
+            <div class="input-container">
+                <input type="text" placeholder=" " id="connect-phone-number" class="withdrawal-input" disabled>
+                <label for="connect-phone-number" class="withdrawal-label">Số điện thoại</label>
+            </div>
+            <div class="input-container">
+                <input type="password" placeholder=" " id="old-password" class="withdrawal-input">
+                <label for="old-password" class="withdrawal-label">Mật khẩu cũ</label>
+            </div>
+            <div class="input-container">
+                <input type="password" placeholder=" " id="new-password" class="withdrawal-input">
+                <label for="new-password" class="withdrawal-label">Mật khẩu mới</label>
+            </div>
+
+            <button id="btn-send-change-password" onclick="change_password()" disabled>ĐỔI MẬT KHẨU
+<!--                <div id="password-weight"></div>-->
+            </button>
+            <div id="new-password-weight-point">
+                <li>Dài tối thiểu 8 ký tự</li>
+                <li>Có chữ cái in hoa</li>
+                <li>Có chữ cái in thường</li>
+                <li>Có số</li>
+                <li>Có ký tự đặc biệt</li>
+            </div>
+        </div>
+    </div>
+    <div class="content-box absolute  tab-over" id="tab-restore" style="display: none;width: 100%;">
+      <div class="content-box-title">
+            Khôi phục tài khoản bị mất
+      </div>
+      <div id="restore-phone" >
+            <div class="input-container">
+                <input type="text" placeholder=" " id="phone-restore" class="withdrawal-input">
+                <label for="phone-restore" class="withdrawal-label">Số điện thoại</label>
+            </div>
+            <div class="input-container">
+                <input type="password" placeholder=" " id="password-restore" class="withdrawal-input">
+                <label for="password-restore" class="withdrawal-label">Mật khẩu</label>
+            </div>
+            <button id="btn-restore" onclick="" disabled>Khôi phục
+            </button>
+            <div style="margin-top: 5px; padding:10px;color: #aeb7bc;">Lưu ý: <span style="font-style: italic;">Việc khôi phục tài khoản bị mất sẽ nhận toàn bộ dữ liệu của tài khoản đó, tuy nhiên số dư tài khoản hiện tại sẽ bị mất. Vui lòng kiểm tra kỹ trước khi thực hiện thao tác</span></div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="wallet-info-container " id="wallet-info-receive">
+    <div class="wallet-info content-box  ">
+        <div id="wallet-qr"></div>
+        <div id="wallet-string"></div>
+        <div id="wallet-chain">BEP20</div>
+        <div style="font-style: italic; font-size: 10px;">
+            Tỉ giá VNĐ/USDT sẽ được tính tại thời điểm giao dịch được xác nhận, và tự động quy đổi ra VND vào tài khoản thực
+        </div>
+    </div>
+</div>
+<div class="wallet-info-container" id="wallet-info-withdrawal">
+    <div class="wallet-withdrawal content-box ">
+        <div class="content-box-title">
+            {{ LANG['withdraw'][user_language] }}
+        </div>
+
+            <li class='two_col_grid' style="width: 250px;"><a style="text-align: left;">{{ LANG['amount'][user_language] }}: </a><a id="vnd_amount">0</a></li>
+            <li class='two_col_grid' style="width: 250px;"><a style="text-align: left;">Trị giá USDT: </a><a id="usdt-bep20-amount">0</a></li>
+        <div class="input-container">
+            <input type="text" placeholder=" " id="withdrawal-wallet" class="withdrawal-input">
+            <label for="withdrawal-wallet" class="withdrawal-label">{{ LANG['enter_usdt_wallet'][user_language] }}</label>
+        </div>
+        <div class="input-container">
+            <input type="text" placeholder=" " id="withdrawal-amount" class="withdrawal-input">
+            <label for="withdrawal-amount" class="withdrawal-label">{{ LANG['withdraw_amount'][user_language] }}</label>
+            <div class="input-right" onclick="fn_withdrawal_max()">max</div>
+        </div>
+        <div class="input-container">
+            <input type="text" placeholder=" " id="withdrawal-amount-usdt" class="withdrawal-input" readonly>
+            <label for="withdrawal-amount-usdt" class="withdrawal-label" >Nhận được: </label>
+        </div>
+        <button id="create_room" onclick="fn_withdrawal()"><div>{{ LANG['confirm'][user_language] }}</div></button>
+
+        <div style="font-style: italic; font-size: 10px;">
+            Số USDT nhận được có thể biến động nhỏ so với tính toán, do biến động tỷ giá tại thời điểm giao dịch được xác nhận
+        </div>
+    </div>
+</div>
+<div id="register-promotion">
+    <div class="content-box bg">
+        <div class="content-box-title">
+            {{ LANG['register_promo'][user_language] }}
+        </div>
+        <div class="packet" id="register-promotion-info" style="box-shadow: none;">
+        </div>
+        <div class="form-create-room">
+            <label style="font-size: 11px !important;" >{{ LANG['participation_fund'][user_language] }}:</label><input type="text" id="promotion-amount">
+        </div>
+        <li class="btn-area" style="display: grid;">
+            <button class="delete" onclick="hide_register_promotion();" style="width: 100%;"><div>{{ LANG['cancel'][user_language] }}</div></button>
+            <button style="width: 100%;" id="register-btn-pro" disabled><div>{{ LANG['register'][user_language] }}</div></button>
+        </li>
+    </div>
+</div>
+
+<script>
+    const input = document.querySelector('.withdrawal-input');
+    const label = document.querySelector('.withdrawal-label');
+
+    input.addEventListener('focus', () => {
+        label.classList.add('active');
+    });
+
+    input.addEventListener('blur', () => {
+        if (!input.value) {
+            label.classList.remove('active');
+        }
+    });
+
+</script>
+<script>
+    var my_name = document.getElementById('my_name');
+    var my_uid = document.getElementById('my_uid');
+    var my_balance = document.getElementById('my_balance');
+    var my_exp = document.getElementById('my_exp');
+    var usdt_amount = document.getElementById('usdt-amount');
+
+    var socket = io('{{ SOCKETIO_URL }}');
+
+    function check_user_info(){
+        socket.emit('socketio_user_info',
+                    {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                    'full_name': Telegram.WebApp.initDataUnsafe.user.first_name + ' ' + Telegram.WebApp.initDataUnsafe.user.last_name,
+                    'username': Telegram.WebApp.initDataUnsafe.user.username,
+                    'language': Telegram.WebApp.initDataUnsafe.user.language_code,
+                    'photo_url': Telegram.WebApp.initDataUnsafe.user.photo_url}
+        );
+    }
+    check_user_info()
+    socket.on('return_user_info_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+        if(msg.status){
+            my_name.innerHTML = msg.full_name;
+            my_uid.innerHTML = msg.uid;
+            my_balance.innerHTML =  Number(msg.real_amount).toLocaleString('de-DE') + 'đ';
+            my_balance.setAttribute("data-amount", msg.real_amount);
+            my_exp.innerHTML = msg.exp;
+            // usdt_amount.innerHTML = '$ ' + msg.usdt_amount;
+            if(msg.phone == null){
+                document.getElementById('btn-connect').style.display = 'block';
+                document.getElementById('connect_data').style.display = 'none';
+                document.getElementById('change_password_connect').style.display = 'none';
+            }else{
+                document.getElementById('connect-phone-number').value = msg.phone;
+                document.getElementById('btn-connect').style.display = 'none';
+                document.getElementById('connect_data').style.display = 'none';
+                document.getElementById('change_password_connect').style.display = 'block';
+
+            }
+        }
+        else{
+        }
+    });
+
+    var receive_id = document.getElementById('receive_id');
+    var transfer_alert = document.getElementById('transfer_alert');
+    var receive_name = document.getElementById('receive_name');
+    var amount_transfer = document.getElementById('amount_transfer');
+    receive_id.addEventListener('input', (evt) => remove_all_input());
+    function remove_all_input(){
+        transfer_alert.innerHTML = '';
+        receive_name.value = '';
+    }
+    receive_id.addEventListener('change', amount_check_user_id);
+    function amount_check_user_id(){
+        socket.emit('socketio_transfer_check_uid',
+            {'uid': receive_id.value,
+            'chat_id': Telegram.WebApp.initDataUnsafe.user.id});
+    }
+    socket.on('return_check_uid_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+        if(msg.status){
+            receive_name.value = msg.data.full_name;
+        }
+        else{
+            transfer_alert.innerHTML = msg.msg;
+        }
+    });
+
+    socket.on('return_transfer_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+        if(msg.status){
+            Telegram.WebApp.showAlert(msg.msg);
+            check_history();
+        }
+        else{
+            transfer_alert.innerHTML = msg.msg;
+        }
+    });
+    function fn_amount_transfer(){
+
+        Telegram.WebApp.showPopup({
+                title  : "{{ LANG['transfer_confirm'][user_language] }}",
+                message: "{{ LANG['confirm_transfer_text'][user_language] }}".replace('{amount}', amount_transfer.value)
+                                                                             .replace('{uid}', receive_id.value)
+                                                                             .replace('{name}', receive_name.value),
+                buttons: [
+                    {id: 'confirm', type: 'destructive', text: "{{ LANG['confirm'][user_language] }}"},
+                    {type: 'cancel'},
+                ]
+            }, function (buttonId) {
+                if (buttonId === 'confirm') {
+                    socket.emit('socketio_transfer',
+                                {'uid': receive_id.value,
+                                'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                                'amount': amount_transfer.value});
+                }
+            });
+    }
+    function check_history(){
+        socket.emit('socketio_wallet_history',
+                    {'chat_id': Telegram.WebApp.initDataUnsafe.user.id});
+    }
+    var history_data = document.getElementById('history_data');
+    function parse_history(history) {
+        history_data.innerHTML = '';
+        for(var i = 0; i < history.length; i++) {
+            var ngay = timeConverter(history[i].date);
+            var noidung = '';
+            if (history[i].content === "RECEIVE") {
+                noidung = "{{ LANG['confirm_transfer_text'][user_language] }}".replace('{uid}', history[i].uid);
+            }
+            if (history[i].content === "TRANSFER") {
+                noidung = "{{ LANG['sent_to_uid'][user_language] }}".replace('{uid}', history[i].uid);
+
+            }
+            if(history[i].content === 'WITHDRAWAL-BEP20-USDT'){
+                let ss = '';
+                if(history[i].status == 0){
+                    ss = "{{ LANG['completed'][user_language] }}";
+                }
+                if(history[i].status == 1){
+                    ss = "{{ LANG['queue'][user_language] }}";
+                }
+                if(history[i].status == -1){
+                    ss = "{{ LANG['reject'][user_language] }}";
+                }
+                noidung = "{{ LANG['withdraw'][user_language] }} USD - " + ss;
+            }
+            if(history[i].content === 'DEPOSIT-BEP20-USDT'){
+                noidung = "{{ LANG['deposit'][user_language] }} USD";
+            }
+            history_data.innerHTML = "<li><a class='history'><span>" + ngay + "</span><span>" + noidung + "</span><span>" + history[i].amount + "</span></a></li>" + history_data.innerHTML;
+
+        }
+    }
+
+    socket.on('return_wallet_history_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb){
+        if(msg.status){
+            parse_history(msg.data);
+        }
+    });
+    check_history();
+
+    var LIST_ALL_PROMOTION = [];
+    var tab2_promotion_active = document.getElementById('tab2-promotion-active');
+    var tab2_promotion_packet = document.getElementById('tab2-promotion-packet');
+    var register_promotion = document.getElementById('register-promotion');
+    var register_promotion_info = document.getElementById('register-promotion-info');
+    var promotion_amount = document.getElementById('promotion-amount');
+    var register_btn_pro = document.getElementById('register-btn-pro');
+    promotion_amount.addEventListener('input', function () {
+        var vl = promotion_amount.value;
+        if (!isNaN(vl) && vl.trim() !== "") {
+            register_btn_pro.disabled = false;
+        } else {
+            register_btn_pro.disabled = true;
+        }
+    })
+    register_btn_pro.addEventListener('click', function () {
+        socket.emit('socketio_register_promotion',
+            {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+            'stt': register_btn_pro.getAttribute("data-info"),
+            'amount': promotion_amount.value});
+    })
+    socket.on('return_register_promotion_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb){
+        if(msg.status){
+            hide_register_promotion();
+            socket.emit('socketio_list_promotion', {'chat_id': Telegram.WebApp.initDataUnsafe.user.id});
+        }
+        Telegram.WebApp.showAlert(msg.msg);
+    });
+
+    socket.emit('socketio_list_promotion', {'chat_id': Telegram.WebApp.initDataUnsafe.user.id});
+    socket.on('result_list_promotion_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb){
+        if(msg.status){
+            LIST_ALL_PROMOTION = msg.data.all_promotions;
+            all_promotion_list(msg.data);
+            my_promotion_list(msg.data);
+        }
+    });
+
+    socket.on('return_promotion_close_info_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb){
+
+        Telegram.WebApp.showPopup({
+            title: "{{ LANG['cancel_promotion'][user_language] }}".replace("{name}", msg.name),
+            message: msg.msg,
+            buttons: [
+                {id: 'delete', type: 'destructive', text: "{{ LANG['cancel'][user_language] }}"},
+                {type: 'cancel'},
+            ]
+        }, function (buttonId) {
+            if (buttonId === 'delete') {
+                socket.emit('socketio_promotion_close', {
+                    'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                    'stt': msg.stt
+                });
+
+            }
+        });
+    });
+
+    socket.on('return_promotion_close_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb){
+        if(msg.status){
+            socket.emit('socketio_list_promotion', {'chat_id': Telegram.WebApp.initDataUnsafe.user.id});
+        }
+        Telegram.WebApp.showAlert(msg.msg);
+    });
+
+
+
+    var usdt_bep20_amount = document.getElementById('usdt-bep20-amount');
+    socket.emit('socketio_wallet_chain', {'chat_id': Telegram.WebApp.initDataUnsafe.user.id});
+    socket.on('result_wallet_chain_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb){
+        document.getElementById('vnd_amount').innerHTML = Number(msg.BEP20.real_amount).toLocaleString('de-DE') + 'đ';
+        wallet_info.push({'wallet': msg.BEP20.usdt_wallet,
+                          'currency': 'BEP20-USDT'})
+    });
+
+    // ===============================================================================================
+    function connect_phone() {
+
+        Telegram.WebApp.showPopup({
+            title  : "Xác nhận kết nối số điện thoại của bạn",
+            message: "- Với việc kết nối này, bạn có thể phục hồi dữ liệu tài khoản telegram này ở bất kỳ telegram nào khác\n" +
+                "- Bạn chỉ có thể thực hiện thao tác rút tiền sau khi kết nối hoàn tất",
+            buttons: [
+                {id: 'access', type: 'destructive', text: "{{ LANG['confirm'][user_language] }}"},
+                {type: 'cancel'},
+            ]
+        }, function (buttonId) {
+            if (buttonId === 'access') {
+                socket.emit('socketio_connect_phone', {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                                                'phone': phone_number.value,
+                                                'password': password.value});
+            }
+        })
+
+    }
+
+    socket.on('result_connect_phone_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb){
+        if(msg.status){
+            location.reload();
+        }
+        else{
+            Telegram.WebApp.showAlert(msg.msg);
+        }
+    });
+
+    function change_password(){
+        Telegram.WebApp.showPopup({
+            title  : "Xác nhận đổi mật khẩu kết nối số điện thoại",
+            message: "- Bấm xác nhận để thực hiện thay đổi",
+            buttons: [
+                {id: 'access', type: 'destructive', text: "{{ LANG['confirm'][user_language] }}"},
+                {type: 'cancel'},
+            ]
+        }, function (buttonId) {
+            if (buttonId === 'access') {
+                socket.emit('socketio_phone_change_password', {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                                                'phone': document.getElementById('connect-phone-number').value,
+                                                'old_password': old_password.value,
+                                                'password': password.value});
+            }
+        })
+    }
+    socket.on('result_phone_change_password_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb){
+        Telegram.WebApp.showAlert(msg.msg);
+    });
+</script>
+<script>
+    var wallet_string = document.getElementById('wallet-string');
+    var wallet_qr = document.getElementById('wallet-qr');
+    var wallet_info_receive = document.getElementById('wallet-info-receive');
+
+    function generateQRCode() {
+        const text = wallet_string.innerHTML;
+        const qrCodeDiv = wallet_qr;
+
+        // Clear any existing QR codes
+        qrCodeDiv.innerHTML = "";
+        new QRCode(qrCodeDiv, {
+                text: text,
+                width: 200,
+                height: 200,
+                colorDark: "#41c0bd",
+                colorLight: "transparent"
+            });
+    }
+</script>
+<script>
+    var wallet_info = [];
+    function deposit(wl) {
+        let wlif = null;
+        for(let i = 0; i < wallet_info.length; i++){
+            if(wallet_info[i].currency == wl){
+                wlif = wallet_info[i];
+                break
+            }
+        }
+        if(wlif.wallet == null){
+            wallet_qr.innerHTML = "";
+            wallet_string.innerHTML = "{{ LANG['wallet_not_ready'][user_language] }}";
+            wallet_info_receive.className = 'wallet-info-container noqr show-deposit';
+        }
+        else{
+            wallet_info_receive.className = 'wallet-info-container show-deposit';
+            wallet_string.innerHTML = wlif.wallet;
+            generateQRCode();
+        }
+        wallet_info_receive.addEventListener('click', function (event) {
+            if(event.target == wallet_info_receive){
+                wallet_info_receive.className = 'wallet-info-container hide-deposit';
+            }
+        })
+    }
+
+    var wallet_info_withdrawal = document.getElementById('wallet-info-withdrawal');
+    function withdrawal(wl) {
+        let wlif = null;
+        for(let i = 0; i < wallet_info.length; i++){
+            if(wallet_info[i].currency == wl){
+                wlif = wallet_info[i];
+                break
+            }
+        }
+        if(wlif == null){
+            wallet_info_withdrawal.className = 'wallet-info-container show-deposit';
+        }
+        else{
+            wallet_info_withdrawal.className = 'wallet-info-container show-deposit';
+        }
+        wallet_info_withdrawal.addEventListener('click', function (event) {
+            if(event.target == wallet_info_withdrawal){
+                wallet_info_withdrawal.className = 'wallet-info-container hide-deposit';
+            }
+        })
+    }
+
+    var withdrawal_amount = document.getElementById('withdrawal-amount');
+    var withdrawal_wallet = document.getElementById('withdrawal-wallet');
+    function fn_withdrawal_max() {
+        withdrawal_amount.value = my_balance.getAttribute("data-amount");
+    }
+
+    function fn_withdrawal() {
+        const amount = withdrawal_amount.value;
+        const wallet = withdrawal_wallet.value;
+        socket.emit('socketio_withdrawal',
+            {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+            'wallet': wallet,
+            'amount': amount,
+            'chain': 'BEP20-USDT'});
+    }
+    socket.on('result_withdrawal_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb){
+        Telegram.WebApp.showAlert(msg.msg);
+    });
+</script>
+<script>
+    function all_promotion_list(data){
+        tab2_promotion_packet.innerHTML = '';
+        if(data.all_promotions.length == 0){
+            tab2_promotion_packet.innerHTML = "<div class='packet'>" +
+                        "<li style='width: 100%;'><span>{{ LANG['no_promotion'][user_language] }}</span></li>" +
+                    "</div>";
+        }
+        else{
+            for(var i = 0; i < data.all_promotions.length; i++){
+                var dt = data.all_promotions[i];
+                var promotion_type = "{{ LANG['unique'][user_language] }}";
+                if(dt.promotion_type == 'EVENT'){promotion_type = "{{ LANG['event'][user_language] }}";}
+                var amd = '';
+                if(dt.amount_from == null){
+                    if(dt.amount_to != null){amd = "{{ LANG['under'][user_language] }} $ " + dt.amount_to;}
+                    else{amd = "{{ LANG['any_capital'][user_language] }}";}
+                }
+                if(dt.amount_from != null){
+                    if(dt.amount_to == null){amd = "{{ LANG['greater_than_amount'][user_language] }} ".replace('{amount}', dt.amount_from);}
+                    if(dt.amount_to != null){
+                        amd = "{{ LANG['from_to_amount'][user_language] }} ".replace("{amount_from}", dt.amount_from).replace("{amount_to}", dt.amount_to);
+                    }
+                }
+                var cpt = '';
+                var cpp = '';
+                if(dt.required_order != null){cpt = "{{ LANG['complete_bets'][user_language] }} ".replace("{required_order}", dt.required_order);}
+                    if (dt.required_profit != null) {
+                        cpp = "{{ LANG['win_percent_capital'][user_language] }} ".replace("{required_profit}", dt.required_profit);
+                    }else{
+                        cpp = "{{ LANG['no_requirement'][user_language] }}";
+                    }
+                var liec = '';
+                if(dt.event_to == null){liec = "{{ LANG['no_deadline'][user_language] }}"}
+                else{liec = timeConverter_short(dt.event_to);}
+                tab2_promotion_packet.innerHTML = "<div class='packet'>" +
+                        "<li><span>" + dt.name + "</span></li>" +
+                        "<li><span>{{ LANG['category'][user_language] }}:</span><span>" + promotion_type + "</span></li>" +
+                        "<li><span>{{ LANG['apply'][user_language] }}</span><span>" + dt.game + "</span></li>" +
+                        "<li><span>{{ LANG['capital'][user_language] }}</span><span>" + amd + "</span></li>" +
+                        "<li><span>{{ LANG['promotion'][user_language] }}/span><span>" + dt.bonus + "%</span></li>" +
+                        "<li><span>{{ LANG['order_target'][user_language] }}</span><span>" + cpt + "</span></li>" +
+                        "<li><span>{{ LANG['profit_target'][user_language] }}</span><span>" + cpp + "</span></li>" +
+                        "<li><span>{{ LANG['deadline'][user_language] }}</span><span>" + liec + "</span></li>" +
+                        "<button style='width: 100%;' onclick='fn_register_promotion(" + dt.stt + ")'><div>{{ LANG['register'][user_language] }}</div></button>" +
+                    "</div>" + tab2_promotion_packet.innerHTML;
+            }
+        }
+    }
+
+    function my_promotion_list(data) {
+        if(data.my_promotions.length == 0){
+            tab2_promotion_active.innerHTML = "<div class='packet'><li style='width: 100%;'><span>{{ LANG['not_joined_promotion'][user_language] }}</span></li></div>";
+        }else{
+            tab2_promotion_active.innerHTML = '';
+            for(var my = 0; my < data.my_promotions.length; my++){
+                var tl = "{{ LANG['unique'][user_language] }}";
+                if(data.my_promotions[my].promotion_type == 'EVENT'){tl = "{{ LANG['event'][user_language] }}";}
+
+                var tg_order = '';
+                var tg_profit = '';
+
+                var process = 0;
+                var process_color = '';
+                if(data.my_promotions[my].target_order != null){
+                    tg_order = data.my_promotions[my].count_order + " / " + data.my_promotions[my].target_order + " {{ LANG['order'][user_language] }}";
+                }
+                if(data.my_promotions[my].target_profit != null){
+                    var p = data.my_promotions[my].profit + data.my_promotions[my].amount + data.my_promotions[my].amount_bonus;
+                    tg_profit = "$ " + p + " /$ " + data.my_promotions[my].target_profit;
+
+                    let total_amount = data.my_promotions[my].amount + data.my_promotions[my].amount_bonus + data.my_promotions[my].profit;
+                    process = total_amount*100/data.my_promotions[my].target_profit;
+                    if(data.my_promotions[my].profit >= 0){
+                        process_color = 'green';
+                    }
+                    else{
+                        if(data.my_promotions[my].profit < 0 && (data.my_promotions[my].amount + data.my_promotions[my].profit > 0)){
+                            process_color = 'orange';
+                        }else{
+                            process_color = 'red';
+                        }
+                    }
+                }
+                process = process.toFixed(0);
+                if(process >= 100) {
+                    process_color = 'blue';
+                    process = 100;
+                }
+
+                var lc = '';
+                if(data.my_promotions[my].licence == null){lc = "{{ LANG['no_deadline'][user_language] }}"}
+                else{lc = timeConverter_short(data.my_promotions[my].licence);}
+
+                var note_packet_stop = '';
+                var btn_del = "";
+                var btn_width = '';
+                if(data.my_promotions[my].code == 0){
+                    btn_del = "";
+                    btn_width = 'disabled';
+                }else{
+                    btn_del = 'disabled';
+                    btn_width = '';
+                    note_packet_stop = "<li style='grid-template-columns: 100%;text-align: center; color: #fb5b5b;'><span>" + data.my_promotions[my].msg + "</span></li>"
+                }
+
+                tab2_promotion_active.innerHTML =
+                        "<div class='packet'>" +
+                        "    <li><span>" + data.my_promotions[my].name + "</span></li>" +
+                        "    <li><span>{{ LANG['category'][user_language] }}:</span><span>" + tl + "</span></li>" +
+                        "    <li><span>{{ LANG['apply'][user_language] }}</span><span>" + data.my_promotions[my].game + "</span></li>" +
+                        "    <li><span>{{ LANG['capital'][user_language] }}</span><span>$ " + data.my_promotions[my].amount + "</span></li>" +
+                        "    <li><span>{{ LANG['promotion'][user_language] }}</span><span>$ " + data.my_promotions[my].amount_bonus + "</span></li>" +
+                        "    <li><span>{{ LANG['order_target'][user_language] }}</span><span>" + tg_order + "</span></li>" +
+                        "    <li><span>{{ LANG['profit_target'][user_language] }}</span><span>" + tg_profit + "</span></li>" +
+                        "    <li><span>{{ LANG['deadline'][user_language] }}</span><span>" + lc + "</span></li>" +
+                        note_packet_stop +
+                        "    <div class='bar'>" +
+                        "        <div class='decoration'></div>" +
+                        "        <div class='fill_bar " + process_color + "' style='width: " + process + "%;'></div>" +
+                        "    </div>" +
+                        "    <li class='btn-area'>" +
+                        "        <button class='delete' style='width: 100%;' " + btn_del + " onclick='close_promotion_action(" + data.my_promotions[my].stt + ")'>" +
+                        "            <div>{{ LANG['cancel'][user_language] }}</div>" +
+                        "        </button>" +
+                        "        <button style='width: 100%;' onclick='close_promotion_action(" + data.my_promotions[my].stt + ")' " + btn_width + ">" +
+                        "            <div>{{ LANG['withdraw'][user_language] }}</div>" +
+                        "        </button>" +
+                        "    </li>" +
+                        "</div>" + tab2_promotion_active.innerHTML;
+            }
+        }
+    }
+
+    function fn_register_promotion(stt) {
+        for (var k = 0; k < LIST_ALL_PROMOTION.length; k++) {
+            if (LIST_ALL_PROMOTION[k].stt == stt) {
+                var dt = LIST_ALL_PROMOTION[k];
+                var promotion_type = "{{ LANG['unique'][user_language] }}";
+                if (dt.promotion_type == 'EVENT') {
+                    promotion_type = "{{ LANG['event'][user_language] }}";
+                }
+                var amd = '';
+                if (dt.amount_from == null) {
+                    if (dt.amount_to != null) {
+                        amd = "{{ LANG['under'][user_language] }} $ " + dt.amount_to;
+                    } else {
+                        amd = "{{ LANG['any_capital'][user_language] }}";
+                    }
+                }
+                if (dt.amount_from != null) {
+                    if (dt.amount_to == null) {
+                        amd = "{{ LANG['greater_than_amount'][user_language] }} ".replace('{amount}', dt.amount_from);
+                    }
+                    if (dt.amount_to != null) {
+                        amd = "{{ LANG['from_to_amount'][user_language] }} ".replace("{amount_from}", dt.amount_from).replace("{amount_to}", dt.amount_to);
+                    }
+                }
+                var cpt = '';
+                if (dt.required_order != null) {
+                    cpt = "{{ LANG['complete_bets'][user_language] }} ".replace("{required_order}", dt.required_order);
+                } else {
+                    if (dt.required_profit != null) {
+                        cpt = "{{ LANG['win_percent_capital'][user_language] }} ".replace("{required_profit}", dt.required_profit);
+                    }else{
+                        cpt = "{{ LANG['no_requirement'][user_language] }}";
+                    }
+                }
+                var liec = '';
+                if(dt.event_to == null){liec = "{{ LANG['no_deadline'][user_language] }}"}
+                else{liec = dt.event_to;}
+                register_promotion_info.innerHTML =
+                    "<li><span>" + dt.name + "</span></li>" +
+                    "<li><span>{{ LANG['category'][user_language] }}:</span><span>" + promotion_type + "</span></li>" +
+                    "<li><span>{{ LANG['apply'][user_language] }}</span><span>" + dt.game + "</span></li>" +
+                    "<li><span>{{ LANG['capital'][user_language] }}</span><span>" + amd + "</span></li>" +
+                    "<li><span>{{ LANG['order_target'][user_language] }}</span><span>" + cpt + "</span></li>" +
+                    "<li><span>{{ LANG['deadline'][user_language] }}</span><span>" + liec + "</span></li>";
+                register_btn_pro.setAttribute("data-info", stt);
+            }
+        }
+        register_promotion.style.display = 'grid';
+
+    }
+    function hide_register_promotion(){
+        register_promotion.style.display = 'none';
+        promotion_amount.value = 0;
+    }
+
+    function close_promotion_action(stt) {
+        socket.emit('socketio_promotion_close_info',
+        {
+            'stt': stt,
+            'chat_id': Telegram.WebApp.initDataUnsafe.user.id
+        });
+
+}
+</script>
+
+<script>
+    function fetch_rate() {
+        fetch("{{SOCKETIO_URL}}/api/usdt-vnd")
+            .then(response => response.json())
+            .then(data => {
+
+            const price = data.vndusdt;
+
+            document.getElementById('usdt_rate').innerHTML = ` ${price.toLocaleString('vi-VN')} VND`;
+            const real_amount_wallet = my_balance.getAttribute("data-amount");
+            usdt_bep20_amount.innerHTML = '$ ' + (real_amount_wallet/price).toFixed(5);
+            document.getElementById('withdrawal-amount-usdt').value = (document.getElementById('withdrawal-amount').value / price).toFixed(5);
+        });
+    }
+    fetch_rate();
+    setInterval(fetch_rate, 1000);
+</script>
+<script>
+    const phone_number = document.getElementById('phone-number');
+    const password = document.getElementById('password');
+    const re_password = document.getElementById('re-password');
+    const connect_data = document.getElementById('connect_data');
+    const password_weight_point = document.getElementById('password-weight-point').children;
+    const btn_send_connect = document.getElementById('btn-send-connect');
+    function requestPhoneNumber(el) {
+        Telegram.WebApp.requestContact(function(sent, event) {
+            if (sent) {
+                const phone = event?.responseUnsafe?.contact?.phone_number;
+                if (phone) {
+                    phone_number.value = '+' + phone;
+                    connect_data.style.display = 'block';
+                    document.getElementById('btn-connect').style.display = 'none';
+                }
+            }
+        });
+    }
+
+    password.addEventListener('input', checkPasswordStrength);
+    re_password.addEventListener('input', checkPasswordStrength);
+    function checkPasswordStrength() {
+        let strength = 0;
+
+        if (password.value.length >= 8){
+            strength++;
+            password_weight_point[0].className = 'check';
+        }else{password_weight_point[0].className = '';}
+        if (/[A-Z]/.test(password.value)){
+             strength++;
+             password_weight_point[1].className = 'check';
+        }else{password_weight_point[1].className = '';}
+        if (/[a-z]/.test(password.value)){
+             strength++;
+             password_weight_point[2].className = 'check';
+        }else{password_weight_point[2].className = '';}
+        if (/[0-9]/.test(password.value)){
+             strength++;
+             password_weight_point[3].className = 'check';
+        }else{password_weight_point[3].className = '';}
+        if (/[^A-Za-z0-9]/.test(password.value)){
+             strength++;
+             password_weight_point[4].className = 'check';
+        }else{password_weight_point[4].className = '';}
+        if(password.value === re_password.value){
+             strength++;
+             password_weight_point[5].className = 'check';
+        }else{password_weight_point[5].className = '';}
+
+        if (strength === 6) {
+            btn_send_connect.disabled = false;
+        }else{
+            btn_send_connect.disabled = true;
+        }
+    }
+
+    const new_password = document.getElementById('new-password');
+    const old_password = document.getElementById('old-password');
+    const new_password_point = document.getElementById('new-password-weight-point').children;
+    const btn_send_new_password = document.getElementById('btn-send-change-password');
+    new_password.addEventListener('input', checkPasswordStrength_change)
+    old_password.addEventListener('input', checkPasswordStrength_change)
+    function checkPasswordStrength_change() {
+        let strength = 0;
+
+        if (new_password.value.length >= 8){
+            strength++;
+            new_password_point[0].className = 'check';
+        }else{new_password_point[0].className = '';}
+        if (/[A-Z]/.test(new_password.value)){
+             strength++;
+             new_password_point[1].className = 'check';
+        }else{new_password_point[1].className = '';}
+        if (/[a-z]/.test(new_password.value)){
+             strength++;
+             new_password_point[2].className = 'check';
+        }else{new_password_point[2].className = '';}
+        if (/[0-9]/.test(new_password.value)){
+             strength++;
+             new_password_point[3].className = 'check';
+        }else{new_password_point[3].className = '';}
+        if (/[^A-Za-z0-9]/.test(new_password.value)){
+             strength++;
+             new_password_point[4].className = 'check';
+        }else{new_password_point[4].className = '';}
+        if(old_password.value !== '' && new_password.value !== ''){
+             strength++;
+        }
+        if (strength === 6) {
+            btn_send_new_password.disabled = false;
+        }else{
+            btn_send_new_password.disabled = true;
+        }
+    }
+</script>
+{% endblock %}

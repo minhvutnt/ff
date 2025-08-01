@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="{{ user_language }}">
+<head>
+    <title>{{ title }} - {{ project }}</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+    <link href="/static/css/style.css?v={{ random_style }}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/68dff742f2.js" crossorigin="anonymous"></script>
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="../static/js/lang.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="../static/css/welcome.css">
+    <meta http-equiv="permissions-policy" content="clipboard-read=*, clipboard-write=*">
+</head>
+{% if not TRUE_TEST %}
+    <script>
+        var platform = Telegram.WebApp.platform;
+        if(platform === 'web'){
+           Telegram.WebApp.close()
+    }
+    </script>
+{% endif %}
+<script>
+    document.addEventListener('contextmenu', event => event.preventDefault());
+</script>
+
+<script>
+    Telegram.WebApp.expand();
+</script>
+
+<body class="theme_dark" onclick="">
+
+    {% block app_border %}
+    {% endblock %}
+</body>
+<script>
+
+    history.scrollRestoration = "manual"
+
+    $(window).on('beforeunload', function(){
+          $(window).scrollTop(0);
+    });
+
+</script>
+
+<script>
+//     document.addEventListener('visibilitychange', function() {
+//       if(document.visibilityState === 'hidden') {
+//         //enter code for pausing refresh
+//       }
+//       else if(document.visibilityState === 'visible') {
+//         // Telegram.WebApp.showAlert('Welcome back!');
+//         location.reload();
+//       }
+// });
+</script>
+<script>
+    function hideKeyboard() {
+        document.activeElement.blur();
+        document.documentElement.scrollHeight;
+    }
+</script>
+
+<script>
+
+    const scrollToBottom = (id) => {
+        const element = document.getElementById(id);
+        element.scrollTop = element.scrollHeight;
+    }
+    scrollToBottom('chat_content');
+
+    const scrollSmoothlyToBottom = (id) => {
+        const element = $(`#${id}`);
+        element.animate({
+            scrollTop: element.prop("scrollHeight")
+        }, 500);
+    }
+</script>
+
+<script>
+    $(function() {
+        if (/ipad|iphone/gi.test(window.navigator.userAgent)) {
+            var events = "abort blur focus input scroll submit touchstart touchmove textarea";
+            $("form, input, textarea").on(events, function(e) {
+              return (function(window, elem, w, h) {
+                       var vh = window.getComputedStyle(elem,null).getPropertyValue(h);
+                       var vw = window.getComputedStyle(elem,null).getPropertyValue(w);
+                       var vwh = {
+                                   "documentWidth": vw,
+                                   "documentHeight": vh,
+                                   "windowInnerWidth": window.innerWidth,
+                                   "windowInnerHeight": window.innerHeight
+                                 };
+                       return vwh
+                      }(window, document.documentElement, "width", "height"));
+            }).focus();
+        };
+    })
+
+    const fatherContent = document.getElementById("father-content");
+    const originHeight = fatherContent.style.height;
+
+    const chatInputText = document.getElementById("chat-input-text");
+    chatInputText.addEventListener("focus", () => {
+        chatInputText.style.backgroundColor = "red";
+    });
+    chatInputText.addEventListener("focusout", () => {
+        fatherContent.style.height = originHeight;
+        chatInputText.style.backgroundColor = "white";
+    });
+
+    visualViewport.addEventListener('resize', (e) => {
+        if (document.activeElement !== chatInputText) return;
+        fatherContent.style.height = visualViewport.height;
+
+        // https://github.com/TelegramMessenger/Telegram-iOS/issues/1296
+        const IOS_SCROLL_PERCENTAGE = 0.97;
+        document.body.scrollTop= document.body.scrollHeight * (IOS_SCROLL_PERCENTAGE * !isiOS())
+    });
+
+    function isiOS() {
+          return [
+            'iPad Simulator',
+            'iPhone Simulator',
+                'iPod Simulator',
+                'iPad',
+                'iPhone',
+                'iPod'
+          ].includes(navigator.platform)
+          // iPad on iOS 13 detection
+          || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+    }
+</script>
+<script>
+    function switch_tab(class_tab, tab_target){
+    var list_tab = document.getElementsByClassName(class_tab);
+    var left_tab = null;
+    var right_tab = null;
+    var last_select = null;
+    for(var i = 0; i < list_tab.length; i++){
+        if(list_tab[i].id === 'btn-' + tab_target){
+            if(last_select != null){
+                right_tab = list_tab[i];
+            }
+            else{
+                left_tab = list_tab[i];
+            }
+        }
+        var list_class = list_tab[i].className.split(' ');
+        if(list_class.includes('tab_btn_select')) {
+            last_select = list_tab[i];
+        }
+    }
+    var out_select = document.getElementById(last_select.id.replace('btn-', ''));
+
+    var in_select = null;
+
+    out_select.classList.remove('tab_in_left');
+    out_select.classList.remove('tab_in_right');
+    out_select.classList.remove('tab_out_right');
+    out_select.classList.remove('tab_out_left');
+
+    last_select.classList.remove('tab_btn_select');
+    if(left_tab != null){
+        in_select = document.getElementById(left_tab.id.replace('btn-', ''));
+        out_select.classList.add('tab_out_right');
+        in_select.style.display = 'block';
+        in_select.classList.remove('tab_out_left');
+        in_select.classList.remove('tab_out_right');
+        in_select.classList.remove('tab_in_left');
+        in_select.classList.add('tab_in_left');
+
+        left_tab.classList.add('tab_btn_select');
+    }
+    else{
+        in_select = document.getElementById(right_tab.id.replace('btn-', ''));
+        out_select.classList.add('tab_out_left');
+        in_select.classList.remove('tab_out_left');
+        in_select.style.display = 'block';
+        in_select.classList.remove('tab_out_right');
+        in_select.classList.remove('tab_in_right');
+        in_select.classList.add('tab_in_right');
+
+        right_tab.classList.add('tab_btn_select');
+    }
+}
+</script>
+<script>
+    // $("body").on("touchstart", function (event) {
+    //     var xClick = event.originalEvent.touches[0].pageX;
+    //     $(this).one("touchmove", function (event) {
+    //         var xMove = event.originalEvent.touches[0].pageX;
+    //         if (Math.floor(xClick - xMove) > 5) {
+    //             Telegram.WebApp.showAlert('1');
+    //         }
+    //         else if (Math.floor(xClick - xMove) < -5) {
+    //             Telegram.WebApp.showAlert('lèt');
+    //         }
+    //     });
+    //     $("body").on("touchend", function () {
+    //             Telegram.WebApp.showAlert('touch');
+    //     });
+    // });
+</script>
+
+<script>
+    var left_door = document.getElementById('left-door');
+    var right_door = document.getElementById('right-door');
+    left_door.classList.add('left-door-out');
+    right_door.classList.add('right-door-out');
+</script>
+</html>

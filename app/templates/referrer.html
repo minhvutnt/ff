@@ -1,0 +1,300 @@
+<script src="../static/js/date_convert.js"></script>
+<script src="../static/js/referrer.js"></script>
+<link rel="stylesheet" href="../static/css/referrer.css">
+<link rel="stylesheet" href="/static/css/list_game.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.css" rel="stylesheet" type="text/css"/>
+{% extends "index.html" %}
+
+{% block app_content %}
+<div id="block-1">
+    <div class="title_ab" style="position: relative;left: 0;">TIẾP THỊ</div>
+
+    <div class="strategy">
+        <div class="col-6 text-header-table border-top-left-radius ">{{ LANG['direct_subordinate'][user_language] }}</div>
+        <div class="col-6 text-header-table border-top-right-radius">{{ LANG['indirect_subordinate'][user_language] }}</div>
+        <div class="col-12 table-row border-bottom-left-radius border-bottom-right-radius">
+            <span class="col-6 ddata" id="count-f1">0</span><span class="col-6 ddata" id="count-ff">0</span>
+        <li class="col-12">{{ LANG['number_of_registrants'][user_language] }}</li>
+            <span class="col-6 ddata" id="total-amount-f1">0</span><span class="col-6 ddata" id="total-amount-ff">0</span>
+        <li class="col-12">{{ LANG['accumulated_balance'][user_language] }}</li>
+            <span class="col-6 ddata" id="count-promotion-f1">0</span><span class="col-6 ddata" id="count-promotion-ff">0</span>
+        <li class="col-12">{{ LANG['first_package_users'][user_language] }}</li>
+        <li class="col-12" id="ref-level">{{ LANG['rank'][user_language] }}</li>
+        </div>
+    </div>
+    <div id="link_ref" class="border-bottom-light" onclick="copy_ref_code('link')">
+        {{ LANG['referral_link'][user_language] }}
+    </div>
+    <div id="set-f0-code">
+        <label>{{ LANG['enter_referral_code'][user_language] }}</label>
+        <input type="text" id="set-ref-code">
+        <button id="add_ref" disabled><div>{{ LANG['sign_up'][user_language] }}</div></button>
+    </div>
+
+    <div id="page_1">
+        <div id="box-info">
+            <li class="ref-info ref-left copy-ref" onclick="copy_ref_code('code')"><span>{{ LANG['copy_invite_code'][user_language] }}</span><span id="ref-code"></span></li>
+            <li class="ref-info ref-left document-ref" onclick="switch_ref(2);"><span>{{ LANG['subordinate_data'][user_language] }}</span><span class="turn-right"></span></li>
+            <li class="ref-info ref-left dollar-ref" onclick="switch_ref(3);"><span>{{ LANG['commission_details'][user_language] }}</span><span class="turn-right"></span></li>
+            <li class="ref-info ref-left law-ref" onclick="switch_ref(4);"><span>{{ LANG['invitation_rules'][user_language] }}</span><span class="turn-right"></span></li>
+            <li class="ref-info ref-left rate-ref" onclick="switch_ref(5)"><span>{{ LANG['commission_history'][user_language] }}</span><span class="turn-right"></span></li>
+            <li class="ref-info ref-left support24"><span>{{ LANG['support_24_7'][user_language] }}</span><span class="turn-right"></span></li>
+        </div>
+    </div>
+    <div id="page_2">
+        <div class="col-12 text-header-table border-top-left-radius border-top-right-radius" style="position: relative;">
+
+            <div class="back-page-1" onclick="switch_ref(1);"></div>
+            {{ LANG['subordinate_data_upper'][user_language] }}
+        </div>
+        <div class="col-12 table-row border-bottom-left-radius border-bottom-right-radius">
+            <div class="check-tree-ref">
+                <div onclick="page_1_tick_check('1')"><span>1:</span><span class="check-ref select" id="check_1"></span></div>
+                <div onclick="page_1_tick_check('2')"><span>2:</span><span class="check-ref" id="check_2"></span></div>
+                <div onclick="page_1_tick_check('3')"><span>3:</span><span class="check-ref " id="check_3"></span></div>
+                <div onclick="page_1_tick_check('4')"><span>4:</span><span class="check-ref " id="check_4"></span></div>
+                <div onclick="page_1_tick_check('5')"><span>5:</span><span class="check-ref " id="check_5"></span></div>
+                <div onclick="page_1_tick_check('6')"><span>6:</span><span class="check-ref " id="check_6"></span></div>
+                <div onclick="page_1_tick_check('7')"><span>7:</span><span class="check-ref"  id="check_7"></span></div>
+                <div onclick="page_1_tick_check('8')"><span>8:</span><span class="check-ref"  id="check_8"></span></div>
+            </div>
+            <div style="margin-top: 10px; display: grid; position: relative" id="ref_list">
+
+            </div>
+        </div>
+    </div>
+    <div id="page_3">
+        <div class="col-12 text-header-table border-top-left-radius border-top-right-radius border-bottom-left-radius border-bottom-right-radius" style="position: relative;">
+            <div class="back-page-1" onclick="switch_ref(1);"></div>
+            {{ LANG['commission_details_upper'][user_language] }}
+        </div>
+        <div class="col-12 text-header-table border-top-left-radius border-top-right-radius" style="position: relative; margin-top: 10px;">
+            {{ LANG['game_commission_structure'][user_language] }}
+        </div>
+        <div class="col-12 table-row border-bottom-left-radius border-bottom-right-radius">
+            <div class="area-ref-info">
+                <div class="table-col1">
+                    <li class="title"></li>
+                    <li class="title">{{ LANG['rank'][user_language] }} 0</li>
+                    <li class="title">{{ LANG['rank'][user_language] }} 1</li>
+                    <li class="title">{{ LANG['rank'][user_language] }} 2</li>
+                </div>
+                <div class="table-col1 scroll">
+                    <li class="ref-table title"><span>F1</span><span>F2</span><span>F3</span><span>F4</span><span>F5</span><span>F6</span><span>F7</span><span>F8</span></li>
+                    <li class="ref-table">{% for ref in REFERRAL['0'] %}<span>{{ ref }}</span>{% endfor %}</li>
+                    <li class="ref-table">{% for ref in REFERRAL['1'] %}<span>{{ ref }}</span>{% endfor %}</li>
+                    <li class="ref-table">{% for ref in REFERRAL['2'] %}<span>{{ ref }}</span>{% endfor %}</li>
+                </div>
+
+            </div>
+<!--                <li style="font-size: 10px; font-style: italic; text-wrap: auto;" class="wrap">* Game Wingo nhận hoa hồng ngay khi vào lệnh, game Bầu cua nhận hoa hồng sau khi ra kết quả lắc</li>-->
+        </div>
+
+        <div class="col-12 text-header-table border-top-left-radius border-top-right-radius" style="position: relative; margin-top: 10px;">
+            {{ LANG['investment_commission_structure'][user_language] }}
+        </div>
+        <div class="col-12 table-row border-bottom-left-radius border-bottom-right-radius">
+            <div class="area-ref-info">
+                <div class="table-col1">
+                    <li class="title"></li>
+                    <li class="title">{{ LANG['rank'][user_language] }} 0</li>
+                    <li class="title">{{ LANG['rank'][user_language] }} 1</li>
+                    <li class="title">{{ LANG['rank'][user_language] }} 2</li>
+                </div>
+                <div class="table-col1 scroll">
+                    <li class="ref-table title"><span>F1</span><span>F2</span><span>F3</span><span>F4</span><span>F5</span><span>F6</span><span>F7</span><span>F8</span></li>
+                    <li class="ref-table">{% for ref in REFERRAL_INVEST['0'] %}<span>{{ ref }}</span>{% endfor %}</li>
+                    <li class="ref-table">{% for ref in REFERRAL_INVEST['1'] %}<span>{{ ref }}</span>{% endfor %}</li>
+                    <li class="ref-table">{% for ref in REFERRAL_INVEST['2'] %}<span>{{ ref }}</span>{% endfor %}</li>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="page_4">
+        <div class="col-12 text-header-table border-top-left-radius border-top-right-radius" style="position: relative;">
+
+            <div class="back-page-1" onclick="switch_ref(1);"></div>
+            {{ LANG['invitation_rules'][user_language] }}
+        </div>
+        <div class="col-12 table-row border-bottom-left-radius border-bottom-right-radius">
+            <li class="wrap">{{ LANG['invitation_explanation_1'][user_language] }}</li>
+            <li class="wrap">{{ LANG['invitation_explanation_2'][user_language] }}</li>
+            <li class="wrap">{{ LANG['invitation_explanation_3'][user_language] }}</li>
+            <li class="wrap">{{ LANG['invitation_explanation_4'][user_language] }}</li>
+            <li class="wrap">{{ LANG['invitation_explanation_5'][user_language] }}<br>
+                {{ LANG['invitation_explanation_6'][user_language] }} <br>
+                {{ LANG['invitation_explanation_7'][user_language] }}<br>
+                {{ LANG['invitation_explanation_8'][user_language] }}
+            </li>
+        </div>
+    </div>
+    <div id="page_5">
+        <div class="col-12 text-header-table border-top-left-radius border-top-right-radius" style="position: relative;">
+
+            <div class="back-page-1" onclick="switch_ref(1);"></div>
+            {{ LANG['commission_history'][user_language] }}
+        </div>
+        <div class="col-12 table-row border-bottom-left-radius border-bottom-right-radius">
+            <li><a class='ref_his title'><span>{{ LANG['day'][user_language] }}</span><span>UID</span><span>{{ LANG['commission'][user_language] }}</span></a></li>
+            <div id="ref_history_data">
+            </div>
+                <div style="width: 100%">
+                <div class="select-page">
+                    <a onclick="strategy_history_select_page('1');"><img src="/static/image/x.gif" class="first-page" id="his_first_page"></a>
+                    <a onclick="strategy_history_select_page('-1');"><img src="/static/image/x.gif" class="back-page" id="his_back_page"></a>
+                    <div id="his_no"></div>
+                    <a onclick="strategy_history_select_page('+1');"><img src="/static/image/x.gif" class="next-page" id="his_next_page"></a>
+                    <a onclick="strategy_history_select_page('');"><img src="/static/image/x.gif" class="last-page" id="his_last_page"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    var ref_code = null;
+    var bot_link = '{{LINK_BOT}}'
+    var ref_link = null;
+    function copy_ref_code(type) {
+        let text = '';
+        let text_cp = '';
+        if(type == 'link'){
+            text = ref_link;
+            text_cp = "{{ LANG['link_copied'][user_language] }}";
+        }
+        else{if(type == 'code'){
+            text= ref_code;
+            text_cp =  "{{ LANG['referral_code_copied'][user_language] }}";
+        }}
+
+        navigator.clipboard.writeText(text).then(function () {
+            Telegram.WebApp.showAlert(text_cp);
+            }).catch(function (err) {
+        });
+    }
+</script>
+<script>
+    $("input").attr("maxlength", 7);
+    function switch_ref(page_num) {
+        $("#page_" + page_num).slideDown();
+        if(page_num == 1){
+            $("#page_2").slideUp();
+            $("#page_3").slideUp();
+            $("#page_4").slideUp();
+            $("#page_5").slideUp();
+        }
+        if(page_num != 1){
+            $("#page_1").slideUp();
+        }
+    }
+</script>
+<script> //page 1
+    function page_1_tick_check(select_n){
+        var tick = select_n;
+        for(var i = 0; i < 10; i++){
+            if(i + 1 <= tick){
+                document.getElementById('check_' + (i + 1)).classList.add('select');
+                var list_ref = document.getElementsByClassName('ref-' + (i + 1));
+                for(var b  = 0; b < list_ref.length; b++){
+                    list_ref[b].style.display = 'grid';
+
+                    if(i < select_n -1){
+                        list_ref[b].children[0].classList.replace('expand', 'clpand');
+                    }
+                    else{
+                        list_ref[b].children[0].classList.replace('clpand', 'expand');
+                    }
+                }
+            }else{
+                var list_ref_none = document.getElementsByClassName('ref-' + (i + 1));
+                document.getElementById('check_' + (i + 1)).classList.remove('select');
+                for(var c  = 0; c < list_ref_none.length; c++){
+                    list_ref_none[c].style.display = 'none';
+                }
+            }
+        }
+    }
+</script>
+<script>
+    var ref_code_value = document.getElementById('set-ref-code');
+    var add_ref = document.getElementById('add_ref');
+    var set_f0_code = document.getElementById('set-f0-code');
+    var his_first_page = document.getElementById('his_first_page');
+    var his_back_page = document.getElementById('his_back_page');
+    var his_next_page = document.getElementById('his_next_page');
+    var his_last_page = document.getElementById('his_last_page');
+    var his_no = document.getElementById('his_no');
+    var this_res_history = 0;
+    var max_res_history = 0;
+    ref_code_value.addEventListener('input', function () {
+        if(ref_code_value.value >= 1000000 && ref_code_value.value < 9999999){
+            add_ref.disabled = false;
+        }
+        else{
+            add_ref.disabled = true;
+        }
+    })
+    add_ref.addEventListener('click', function () {
+        Telegram.WebApp.showPopup({
+                title  : "{{ LANG['register_referral_code'][user_language] }}",
+                message: "{{ LANG['confirm_register_referral_code'][user_language] }}".replace('{code}', ref_code_value.value),
+                buttons: [
+                    {id: 'close', type: 'destructive', text: "{{ LANG['register'][user_language] }}"},
+                    {type: 'cancel'},
+                ]
+            }, function (buttonId) {
+                if (buttonId === 'close') {
+                    socket.emit('socketio_add_ref',
+                             {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                              'f0': ref_code_value.value});
+                }
+            }
+        );
+    })
+</script>
+<script>
+    var ref_list = document.getElementById('ref_list');
+    var ref_history_data = document.getElementById('ref_history_data');
+    var socket = io('{{ SOCKETIO_URL }}');
+
+    const count_promotion_f1 = document.getElementById('count-promotion-f1');
+    const count_promotion_fn = document.getElementById('count-promotion-ff');
+    socket.emit('socketio_get_ref',
+             {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+             'fnum': '1',
+             'fpage': 0});
+    socket.on('return_get_ref_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb) {
+        ref_code = msg.data.uid;
+        ref_link = bot_link + '?start=' + msg.data.uid;
+        document.getElementById('ref-code').innerHTML = msg.data.uid;
+        document.getElementById('ref-level').innerHTML = "{{ LANG['rank'][user_language] }} " + msg.data.ref_level;
+        if(msg.data.f0 == null){
+            set_f0_code.style.display = 'grid';
+        }
+        count_promotion_f1.innerHTML = msg.packet_f1;
+        count_promotion_fn.innerHTML = msg.packet_fn;
+        referrer_list(msg.ref);
+    });
+    socket.on('return_add_ref_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb) {
+        if(msg.status){
+            set_f0_code.style.display = 'none';
+        }
+        else{
+            if(msg.msg == ''){location.reload()}
+        }
+        Telegram.WebApp.showAlert(msg.msg);
+
+    });
+
+
+    socket.emit('socketio_get_ref_history',
+             {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+             'page': 0});
+    socket.on('return_get_ref_history_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb) {
+        if(msg.status){
+            ref_history(msg);
+        }
+    });
+</script>
+
+{% endblock %}

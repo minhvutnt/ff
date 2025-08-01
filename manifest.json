@@ -1,0 +1,17 @@
+{
+  "user": "OFF",
+  "language": [
+    {
+      "code": "CN",
+      "language": "中国人"
+    },
+    {
+      "code": "EN",
+      "language": "English"
+    },
+    {
+      "code": "VI",
+      "language": "Việt Nam"
+    }
+  ]
+}

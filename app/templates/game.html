@@ -1,0 +1,12 @@
+<link rel="stylesheet" href="/static/css/list_game.css">
+{% extends "index.html" %}
+
+{% block app_content %}
+<div class="title_ab game-title" style="position: unset;">{{ LANG['game'][user_language] }}</div>
+<div class="game-container" >
+    <div class="game wingo-banner" onclick="load_page('{{ url_for('html_wingo') }}');"></div>
+    <div class="game baucua-banner" onclick="load_page('{{ url_for('html_baucua_room') }}');"></div>
+
+</div>
+
+{% endblock %}

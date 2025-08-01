@@ -1,0 +1,138 @@
+<link rel="stylesheet" href="../static/css/manage.css">
+<link rel="stylesheet" href="../static/css/wallet.css">
+<link rel="stylesheet" href="/static/css/list_dice_room.css">
+<link rel="stylesheet" href="/static/css/list_game.css">
+<script src="/static/css/input_number.js"></script>
+
+<link rel="stylesheet" href="/static/css/switch_tag.css">
+{% extends "index.html" %}
+
+{% block app_content %}
+
+<div class="game-title title_ab" style="position: unset">THƯỞNG ĐẠI LÝ</div>
+
+<div class="game-container" style="overflow-y: scroll; overflow-x: hidden; display: block">
+
+        <div class="tab_bar">
+            <div class="tab_box">
+                <div class="tab tab_btn tab_btn_select" id='btn-tab-event' onclick="switch_tab('tab', 'tab-event')">
+                    <div class="tab_btn_text">Thưởng</div>
+                </div>
+                <div class="tab tab_btn" id='btn-tab-day' onclick="switch_tab('tab', 'tab-day')">
+                    <div class="tab_btn_text">Ngày</div>
+                </div>
+                <div class="tab tab_btn" id='btn-tab-week' onclick="switch_tab('tab', 'tab-week')">
+                    <div class="tab_btn_text">Tuần</div>
+                </div>
+                <div class="tab tab_btn" id='btn-tab-guild' onclick="switch_tab('tab', 'tab-guild')">
+                    <div class="tab_btn_text">Điều kiện</div>
+                </div>
+            </div>
+        </div>
+
+    <div id="tab-content-noborder">
+        <div id="tab-event" class="tab_select popup border-bottom-light">
+            <h4 class="h4_title">THƯỞNG MỤC TIÊU</h4>
+            <div class="col-3 text-center table-row bold">THƯỞNG</div>
+            <div class="col-9 text-center table-row bold">Điều kiện</div>
+
+            <div class="col-3 text-center table-row bold">$ 5000</div>
+            <div class="col-9 text-center table-row bold">Đạt 150F nạp 3 lần</div>
+
+            <div class="col-3 text-center table-row bold">$ 4000</div>
+            <div class="col-9 text-center table-row bold">Đạt 120F nạp 3 lần</div>
+
+            <div class="col-3 text-center table-row bold">$ 3000</div>
+            <div class="col-9 text-center table-row bold">Đạt 90F nạp 3 lần</div>
+
+            <div class="col-3 text-center table-row bold">$ 2000</div>
+            <div class="col-9 text-center table-row bold">Đạt 70F nạp 3 lần</div>
+
+            <div class="col-3 text-center table-row bold">$ 1000</div>
+            <div class="col-9 text-center table-row bold">Đạt 50F nạp 3 lần</div>
+
+            <div class="col-3 text-center table-row bold">$ 500</div>
+            <div class="col-9 text-center table-row bold">Đạt 30F nạp 3 lần</div>
+
+            <div class="col-3 text-center table-row bold">$ 150</div>
+            <div class="col-9 text-center table-row bold">Đạt 10F nạp 3 lần</div>
+        </div>
+        <div id="tab-day" class="tab-over popup border-bottom-light">
+            <h4 class="h4_title">THƯỞNG NGÀY</h4>
+
+            <div class="col-3 text-center table-row bold">Điều kiện</div>
+            <div class="col-9 text-center table-row bold">THƯỞNG</div>
+
+            <div class="col-3 text-center table-row bold">3F mới</div>
+            <div class="col-9 text-center table-row bold">$ 10</div>
+
+            <div class="col-3 text-center table-row bold">4F mới</div>
+            <div class="col-9 text-center table-row bold">$ 13</div>
+
+            <div class="col-3 text-center table-row bold">5F mới</div>
+            <div class="col-9 text-center table-row bold">$ 16</div>
+
+            <div class="col-3 text-center table-row bold">6F mới</div>
+            <div class="col-9 text-center table-row bold">$ 20</div>
+
+            <div class="col-3 text-center table-row bold">7F mới</div>
+            <div class="col-9 text-center table-row bold">$ 23</div>
+
+            <div class="col-3 text-center table-row bold">8F mới</div>
+            <div class="col-9 text-center table-row bold">$ 26</div>
+
+            <div class="col-3 text-center table-row bold">9F mới</div>
+            <div class="col-9 text-center table-row bold">$ 30</div>
+
+            <div class="col-3 text-center table-row bold">10F mới</div>
+            <div class="col-9 text-center table-row bold">$ 34</div>
+
+            <div class="col-3 text-center table-row bold">15F mới</div>
+            <div class="col-9 text-center table-row bold">$ 47</div>
+
+            <div class="col-3 text-center table-row bold">20F mới</div>
+            <div class="col-9 text-center table-row bold">$ 68</div>
+
+            <div class="col-3 text-center table-row bold">30F mới</div>
+            <div class="col-9 text-center table-row bold">$ 100</div>
+        </div>
+        <div id="tab-week" class="tab-over popup border-bottom-light">
+            <h4 class="h4_title">THƯỞNG TUẦN</h4>
+
+            <div class="col-3 text-center table-row bold">Điều kiện</div>
+            <div class="col-9 text-center table-row bold">THƯỞNG</div>
+
+            <div class="col-3 text-center table-row bold">10F</div>
+            <div class="col-9 text-center table-row bold">$ 10</div>
+
+            <div class="col-3 text-center table-row bold">20F</div>
+            <div class="col-9 text-center table-row bold">$ 21</div>
+
+            <div class="col-3 text-center table-row bold">30F</div>
+            <div class="col-9 text-center table-row bold">$ 32</div>
+
+            <div class="col-3 text-center table-row bold">40F</div>
+            <div class="col-9 text-center table-row bold">$ 43</div>
+
+            <div class="col-3 text-center table-row bold">50F</div>
+            <div class="col-9 text-center table-row bold">$ 54</div>
+
+            <div class="col-3 text-center table-row bold">100F</div>
+            <div class="col-9 text-center table-row bold">$ 110</div>
+
+            <div class="col-3 text-center table-row bold">200F</div>
+            <div class="col-9 text-center table-row bold">$ 230</div>
+        </div>
+        <div id="tab-guild" class="tab-over popup border-bottom-light center">
+            <h4 class="h4_title">ĐIỀU KIỆN</h4>
+            <li>F nạp tối thiểu $ 10</li>
+            <li>Trùng số điện thoại, trùng IP sẽ chỉ tính 1 lần</li>
+            <li>F hợp lệ khi tham gia khuyến mãi lần đầu</li>
+            <li>Huỷ tư cách nhận lương nếu đại lý có dấu hiệu lạm dụng</li>
+            <li>Thưởng ngày sẽ được thanh toán vào 0h - 1h hàng ngày</li>
+            <li>Thưởng tuần sẽ được thanh toán vào thứ 2 hàng tuần</li>
+            <li>Thưởng mục tiêu liên hệ đội ngũ hỗ trợ</li>
+        </div>
+    </div>
+</div>
+{% endblock %}

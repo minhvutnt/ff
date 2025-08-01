@@ -1,0 +1,423 @@
+
+<link rel="stylesheet" href="/static/css/switch_tag.css">
+<link rel="stylesheet" href="/static/css/freeusdt.css">
+{% extends "index.html" %}
+
+{% block app_content %}
+<div class="main-index">
+<!--    <div class="tab-btn-container">-->
+<!--        <div class="col-6 height100"><div class="tab-btn tab-btn-active tab tab_select" id='btn-tab-daily' onclick="switch_tab('tab', 'tab-daily')">Daily Free</div></div>-->
+<!--        <div class="col-6 height100"><div class="tab-btn tab-btn-noactive tab" id='btn-tab-weekly'  onclick="switch_tab('tab', 'tab-weekly')">Week Lottery</div></div>-->
+<!--    </div>-->
+
+    <div class="tab_bar">
+        <div class="tab_box">
+            <div class="tab tab_btn tab_btn_select" id='btn-tab-daily' onclick="switch_tab('tab', 'tab-daily')">
+                <div class="tab_btn_text">{{ LANG['free'][user_language] }}</div>
+            </div>
+            <div class="tab tab_btn" id='btn-tab-weekly' onclick="switch_tab('tab', 'tab-weekly')">
+                <div class="tab_btn_text">{{ LANG['weekly_lottery'][user_language] }}</div>
+            </div>
+        </div>
+    </div>
+    <div id="tab-content">
+        <div id="tab-daily" class="tab_select">
+            <div class="lottery_winner_table_box">
+                <div class="col-6 text-header-table border-top-left-radius">{{ LANG['lucky_number'][user_language] }}</div>
+                <div class="col-6 text-header-table border-top-right-radius">{{ LANG['payout'][user_language] }}</div>
+                {% for rate in LOTTERY_RATE %}
+
+                    {% if rate['from'] == rate['to'] %}<div class="col-6 table-row border-bottom-left-radius">{{ rate['from'] }}{% else %} <div class="col-6 table-row">{{ rate['from'] }}-{{ rate['to'] }}{% endif %}</div>
+                    <div class="col-6 table-row {% if rate['from'] == rate['to'] %}border-bottom-right-radius{%endif %}">{{ rate['pay'] }} đ</div>
+
+                {% endfor %}
+            </div>
+            <div class="roll-btn-area">
+                <div class="cowndow-clock-topimage">
+                    <div class="background_span">
+                        <div class="left-maker"></div>
+                        <p class="div-number-countdown" id="local_getfree_minute1"></p>
+                        <div class="right-maker"></div>
+                    </div>
+                    <div class="background_span">
+                        <div class="left-maker"></div>
+                        <p class="div-number-countdown" id="local_getfree_minute2"></p>
+                        <div class="right-maker"></div>
+                    </div>
+                    <div class="background_span">
+                        <div class="left-maker"></div>
+                        <p class="div-number-countdown dotdot-padding" id="local_getfree_dot">:</p>
+                        <div class="right-maker"></div>
+                    </div>
+                    <div class="background_span">
+                        <div class="left-maker"></div>
+                        <p class="div-number-countdown" id="local_getfree_second1"></p>
+                        <div class="right-maker"></div>
+                    </div>
+                    <div class="background_span">
+                        <div class="left-maker"></div>
+                        <p class="div-number-countdown" id="local_getfree_second2"></p>
+                        <div class="right-maker"></div>
+                    </div>
+                </div>
+                <div class="btn-roll-area">
+                    <button id="btn-get-freeusdt" class="max-width" style="display: none"><div>{{ LANG['roll'][user_language] }}</div></button>
+                    <div id="roll_prize" class="max-width"></div>
+                </div>
+            </div>
+
+            <div id="my_get_free_history">
+                <div class="col-12 text-header-table border-top-left-radius border-top-right-radius">{{ LANG['history'][user_language] }}</div>
+                <div class="col-5 text-center table-row bold">{{ LANG['day'][user_language] }}</div>
+                <div class="col-4 text-center table-row bold">{{ LANG['lucky_number'][user_language] }}</div>
+                <div class="col-3 text-center table-row bold">{{ LANG['receive'][user_language] }}</div>
+                <div id="my_get_free_history_data">
+                    <div class="col-12 text-center table-row">{{ LANG['no_history'][user_language] }}</div>
+                </div>
+            </div>
+
+        </div>
+        <div id="tab-weekly" class="tab-over">
+            <h4 class="h4_title">{{ LANG['lottery_round'][user_language] }} <span class="current_lottery_round" id="roundnumber"></span>&nbsp;<br>{{ LANG['ends_in'][user_language] }}</h4>
+            <div class="lottery-week-end">
+                <div class="show4" id="week-day">0</div>
+                <div class="show4" id="week-hour">0</div>
+                <div class="show4" id="week-minute">0</div>
+                <div class="show4" id="week-second">0</div>
+
+                <div class="show4 show-title">{{ LANG['days'][user_language] }}</div>
+                <div class="show4 show-title">{{ LANG['hours'][user_language] }}</div>
+                <div class="show4 show-title">{{ LANG['minutes'][user_language] }}</div>
+                <div class="show4 show-title">{{ LANG['seconds'][user_language] }}</div>
+            </div>
+            <div class="prize-area">
+                <div class="top-height">
+                    <div class="top-left top-gold-left border-top-left-radius">1st</div>
+                    <div class="top-right top-gold-right border-top-right-radius" id="prize_1">0</div>
+                </div>
+                <div class="top-height">
+                    <div class="top-left top-silver-left">2nd</div>
+                    <div class="top-right top-silver-right" id="prize_2">0</div>
+                </div>
+                <div class="top-height">
+                    <div class="top-left top-silver-left ">3rd</div>
+                    <div class="top-right top-silver-right" id="prize_3">0</div>
+                </div>
+                <div class="top-height">
+                    <div class="top-left top-bronze-left ">4th</div>
+                    <div class="top-right top-bronze-right" id="prize_4">0</div>
+                </div>
+                <div class="top-height">
+                    <div class="top-left top-bronze-left ">5th</div>
+                    <div class="top-right top-bronze-right" id="prize_5">0</div>
+                </div>
+                <div class="top-height">
+                    <div class="top-left top-bronze-left ">6th</div>
+                    <div class="top-right top-bronze-right" id="prize_6">0</div>
+                </div>
+                <div class="top-height">
+                    <div class="top-left top-green-left ">7th</div>
+                    <div class="top-right top-green-right" id="prize_7">0</div>
+                </div>
+                <div class="top-height">
+                    <div class="top-left top-green-left ">8th</div>
+                    <div class="top-right top-green-right" id="prize_8">0</div>
+                </div>
+                <div class="top-height">
+                    <div class="top-left top-green-left ">9th</div>
+                    <div class="top-right top-green-right" id="prize_9">0</div>
+                </div>
+                <div class="top-height">
+                    <div class="top-left top-green-left border-bottom-left-radius">10th</div>
+                    <div class="top-right top-green-right border-bottom-right-radius" id="prize_10">0</div>
+                </div>
+            </div>
+
+            <div class="ticket-strategy">
+                <div class="col-4 text-header-table border-top-left-radius">{{ LANG['your_tickets'][user_language] }}</div>
+                <div class="col-4 text-header-table border-top-right-radius">{{ LANG['total_tickets'][user_language] }}</div>
+                <div class="col-4 text-header-table border-top-right-radius">{{ LANG['win_chance'][user_language] }}</div>
+
+                <div class="col-4 table-row border-bottom-left-radius" id="myticket">0</div>
+                <div class="col-4 table-row " id="total-ticket">0</div>
+                <div class="col-4 table-row border-bottom-right-radius" id="winticketrate">0.0000%</div>
+
+            </div>
+            <div class="buy-ticket-area">
+                <div class="col-12 text-header-table border-top-left-radius border-top-right-radius">{{ LANG['buy_tickets'][user_language] }}</div>
+                <div class="col-12 table-row border-bottom-left-radius border-bottom-right-radius">
+                    <label for="ticketnumber">{{ LANG['number_of_tickets'][user_language] }}</label>
+                    <input type="text" id="ticketnumber" name="ticketnumber" placeholder="{{ LANG['enter_number_of_tickets'][user_language] }}">
+
+                    <label for="priceperticket">{{ LANG['price_per_ticket'][user_language] }}</label>
+                    <input type="text" id="priceperticket" name="priceperticket" value="{{ PRICE_PER_TICKET }} đ" disabled>
+
+                    <label for="totalamount">{{ LANG['total_amount'][user_language] }}</label>
+                    <input type="text" id="totalamount" name="totalamount" value="0 đ" disabled>
+
+                    <input type="submit" id="submit" name="submit" value="{{ LANG['buy'][user_language] }}" onclick="submit_buy()">
+                </div>
+            </div>
+            <div class="history-winner">
+                <h4 class="h4_title">{{ LANG['previous_win'][user_language] }}</h4>
+                <div class="col-12 text-header-table border-top-left-radius border-top-right-radius">{{ LANG['lottery_round'][user_language] }} <span id="last_round"></span></div>
+                <div class="col-12 text-center table-row">{{ LANG['total_tickets'][user_language] }}: <span id="last_total_ticket"></span></div>
+                <li class="week-history bold center"><span>No.</span><span>UID</span><span style="text-align: center !important;">{{ LANG['win'][user_language] }}</span><span>{{ LANG['tickets'][user_language] }}</span></li>
+                <div id="last_week_history"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var input_buy_ticket = document.getElementById('ticketnumber');
+    var totalamount = document.getElementById('totalamount');
+    const inputHandler = function(e) {
+        if(!isNaN(input_buy_ticket.value*{{ PRICE_PER_TICKET }})){
+            totalamount.value = Number((input_buy_ticket.value * {{ PRICE_PER_TICKET }}).toFixed(0)).toLocaleString('vi-VN') + ' đ';
+        }else{
+            totalamount.value = '-'
+        }
+    }
+
+    input_buy_ticket.addEventListener('input', inputHandler);
+    input_buy_ticket.addEventListener('propertychange', inputHandler);
+</script>
+<script>
+    function submit_buy() {
+        if(!isNaN(input_buy_ticket.value*1) && input_buy_ticket.value*1 > 0){
+            Telegram.WebApp.showPopup({
+                title  : "{{ LANG['pay_confirm'][user_language] }}",
+                message: "{{ LANG['confirm_your_pay'][user_language] }}",
+                buttons: [
+                    {id: 'buy', type: 'destructive', text: "{{ LANG['buy_n_tickets'][user_language] }}".replace('{n}', input_buy_ticket.value)},
+                    {type: 'cancel'},
+                ]
+            }, function (buttonId) {
+                if (buttonId === 'buy') {
+                    buy_ticket(input_buy_ticket.value*1);
+                }
+            });
+        }
+    }
+
+
+</script>
+<script>
+    var week_day = document.getElementById('week-day');
+    var week_hour = document.getElementById('week-hour');
+    var week_minute = document.getElementById('week-minute');
+    var week_second = document.getElementById('week-second');
+    var prize = document.getElementById('totalamount');
+    var secondinweek = 7*60*60*24*1000;
+
+    function countdown_weekly(time_target){
+        var countDownDate = new Date(time_target).getTime();
+        var now = new Date().getTime();
+        var distance = countDownDate - now;
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        week_day.innerText = days;
+        week_hour.innerText = hours;
+        week_minute.innerText = minutes;
+        week_second.innerText = seconds;
+      if (distance < 0) {
+          location.reload();
+      }
+    }
+    function countdown_prize(time_target, prize_amount){
+        var countDownDate2 = new Date(time_target).getTime();
+        var now2 = new Date().getTime();
+        var distance2= countDownDate2 - now2;
+
+        var persecond1 = Number(((prize_amount.prize_1*(secondinweek - distance2)/secondinweek).toFixed(0))).toLocaleString('vi-VN');
+        var persecond2 = Number(((prize_amount.prize_2*(secondinweek - distance2)/secondinweek).toFixed(0))).toLocaleString('vi-VN');
+        var persecond3 = Number(((prize_amount.prize_3*(secondinweek - distance2)/secondinweek).toFixed(0))).toLocaleString('vi-VN');
+        var persecond4 = Number(((prize_amount.prize_4*(secondinweek - distance2)/secondinweek).toFixed(0))).toLocaleString('vi-VN');
+        var persecond5 = Number(((prize_amount.prize_5*(secondinweek - distance2)/secondinweek).toFixed(0))).toLocaleString('vi-VN');
+        var persecond6 = Number(((prize_amount.prize_6*(secondinweek - distance2)/secondinweek).toFixed(0))).toLocaleString('vi-VN');
+        var persecond7 = Number(((prize_amount.prize_7*(secondinweek - distance2)/secondinweek).toFixed(0))).toLocaleString('vi-VN');
+        var persecond8 = Number(((prize_amount.prize_8*(secondinweek - distance2)/secondinweek).toFixed(0))).toLocaleString('vi-VN');
+        var persecond9 = Number(((prize_amount.prize_9*(secondinweek - distance2)/secondinweek).toFixed(0))).toLocaleString('vi-VN');
+        var persecond10 = Number(((prize_amount.prize_10*(secondinweek - distance2)/secondinweek).toFixed(0))).toLocaleString('vi-VN');
+        if (distance2 < 0) {
+        }
+        else{
+            document.getElementById('prize_1').innerHTML = persecond1 + ' đ';
+            document.getElementById('prize_2').innerHTML = persecond2 + ' đ';
+            document.getElementById('prize_3').innerHTML = persecond3 + ' đ';
+            document.getElementById('prize_4').innerHTML = persecond4 + ' đ';
+            document.getElementById('prize_5').innerHTML = persecond5 + ' đ';
+            document.getElementById('prize_6').innerHTML = persecond6 + ' đ';
+            document.getElementById('prize_7').innerHTML = persecond7 + ' đ';
+            document.getElementById('prize_8').innerHTML = persecond8 + ' đ';
+            document.getElementById('prize_9').innerHTML = persecond9 + ' đ';
+            document.getElementById('prize_10').innerHTML = persecond10 + ' đ';
+        }
+    }
+function countdown_weekly_time(time_target, prize){
+    countdown_weekly(time_target);
+    var x = setInterval(function() {
+        countdown_weekly(time_target);
+    }, 1000);
+
+    countdown_prize(time_target, prize);
+    var y = setInterval(function() {
+        countdown_prize(time_target, prize);
+    }, 100);
+}
+    var last_week_history = document.getElementById('last_week_history');
+    function week_history(last_week_data) {
+        last_week_history.innerHTML = '';
+        for(var w = 1; w <= 10; w++){
+            var uid = 0;
+            var am = 0;
+            var tic = 0;
+            if(w == 1){uid = last_week_data.id_1; am = Number(last_week_data.prize_1).toLocaleString('vi-VN'); tic = last_week_data.ticket_1;}
+            if(w == 2){uid = last_week_data.id_2; am = Number(last_week_data.prize_2).toLocaleString('vi-VN'); tic = last_week_data.ticket_2;}
+            if(w == 3){uid = last_week_data.id_3; am = Number(last_week_data.prize_3).toLocaleString('vi-VN'); tic = last_week_data.ticket_3;}
+            if(w == 4){uid = last_week_data.id_4; am = Number(last_week_data.prize_4).toLocaleString('vi-VN'); tic = last_week_data.ticket_4;}
+            if(w == 5){uid = last_week_data.id_5; am = Number(last_week_data.prize_5).toLocaleString('vi-VN'); tic = last_week_data.ticket_5;}
+            if(w == 6){uid = last_week_data.id_6; am = Number(last_week_data.prize_6).toLocaleString('vi-VN'); tic = last_week_data.ticket_6;}
+            if(w == 7){uid = last_week_data.id_7; am = Number(last_week_data.prize_7).toLocaleString('vi-VN'); tic = last_week_data.ticket_7;}
+            if(w == 8){uid = last_week_data.id_8; am = Number(last_week_data.prize_8).toLocaleString('vi-VN'); tic = last_week_data.ticket_8;}
+            if(w == 9){uid = last_week_data.id_9; am = Number(last_week_data.prize_9).toLocaleString('vi-VN'); tic = last_week_data.ticket_9;}
+            if(w == 10){uid = last_week_data.id_10; am = Number(last_week_data.prize_10).toLocaleString('vi-VN'); tic = last_week_data.ticket_10;}
+            last_week_history.innerHTML += "<li class='week-history'>" +
+                                    "<span>Top " + w + "</span>" +
+                                    "<span>" + uid + "</span>" +
+                                    "<span>" + am + " đ</span>" +
+                                "<span>" + tic + "</span>" +
+                                "</li>";
+        }
+
+    }
+</script>
+    <script type="text/javascript" charset="utf-8">
+    var socket = io('{{ SOCKETIO_URL }}');
+        var btn_roll = document.getElementById('btn-get-freeusdt');
+        var roll_prize = document.getElementById('roll_prize');
+
+        function buy_ticket(number) {
+            socket.emit('socketio_user_buy_ticket',
+                    {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                    'tickets': number}
+        );
+    }
+    roll_result = null;
+    var count_roll_interval = 0;
+    function roll_random_change() {
+        var roll_random_change_interval = setInterval(function () {
+            count_roll_interval++;
+            local_getfree_minute1.innerText = Math.floor(Math.random() * 2);
+            local_getfree_minute2.innerText = Math.floor(Math.random() * 10);
+            local_getfree_dot.innerText = Math.floor(Math.random() * 10);
+            local_getfree_second1.innerText = Math.floor(Math.random() * 10);
+            local_getfree_second2.innerText = Math.floor(Math.random() * 10);
+
+            if (roll_random_change_interval != null && count_roll_interval >= 10) {
+                local_getfree_minute1.innerText = roll_result[0];
+                local_getfree_minute2.innerText = roll_result[1];
+                local_getfree_dot.innerText = roll_result[2];
+                local_getfree_second1.innerText = roll_result[3];
+                local_getfree_second2.innerText = roll_result[4];
+                clearInterval(roll_random_change_interval);
+            }
+        }, 50);
+    }
+    var btn_click = 0;
+    btn_roll.addEventListener('click', function (){
+        if(btn_click ===0 ){
+            btn_roll.disabled = true;
+            roll_random_change();
+            socket.emit('socketio_user_roll_free',
+                        {'chat_id': Telegram.WebApp.initDataUnsafe.user.id}
+            );
+        }
+        else{
+            btn_click += 1;
+            btn_roll.style.display = 'none';
+        }
+    })
+    socket.on('return_user_roll_free_usdt_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+        if(msg.status){
+              btn_roll.style.display = 'none';
+              roll_result = msg.roll;
+              socket.emit('socketio_list_free_usdt_roll_history', {'chat_id': Telegram.WebApp.initDataUnsafe.user.id});
+        }
+        roll_prize.innerHTML = msg.msg;
+
+    })
+
+    var roundnumber = document.getElementById('roundnumber');
+    var total_ticket = document.getElementById('total-ticket');
+    var myticket = document.getElementById('myticket');
+    var winticketrate = document.getElementById('winticketrate');
+    var last_total_ticket = document.getElementById('last_total_ticket');
+    var last_round = document.getElementById('last_round');
+
+    socket.on('return_user_buy_ticket_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+        if(msg.status){
+              check_time_free_user();
+        }
+        console.log('a', myticket.innerHTML*100, total_ticket.innerHTML*1)
+        winticketrate.innerHTML = (myticket.innerHTML*100/(total_ticket.innerHTML*1)).toFixed(6) + "%";
+        Telegram.WebApp.showAlert(msg.msg);
+    })
+
+    socket.emit('socketio_list_free_usdt_roll_history',
+                {'chat_id': Telegram.WebApp.initDataUnsafe.user.id}
+    );
+    var my_get_free_history_data = document.getElementById('my_get_free_history_data');
+    socket.on('return_user_list_free_usdt_roll_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+        if(msg.status){
+            if(msg.result.length > 0){
+                my_get_free_history_data.innerHTML = '';
+                for(var i = 0; i < msg.result.length; i++){
+                    if(i === msg.result.length - 1 ){
+                        my_get_free_history_data.innerHTML =
+                        "<div class='col-5 text-center table-row new_history_color'>" + msg.result[i][0] + "</div>" +
+                        "<div class='col-4 text-center table-row new_history_color'>" + msg.result[i][1] + "</div>" +
+                        "<div class='col-3 text-center table-row new_history_color'>" + msg.result[i][2] + "</div>" + my_get_free_history_data.innerHTML;
+                    }
+                    else{
+                        my_get_free_history_data.innerHTML =
+                        "<div class='col-5 text-center table-row '>" + msg.result[i][0] + "</div>" +
+                        "<div class='col-4 text-center table-row '>" + msg.result[i][1] + "</div>" +
+                        "<div class='col-3 text-center table-row '>" + msg.result[i][2] + "</div>" + my_get_free_history_data.innerHTML;
+                    }
+
+                }
+            }
+        }
+    })
+    socket.on('return_free_time_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+        if(msg.status){
+           //  'this_week': LIST_LOTTE_WEEK[-1].info,
+           //  'last_week': LIST_LOTTE_WEEK[-2].info,
+            countdown_weekly_time(msg.this_week.end_time, msg.this_week);
+            roundnumber.innerHTML = msg.this_week.roundnumber;
+            total_ticket.innerHTML = msg.this_week.total_tickets;
+            last_round.innerHTML = msg.last_week.roundnumber;
+            week_history(msg.last_week);
+            last_total_ticket.innerHTML = msg.last_week.total_tickets.toLocaleString();
+        }
+        else{
+        }
+    });
+    socket.on('return_user_info_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+        if(msg.status){
+            myticket.innerHTML = msg.tickets;
+            console.log('b', myticket.innerHTML*100, total_ticket.innerHTML*1)
+            winticketrate.innerHTML = (myticket.innerHTML*100/(total_ticket.innerHTML*1)).toFixed(6) + "%";
+        }
+        else{
+            // console.log(msg);
+        }
+    });
+</script>
+{% endblock %}

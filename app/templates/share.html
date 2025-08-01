@@ -1,0 +1,518 @@
+<link rel="stylesheet" href="../static/css/invest.css">
+<link rel="stylesheet" href="../static/css/switch_tag.css">
+<script src="../static/js/page_split.js"></script>
+<script src="../static/js/date_convert.js"></script>
+<link rel="stylesheet" href="../static/css/list_game.css">
+<script src="/static/css/input_number.js"></script>
+<link rel="stylesheet" href="/static/css/list_dice_room.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+{% extends "index.html" %}
+
+{% block app_content %}
+
+<div class="game-title title_ab" style="position: unset;">{{ LANG['investment_channel'][user_language] }}</div>
+
+<div style="gap: 14px; width: calc(100% - 60px); margin: 20px auto;" >
+
+    <div class="content-box" id="achbe" style="padding: 10px 5px;">
+
+        <canvas id="myChart" style="width:100%;"></canvas>
+    </div>
+    <div class="tab_bar">
+        <div class="tab_box">
+            <div class="tab tab_btn tab_btn_select" id='btn-tab-my-invest' onclick="switch_tab('tab', 'tab-my-invest')">
+                <div class="tab_btn_text">{{ LANG['my_investment'][user_language] }}</div>
+            </div>
+            <div class="tab tab_btn" id='btn-tab-invest-history' onclick="switch_tab('tab', 'tab-invest-history')">
+                <div class="tab_btn_text">{{ LANG['history'][user_language] }}</div>
+            </div>
+            <div class="tab tab_btn" id='btn-tab-guild' onclick="switch_tab('tab', 'tab-guild')">
+                <div class="tab_btn_text">{{ LANG['guide'][user_language] }}</div>
+            </div>
+        </div>
+    </div>
+  <div style="position: relative; margin-bottom: 20px; border: 0;">
+    <div class="popup tab_select" id="tab-my-invest">
+      <div class="content-box-title">
+            {{ LANG['add_investment_package'][user_language] }}
+      </div>
+      <div id="add-invest">
+      </div>
+
+      <div id="my-invest">
+          <div class="content-box-title">
+                {{ LANG['my_investment'][user_language] }}
+          </div>
+          <div id="my-invest-data">
+          </div>
+      </div>
+
+    </div>
+
+    <div class="popup tab-over" id="tab-invest-history" style="display: none;">
+      <div class="content-box-title">
+          {{ LANG['history_30_days'][user_language] }}
+      </div>
+        <div id="history_data">
+            <li class="center">{{ LANG['no_history'][user_language] }}</li>
+        </div>
+    </div>
+    <div class="popup tab-over" id="tab-guild" style="display: none;">
+      <div class="content-box-title">
+            {{ LANG['investment_packages'][user_language] }}
+      </div>
+      <div style="border: 1px solid #999; border-radius: 3px;">
+          <li><a class='invest_packet title' style="white-space: normal; font-size: 10px !important;"><span>{{ LANG['package'][user_language] }}</span><span>{{ LANG['investment_amount'][user_language] }}</span><span>{{ LANG['reward'][user_language] }}</span><span>{{ LANG['day'][user_language] }}</span></a></li>
+          {% for i in INVEST %}
+            <li><a class="invest_packet {% if i['level']==7 %}invest_vip {% endif %}"><span>{{ i['name'] }}</span><span>{% if i['from'] ==i['to'] %}{{ i['from'] }}đ{% else %}{{ i['from'] | format_thousands  }}đ - {{ i['to'] | format_thousands  }}đ{% endif %}</span><span>{{ i['bonus'] }}%</span><span>{{ i['day'] }}</span></a></li>
+          {% endfor %}
+      </div>
+      <div class="content-box-title">
+            {{ LANG['guide'][user_language] }}
+      </div>
+      <div class="invest-guild">
+          <a class="guild hide-guild" id='btn_what_is_guild' onclick="show_guild('what_is_guild');">{{ LANG['what_is_investment'][user_language] }}</a>
+            <div class="guid-data" id="what_is_guild">
+                - {{ LANG['investment_description_1'][user_language] }}<br>
+                - {{ LANG['investment_description_2'][user_language] }}<br>
+                - {{ LANG['investment_description_3'][user_language] }}<br>
+                - {{ LANG['investment_description_4'][user_language] }}
+            </div>
+          <a class="guild hide-guild" id='btn_what_is_day'  onclick="show_guild('what_is_day');">{{ LANG['what_is_maturity_date'][user_language] }}</a>
+            <div class="guid-data" id="what_is_day">
+                - {{ LANG['maturity_date_description_1'][user_language] }}<br>
+                - {{ LANG['maturity_date_description_2'][user_language] }}<br>
+                - {{ LANG['maturity_date_description_3'][user_language] }}
+            </div>
+          <a class="guild hide-guild" id='btn_what_is_level'  onclick="show_guild('what_is_level');">{{ LANG['investment_requirements'][user_language] }}</a>
+            <div class="guid-data" id="what_is_level">
+                - {{ LANG['package_capital_requirement'][user_language] }}<br>
+            </div>
+          <a class="guild hide-guild" id='btn_what_is_bonus'  onclick="show_guild('what_is_bonus');">{{ LANG['what_is_interest_reward'][user_language] }}</a>
+            <div class="guid-data" id="what_is_bonus">
+                - {{ LANG['interest_reward_description_1'][user_language] }}<br>
+                - {{ LANG['interest_reward_description_2'][user_language] }}
+            </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="black-wall"></div>
+<div id="add-invest-container">
+    <div class="level_container">
+        <div class="level_content_background">
+            <div class="level_name">
+                <a class="close_btn" id="add_invest_close_btn">
+                    <img src="/static/image/svg/close.svg">
+                </a>
+                <h4 class="title_ab center" style="    white-space: normal; height: auto; left: 0;">
+                    {{ LANG['open_investment_package'][user_language] }}
+                </h4>
+            </div>
+            <div class="level_info" style="overflow-y: hidden;">
+                <div class=" middle">
+                    <div style="position: relative; height: calc(100% - 38px);overflow-y: scroll;">
+                        <div id="select-packet">
+                            <h4 class="center " >{{ LANG['select_investment_package'][user_language] }}</h4>
+                            {% for i in INVEST %}
+                                <div class="packet {% if i['level']==7 %}packet-vip{% else %}packet-normal{% endif %}" id="select_packet_{{ i['no'] }}" onclick="select_packet('{{ i['no'] }}');">
+                                    <li>{{ LANG['package'][user_language] }}</li>
+                                    <li>{{ i['name'] }}</li>
+                                    <li>{{ LANG['amount'][user_language] }}</li>
+                                    <li>{% if i['from']==i['to'] %}{{ i['from'] | format_thousands }}đ{% else %}{{ i['from'] | format_thousands  }}đ - {{ i['to'] | format_thousands  }}đ{% endif %}</li>
+                                    <li>{{ LANG['requirement'][user_language] }}l</li>
+                                    <li>Level {{ i['level'] }}</li>
+                                    <li>{{ LANG['interest_reward'][user_language] }}</li>
+                                    <li>{{ i['bonus'] }}%</li>
+                                    <li>{{ LANG['maturity'][user_language] }}</li>
+                                    <li>{{ i['day'] }} {{ LANG['day'][user_language] }}</li><li></li>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div id="form-add-invest">
+                            <div>
+                                <label>{{ LANG['investment_capital'][user_language] }}</label>
+                                <input type="number" id="invest-amount" value="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="add-invest-btn">
+                        <button id="add-invest-back" disabled><div>{{ LANG['go_back'][user_language] }}</div></button>
+                        <button id="add-invest-next" disabled><div>{{ LANG['next'][user_language] }}</div></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="black-wall-my-history"></div>
+<div id="my-history-data">
+    <div class="level_container">
+        <div class="level_content_background">
+            <div class="level_name">
+                <a class="close_btn" id="my-history-close" onclick="hide_my_history()">
+                    <img src="/static/image/svg/close.svg">
+                </a>
+                <h4 class="title_ab center" id="my-history-title">
+                    {{ LANG['package_history'][user_language] }}
+                </h4>
+            </div>
+            <div class="level_info">
+                <li class='my-history-data title'><span>{{ LANG['day'][user_language] }}</span><span>{{ LANG['interest'][user_language] }}</span><span>{{ LANG['receive'][user_language] }}l</span></li>
+                <div id="my-invest-history"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var add_invest_back = document.getElementById('add-invest-back');
+    var add_invest_next = document.getElementById('add-invest-next');
+    var form_add_invest = document.getElementById('form-add-invest');
+    var invest_amount = document.getElementById('invest-amount');
+    var packet_choose = null;
+    var packet_status = 1; //1 - select packet ; 2 - amount
+    function select_packet(pid){
+        var lpac = document.getElementsByClassName('packet');
+        for(var i = 0; i < lpac.length; i++){
+            if(lpac[i].id === ('select_packet_' + pid)){
+                packet_choose = pid;
+                lpac[i].classList.add('select-packet');
+            }else{
+                lpac[i].classList.remove('select-packet');
+            }
+        }
+        back_next_status();
+    }
+    function back_next_status() {
+        if(packet_choose !== null){
+            if(packet_status === 1){
+                add_invest_back.disabled = true;
+                add_invest_next.disabled = false;
+                add_invest_next.innerHTML = "<div>{{ LANG['next'][user_language] }}</div>";
+            }
+            if(packet_status === 2){
+                add_invest_back.disabled = false;
+                if(invest_amount.value > 0){
+                    packet_status = 3;
+                    add_invest_next.disabled = false;
+                }else{
+                    add_invest_next.disabled = true;
+                }
+                add_invest_next.innerHTML = "<div>{{ LANG['register'][user_language] }}</div>";
+                $('#' + form_add_invest.id).slideDown();
+            }
+
+        }
+    }
+    back_next_status();
+    add_invest_next.addEventListener('click', action_next);
+    add_invest_back.addEventListener('click', action_back);
+    function action_back(){
+        if(packet_status === 2){
+            var lpac = document.getElementsByClassName('packet');
+            for(var i = 0; i < lpac.length; i++){
+                if(lpac[i].id !== ('select_packet_' + packet_choose)){
+                    $("#" + lpac[i].id).slideDown();
+                }
+            }
+            packet_status = 1;
+            $("#" + form_add_invest.id).slideUp();
+        }
+        back_next_status();
+    }
+    function action_next(){
+        if(packet_choose !== null){
+            if(packet_status === 1){
+                hide_packet_notselect(packet_choose);
+                packet_status = 2;
+            }
+            if(packet_status === 3){
+                add_invest_next.disabled = true;
+                socket.emit('socketio_invest_add',
+                 {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                  'amount': invest_amount.value,
+                  'packet_id': PACKET_SELECT});
+            }
+        }
+        back_next_status();
+    }
+    function hide_packet_notselect(pid){
+        var lpac = document.getElementsByClassName('packet');
+        PACKET_SELECT = pid;
+
+        for(var i = 0; i < lpac.length; i++){
+            if(lpac[i].id !== ('select_packet_' + pid)){
+                $("#" + lpac[i].id).slideUp();
+            }
+        }
+    }
+    invest_amount.addEventListener('input', back_next_status);
+</script>
+<script>
+    var black_wall = document.getElementById('black-wall');
+    var add_invest = document.getElementById('add-invest');
+    var add_invest_container = document.getElementById('add-invest-container');
+    var add_invest_close_btn = document.getElementById('add_invest_close_btn');
+
+    add_invest.addEventListener('click', show_add_invest);
+    add_invest_close_btn.addEventListener('click', hide_add_invest);
+    function show_add_invest(){
+        black_wall.style.display = 'block';
+        add_invest_container.classList.remove('hide-add-invest');
+        add_invest_container.classList.add('show-add-invest');
+    }
+    function hide_add_invest(){
+        black_wall.style.display = 'none';
+
+        add_invest_container.classList.add('hide-add-invest');
+        add_invest_container.classList.remove('show-add-invest');
+    }
+</script>
+<script>
+    var PACKET_SELECT = null;
+    function show_my_packet(packetid){
+        var allpacket = document.getElementsByClassName('my-invest-data-info');
+        for(var i = 0; i < allpacket.length; i++){
+            if('packet_' + packetid == allpacket[i].id){
+                $("#" + allpacket[i].id).slideDown();
+            }
+            else{
+                $("#" + allpacket[i].id).slideUp();
+            }
+        }
+    }
+</script>
+
+<script>
+    var history_data = document.getElementById('history_data');
+    function draw_chart(data){
+        let xValues = [];
+        let yValues = [];
+        // stt: 50, day: 1741021200000, profit: 0.33
+        history_data.innerHTML = '';
+        for(let i = 0; i < data.length; i++){
+            xValues.push(timeConverter_short_number(data[i].day));
+            yValues.push(data[i].profit)
+            history_data.innerHTML += '<li class="col-8 center">' + timeConverter_short(data[data.length - 1 - i].day) + '</li><li class="col-4 center">' + data[data.length - 1 - i].profit + ' %</li>';
+
+        }
+        let barColors = "#4deeea99";
+        new Chart("myChart", {
+            type: "bar",
+            data: {
+                labels: xValues,
+                datasets: [{
+                backgroundColor: barColors,
+                data: yValues,
+                label: ""
+                }]
+            },
+            options: {
+                plugins: {
+                  legend: {
+                    display: false
+                  }
+                },
+                legend: { display: false },
+                title: {
+                    display: false,
+                },
+                layout: {
+                    padding: {
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 8
+                            },
+                            padding: 0,
+                            color: barColors,
+                            autoSkip: false,
+                            maxTicksLimit: xValues.length,
+                            rotation: 90,
+                            textAlign: "right"
+                        }
+                    },
+                    y: {
+                        // ticks: {
+                        //     font: {
+                        //         size: 9
+                        //     },
+                        //     padding: 0,
+                        //     color: '#4deeea99'
+                        // }
+                        display: false
+                    }
+                }
+            },
+            plugins: [{
+            afterDraw: function(chart) {
+                let ctx = chart.ctx;
+                chart.data.datasets.forEach((dataset, i) => {
+                    let meta = chart.getDatasetMeta(i);
+                    meta.data.forEach((bar, index) => {
+                        let value = dataset.data[index];
+                        ctx.fillStyle = barColors; // Màu chữ
+                        ctx.font = "5px Arial"; // Font chữ
+                        ctx.textAlign = "center";
+                        ctx.fillText(value, bar.x, bar.y - 5); // Hiển thị số trên đầu cột
+                    });
+                });
+                }
+            }]
+        });
+
+    }
+</script>
+<script>
+    function show_guild(showid){
+        var allguild = document.getElementsByClassName('guild');
+        for(var i = 0; i < allguild.length; i++){
+            allguild[i].classList.remove('show-guild');
+            allguild[i].classList.remove('hide-guild');
+            allguild[i].classList.add('hide-guild');
+            if(allguild[i].id.replace('btn_', '') === showid){
+                allguild[i].classList.remove('hide-guild');
+                allguild[i].classList.remove('show-guild');
+                allguild[i].classList.add('show-guild');
+                $("#" + allguild[i].id.replace('btn_', '')).slideDown();
+            }
+            else{
+                $("#" + allguild[i].id.replace('btn_', '')).slideUp();
+            }
+        }
+    }
+</script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io('{{ SOCKETIO_URL }}');
+        socket.on('return_invest_packet_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb) {
+          Telegram.WebApp.showAlert(msg.msg);
+          add_invest_next.disabled = false;
+          packet_status = 2;
+          invest_amount.value = 0;
+          if(msg.status){
+              packet_status = 1;
+              hide_add_invest();
+
+              socket.emit('socketio_invest_list',
+                         {'chat_id': Telegram.WebApp.initDataUnsafe.user.id});
+                var lpac = document.getElementsByClassName('packet');
+                for(var i = 0; i < lpac.length; i++){
+                    if(lpac[i].id !== ('select_packet_' + packet_choose)){
+                        $("#" + lpac[i].id).slideDown();
+                    }
+                }
+          }
+        });
+
+        socket.emit('socketio_invest_list',
+                 {'chat_id': Telegram.WebApp.initDataUnsafe.user.id});
+        var my_invest_data = document.getElementById('my-invest-data');
+        var INVEST_PACKET = JSON.parse('{{ INVEST | tojson | safe}}');
+        var MY_INVEST = null;
+        function check_vip_packet(packet){
+            var rt = false;
+            for(var k = 0; k < INVEST_PACKET.length; k++){
+                if(INVEST_PACKET[k].name === packet.name && INVEST_PACKET[k].level >= 7){
+                    rt = true;
+                    break
+                }
+            }
+            return rt
+        }
+        socket.on('return_invest_list_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb) {
+            if(msg.status) {
+                my_invest_data.innerHTML = '';
+                for (var i = 0; i < msg.data.length; i++) {
+                    var vip_level = ''
+                    if(check_vip_packet(msg.data[i])){
+                        vip_level = 'invest_vip';
+                    }
+                    var date_done = date_complete(msg.data[i].start_time);
+                    var percent_complete = date_done*100/msg.data[i].day;
+
+                    my_invest_data.innerHTML = "<div class='invest-box-data" + vip_level + "' onClick='show_my_packet(" + msg.data[i].stt + ")'>" +
+                                                  "<div class='level_current'>" +
+                                                  "    <span class='level_number'>{{ LANG['package'][user_language] }}: " + msg.data[i].name + "</span>" +
+                                                  "    <span class='level_exp_text'>" + date_done + "/" + msg.data[i].day + " {{ LANG['day'][user_language] }}</span>" +
+                                                  "</div>" +
+                                                  "<div class='bar'>" +
+                                                  "    <div class='decoration'></div>" +
+                                                  "    <div class='fill_bar blue' style='width: " + percent_complete + "%;'></div>" +
+                                                  "</div>" +
+                                                  "<div class='my-invest-data-info' id='packet_" + msg.data[i].stt + "'>" +
+                                                  "    <li class='two_col_grid'><a>{{ LANG['investment_capital'][user_language] }} </a><a>" + Number(msg.data[i].amount).toLocaleString('de-DE') + "đ</a></li>" +
+                                                  "    <li class='two_col_grid'><a>{{ LANG['interest_reward'][user_language] }}: </a><a>" + msg.data[i].bonus + " %</a></li>" +
+                                                  "    <li class='two_col_grid'><a>{{ LANG['maturity'][user_language] }}: </a><a>" + date_done + "/" + msg.data[i].day + " {{ LANG['days'][user_language] }}</a></li>" +
+                                                  "    <li class='two_col_grid'><a>{{ LANG['start_date'][user_language] }}: </a><a>" + timeConverter(msg.data[i].start_time) + "</a></li>" +
+                                                  "    <li class='two_col_grid'><a>{{ LANG['profit'][user_language] }}: </a><a>" + msg.data[i].profit + "đ</a></li>" +
+                                                  "    <button onclick='my_invest_history(" + msg.data[i].stt + ")'>{{ LANG['history'][user_language] }}</button>" +
+                                                  "</div>" +
+                                              "</div>" + my_invest_data.innerHTML;
+
+                    }
+                    MY_INVEST = msg.data;
+            }
+        });
+
+        socket.emit('socketio_invest_data',
+                 {'chat_id': Telegram.WebApp.initDataUnsafe.user.id});
+        socket.on('return_invest_data_' + Telegram.WebApp.initDataUnsafe.user.id, function (msg, cb) {
+            if(msg.status) {
+                draw_chart(msg.data);
+            }
+        });
+
+</script>
+<script>
+
+    var black_wall_my_invest = document.getElementById('black-wall-my-history');
+    var my_history_data = document.getElementById('my-history-data');
+    var my_history_close = document.getElementById('my-history-close');
+    var my_invest_history_html = document.getElementById('my-invest-history');
+    var my_history_title = document.getElementById('my-history-title');
+    function my_invest_history(stt) {
+        //parse data
+        my_invest_history_html.innerHTML = "<li class='center'>{{ LANG['no_data'][user_language] }}</li>";
+        for(let i = 0; i < MY_INVEST.length; i++){
+            my_history_title.innerHTML = MY_INVEST[i].name;
+            if(MY_INVEST[i].stt === stt) {
+                if(MY_INVEST[i].history.length === 0){
+                }
+                else{
+                    my_invest_history_html.innerHTML = '';
+                    let tbace = MY_INVEST[i].history;
+                    for(let j = 0; j < tbace.length; j++){
+                        my_invest_history_html.innerHTML += "<li class='my-history-data'>" +
+                                                                "<span>" + timeConverter_short(tbace[tbace.length - 1 - j][0]) + "</span>" +
+                                                                "<span>" + tbace[tbace.length - 1 - j][1] + "% (+" + + MY_INVEST[i].bonus + "%)</span>" +
+                                                                "<span>" + tbace[tbace.length - 1 - j][2] + "đ</span>" +
+                                                            "</li>";
+                    }
+                }
+            }
+        }
+
+        black_wall_my_invest.style.display = 'block';
+        my_history_data.classList.remove('hide-add-invest');
+        my_history_data.classList.add('show-add-invest');
+    }
+
+    my_history_close.addEventListener('click', hide_my_history)
+
+    function hide_my_history() {
+        black_wall_my_invest.style.display = 'none';
+        my_history_data.classList.remove('show-add-invest');
+        my_history_data.classList.add('hide-add-invest');
+    }
+</script>
+{% endblock %}

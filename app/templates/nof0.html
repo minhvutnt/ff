@@ -1,0 +1,16 @@
+<link rel="stylesheet" href="../static/css/welcome.css">
+
+<style>
+
+    #left-door:before{
+        content: '{{ PROJECT_NAME }}';
+    }
+</style>
+{% extends "_index_base_.html" %}
+
+{% block app_border %}
+
+  <div class="welcome">
+    <h2>Liên hệ đại lý để tham gia cộng đồng {{ PROJECT_NAME }}</h2>
+  </div>
+{% endblock %}

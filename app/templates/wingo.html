@@ -1,0 +1,709 @@
+<script src="../static/css/input_number.js"></script>
+<link rel="stylesheet" href="../static/css/bet-container.css">
+<script src="../static/js/wingo.js"></script>
+<link rel="stylesheet" href="../static/css/list_game.css">
+<link rel="stylesheet" href="../static/css/wingo.css">
+<link rel="stylesheet" href="../static/css/switch_tag.css">
+<script src="../static/js/switch_tab.js"></script>
+<script src="../static/js/sound.js"></script>
+<script src="../static/js/date_convert.js"></script>
+<script src="/static/css/input_number.js"></script>
+{% extends "index.html" %}
+<!--https://codepen.io/jico/pen/wvMpgog?editors=1111-->
+{% block app_content %}
+<div style="width: calc(100% - 20px); margin: auto; margin-top: 0;">
+    <div style="position: relative; height: 42px;">
+      <h4 class="title_ab center" id="room_id" style="width: 100%; left: 0;">WINGO</h4>
+    </div>
+    <div id="data-area">
+        <div class="guild"><svg data-v-3e4c6499="" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" fill="none"><path data-v-3e4c6499="" d="M23.67 3H12.33C6.66 3 5.25 4.515 5.25 10.56V27.45C5.25 31.44 7.44 32.385 10.095 29.535L10.11 29.52C11.34 28.215 13.215 28.32 14.28 29.745L15.795 31.77C17.01 33.375 18.975 33.375 20.19 31.77L21.705 29.745C22.785 28.305 24.66 28.2 25.89 29.52C28.56 32.37 30.735 31.425 30.735 27.435V10.56C30.75 4.515 29.34 3 23.67 3ZM11.67 18C10.845 18 10.17 17.325 10.17 16.5C10.17 15.675 10.845 15 11.67 15C12.495 15 13.17 15.675 13.17 16.5C13.17 17.325 12.495 18 11.67 18ZM11.67 12C10.845 12 10.17 11.325 10.17 10.5C10.17 9.675 10.845 9 11.67 9C12.495 9 13.17 9.675 13.17 10.5C13.17 11.325 12.495 12 11.67 12ZM24.345 17.625H16.095C15.48 17.625 14.97 17.115 14.97 16.5C14.97 15.885 15.48 15.375 16.095 15.375H24.345C24.96 15.375 25.47 15.885 25.47 16.5C25.47 17.115 24.96 17.625 24.345 17.625ZM24.345 11.625H16.095C15.48 11.625 14.97 11.115 14.97 10.5C14.97 9.885 15.48 9.375 16.095 9.375H24.345C24.96 9.375 25.47 9.885 25.47 10.5C25.47 11.115 24.96 11.625 24.345 11.625Z" fill="currentColor"></path></svg>
+            {{ LANG['guide'][user_language] }}
+        </div>
+        <div>{{ LANG['time_remaining'][user_language] }}
+        </div>
+        <div>{{ LANG['wingo_1m'][user_language] }}
+        </div>
+        <div class="countdown-data">
+            <div></div>
+            <div id="wingo-minute-1">0</div>
+            <div id="wingo-minute-2">0</div>
+            <div>:</div>
+            <div id="wingo-second-1">0</div>
+            <div id="wingo-second-2">0</div>
+        </div>
+        <div id="last-ball">
+        </div>
+        <div id="roundnumber">
+        </div>
+    </div>
+    <div class="content-box dice-area">
+        <div id="color-area">
+            <div class="btn-bet btn-color-green" id="bet-green">{{ LANG['green'][user_language] }}</div>
+            <div class="btn-bet btn-color-purple" id="bet-purple">{{ LANG['purple'][user_language] }}</div>
+            <div class="btn-bet btn-color-red" id="bet-red">{{ LANG['red'][user_language] }}</div>
+        </div>
+        <div id="wingo-area">
+            <div class="area-data wingo-0" id="bet-0"></div>
+            <div class="area-data wingo-1" id="bet-1"></div>
+            <div class="area-data wingo-2" id="bet-2"></div>
+            <div class="area-data wingo-3" id="bet-3"></div>
+            <div class="area-data wingo-4" id="bet-4"></div>
+            <div class="area-data wingo-5" id="bet-5"></div>
+            <div class="area-data wingo-6" id="bet-6"></div>
+            <div class="area-data wingo-7" id="bet-7"></div>
+            <div class="area-data wingo-8" id="bet-8"></div>
+            <div class="area-data wingo-9" id="bet-9"></div>
+        </div>
+        <div id="bigsmall-area">
+            <div class="btn-bet btn-big" id="bet-big">{{ LANG['big'][user_language] }}</div>
+            <div class="btn-bet btn-small" id="bet-small">{{ LANG['small'][user_language] }}</div>
+        </div>
+        <div id="black-area-countdown">
+            <div id="show-countdown-second-1">0</div>
+            <div id="show-countdown-second-2">0</div>
+        </div>
+    </div>
+
+  <div class="tab_bar">
+        <div class="tab_box">
+            <div class="tab tab_btn tab_btn_select" id='btn-tab-wingo-history' onclick="switch_tab('tab', 'tab-wingo-history')">
+                <div class="tab_btn_text">{{ LANG['history'][user_language] }}</div>
+            </div>
+            <div class="tab tab_btn" id='btn-tab-my-history' onclick="switch_tab('tab', 'tab-my-history')">
+                <div class="tab_btn_text">{{ LANG['my_history'][user_language] }}</div>
+            </div>
+<!--            <div class="tab tab_btn" id='btn-tab-strategy' onclick="switch_tab('tab', 'tab-strategy')">-->
+<!--                <div class="tab_btn_text">THÓNG KÊ</div>-->
+<!--            </div>-->
+        </div>
+    </div>
+  <div style="position: relative; margin-bottom: 20px; border: 0;">
+    <div class="content-box absolute  tab_select" id="tab-wingo-history" style="width: 100%">
+      <div>
+          <li class="wingo-history title center"><span>{{ LANG['lottery_round'][user_language] }}</span><span>{{ LANG['number'][user_language] }}</span><span>{{ LANG['big_small'][user_language] }}</span><span>{{ LANG['color'][user_language] }}</span></li>
+          <div id="wingo_history">
+
+          </div>
+      </div>
+        <div style="width: 100%">
+            <div class="select-page">
+                <a onclick="wingo_history_select_page('1');"><img src="/static/image/x.gif" class="first-page" id="history_first_page"></a>
+                <a onclick="wingo_history_select_page('-1');"><img src="/static/image/x.gif" class="back-page" id="history_back_page"></a>
+                <div id="history_no"></div>
+                <a onclick="wingo_history_select_page('+1');"><img src="/static/image/x.gif" class="next-page" id="history_next_page"></a>
+                <a onclick="wingo_history_select_page('');"><img src="/static/image/x.gif" class="last-page" id="history_last_page"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-box absolute  tab-over" id="tab-my-history" style="display: none;">
+      <div id="my_history_data">
+      </div>
+        <div style="width: 100%">
+            <div class="select-page">
+                <a onclick="my_select_page('1');"><img src="/static/image/x.gif" class="first-page" id="my_first_page"></a>
+                <a onclick="my_select_page('-1');"><img src="/static/image/x.gif" class="back-page" id="my_back_page"></a>
+                <div id="my_no"></div>
+                <a onclick="my_select_page('+1');"><img src="/static/image/x.gif" class="next-page" id="my_next_page"></a>
+                <a onclick="my_select_page('');"><img src="/static/image/x.gif" class="last-page" id="my_last_page"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-box absolute  tab-over" id="tab-strategy" style="display: none;">
+      <div class="content-box-title">
+          {{ LANG['statistics'][user_language] }}
+      </div>
+      <div id="strategy_title">
+      </div>
+      <div id="strategy_data">
+      </div>
+        <div style="width: 100%">
+            <div class="select-page">
+                <a><img src="/static/image/x.gif" class="first-page" id="strategy_first_page"></a>
+                <a><img src="/static/image/x.gif" class="back-page" id="strategy_back_page"></a>
+                <div id="strategy_no"></div>
+                <a><img src="/static/image/x.gif" class="next-page" id="strategy_next_page"></a>
+                <a><img src="/static/image/x.gif" class="last-page" id="strategy_last_page"></a>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div id="disable-bet-area"></div>
+  <div id="bet-container">
+    <div id="bet-container-img"><div id="bet-container-value-img"></div></div>
+    <div id="bet-information">
+      {{ LANG['draw_round'][user_language] }} <span id="bet_round_number"></span> {{ LANG['placing'][user_language] }} <span id="select_dice_type_name"></span><span id="amount_bet_done">0</span> đ <span id="add_bet_amount_value"></span>
+    </div>
+    <div class="amount-bet">
+      <label>BET</label><input class="icon" value="0" type="number" step="0.01" id="bet_amount" min="0">
+    </div>
+    <div class="add_amount">
+      <div class="col-3" onclick="click_change_amount(1000);" ><div class="add-amount-btn">+1k</div></div>
+      <div class="col-3" onclick="click_change_amount(10000);"><div class="add-amount-btn">+10k</div></div>
+      <div class="col-3" onclick="click_change_amount(100000);"><div class="add-amount-btn">+100k</div></div>
+      <div class="col-3" onclick="click_change_amount(1000000);"><div class="add-amount-btn">+1M</div></div>
+      <div class="col-3" onclick="click_change_amount('DOUBLE');"><div class="add-amount-btn">x2</div></div>
+      <div class="col-3" onclick="click_change_amount('HALF');"><div class="add-amount-btn">/2</div></div>
+      <div class="col-3" onclick="click_change_amount('ZERO');"><div class="add-amount-btn">Xoá</div></div>
+      <div class="col-3" onclick="click_change_amount('ALL');"><div class="add-amount-btn">Tất cả</div></div>
+    </div>
+    <div id="area-submit-bet"><div class="submit-btn">{{ LANG['send'][user_language] }}</div></div>
+  </div>
+  <div id="win-container">
+    <div class="wdata">
+        <div>BIGWIN</div>
+        <div id="win-amount">
+            <svg width="200px" height="50px">
+                <path id='curveDown' d="M 0 00 Q 100 50 200 0" fill="transparent" stroke="" stroke-width="1"/>
+                <text font-size="28px">
+                    <textPath href="#curveDown" fill="#fed23e" startOffset="50%" text-anchor="middle" id="win-profit">
+                        123000đ
+                    </textPath>
+                </text>
+            </svg>
+        </div>
+        <div class="win-data">
+            <div class="win-round">
+                <span>Kỳ xổ:</span><span style='text-align: right' id="win-round"></span>
+            </div>
+            <div>Kết quả</div>
+
+            <div class="win-result">
+                <div id="win-1"></div>
+                <div id="win-2"></div>
+                <div id="win-3"></div>
+            </div>
+        <div>
+    </div>
+    <div id="win-close"></div>
+  </div>
+    <div id="black-area-room-info" class="black-background"></div>
+<script>
+    <!--  Win container  -->
+    const win_container = document.getElementById('win-container');
+    function close_win_container() {
+        win_container.style.display = 'none';
+    }
+    function open_win_container(data) {
+        let r = 0;
+        let w = 0;
+        let rs = null;
+        for (let i = 0; i < data.length; i++){
+
+            if(data[i].roundnumber === r){
+                w += data[i].profit;
+            }
+            if(data[i].roundnumber > r){
+                w = data[i].profit;
+                r = data[i].roundnumber;
+                rs = data[i].result;
+            }
+        }
+        if(w !== 0){
+            document.getElementById('win-profit').innerHTML = w + 'đ';
+            document.getElementById('win-round').innerHTML = r;
+            document.getElementById('win-1').innerHTML = rs;
+            if(rs === '0' || rs === '1' || rs === '2' || rs === '3' || rs === '4'){
+                document.getElementById('win-2').innerHTML = 'Nhỏ';
+            }else{
+                document.getElementById('win-2').innerHTML = 'Lớn';
+            }
+            if(rs === '1' || rs === '3' || rs === '7' || rs === '9'){
+                document.getElementById('win-3').innerHTML = 'Xanh';
+            }else{
+                if(rs === '2' || rs === '4' || rs === '6' || rs === '8') {
+                    document.getElementById('win-3').innerHTML = 'Đỏ';
+                }else{
+                    if(rs === '0'){
+                        document.getElementById('win-3').innerHTML = 'Đỏ Tím';
+                    }
+                    else{
+                        document.getElementById('win-3').innerHTML = 'Xanh Tím';
+                    }
+                }
+            }
+
+            win_container.style.display = 'grid';
+            let timeLeft = 3;
+            const win_interval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft < 0) {
+                clearInterval(win_interval);
+                win_container.style.display = 'none';
+                }
+            }, 1000);
+        }
+
+    }
+    document.getElementById('win-close').addEventListener('click', function () {
+        close_win_container();
+    })
+</script>
+    <script>
+        var submit_btn = document.getElementById('area-submit-bet');
+        submit_btn.addEventListener('click' , function () {
+            var r = bet_round_number.innerHTML;
+            var am = bet_amount.value;
+            var bt = bet_select;
+
+            Telegram.WebApp.showPopup({
+                title  : "{{ LANG['bet_wingo'][user_language] }}",
+                message: "- {{ LANG['lottery_round'][user_language] }} " + r + '\n' +
+                         "- {{ LANG['select'][user_language] }}: " + type_to_string(bt) + '\n' +
+                         "- {{ LANG['amount'][user_language] }}: $" + am,
+                buttons: [
+                    {id: 'access', type: 'destructive', text: "{{ LANG['confirm'][user_language] }}"},
+                    {type: 'cancel'},
+                ]
+            }, function (buttonId) {
+                if (buttonId === 'access') {
+                    socket.emit('socketio_wingo_bet',
+                                {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                                'bet_value': bt,
+                                'bet_amount': am,
+                                'roundnumber': r,
+                                'wallet': localStorage.getItem('balance')});
+                }
+            }
+        );
+        })
+        var disable_bet_area = document.getElementById('disable-bet-area');
+        var bet_container = document.getElementById('bet-container');
+        disable_bet_area.addEventListener('click', function (){container_bet_hide();})
+
+        var bet_select = null;
+        var bet_green = document.getElementById('bet-green');
+        var bet_red = document.getElementById('bet-red');
+        var bet_purple = document.getElementById('bet-purple');
+
+        var bet_0 = document.getElementById('bet-0');
+        var bet_1 = document.getElementById('bet-1');
+        var bet_2 = document.getElementById('bet-2');
+        var bet_3 = document.getElementById('bet-3');
+        var bet_4 = document.getElementById('bet-4');
+        var bet_5 = document.getElementById('bet-5');
+        var bet_6 = document.getElementById('bet-6');
+        var bet_7 = document.getElementById('bet-7');
+        var bet_8 = document.getElementById('bet-8');
+        var bet_9 = document.getElementById('bet-9');
+
+        var bet_big = document.getElementById('bet-big');
+        var bet_small = document.getElementById('bet-small');
+
+
+        bet_green.addEventListener('click', function (){bet_select = 'G'; container_bet_show();})
+        bet_red.addEventListener('click', function (){bet_select = 'R'; container_bet_show();})
+        bet_purple.addEventListener('click', function (){bet_select = 'P'; container_bet_show();})
+
+        bet_0.addEventListener('click', function (){bet_select = '0'; container_bet_show();})
+        bet_1.addEventListener('click', function (){bet_select = '1'; container_bet_show();})
+        bet_2.addEventListener('click', function (){bet_select = '2'; container_bet_show();})
+        bet_3.addEventListener('click', function (){bet_select = '3'; container_bet_show();})
+        bet_4.addEventListener('click', function (){bet_select = '4'; container_bet_show();})
+        bet_5.addEventListener('click', function (){bet_select = '5'; container_bet_show();})
+        bet_6.addEventListener('click', function (){bet_select = '6'; container_bet_show();})
+        bet_7.addEventListener('click', function (){bet_select = '7'; container_bet_show();})
+        bet_8.addEventListener('click', function (){bet_select = '8'; container_bet_show();})
+        bet_9.addEventListener('click', function (){bet_select = '9'; container_bet_show();})
+
+        bet_big.addEventListener('click', function (){bet_select = 'B'; container_bet_show();})
+        bet_small.addEventListener('click', function (){bet_select = 'S'; container_bet_show();})
+
+    </script>
+    <script>
+        var bet_round_number = document.getElementById('bet_round_number');
+        var wingo_history_div = document.getElementById('wingo_history');
+        var history_first_page = document.getElementById('history_first_page');
+        var history_back_page = document.getElementById('history_back_page');
+        var history_next_page = document.getElementById('history_next_page');
+        var history_last_page = document.getElementById('history_last_page');
+        var history_no = document.getElementById('history_no');
+        var last_ball = document.getElementById('last-ball');
+
+        var wingo_minute_1 = document.getElementById('wingo-minute-1');
+        var wingo_minute_2 = document.getElementById('wingo-minute-2');
+        var wingo_second_1 = document.getElementById('wingo-second-1');
+        var wingo_second_2 = document.getElementById('wingo-second-2');
+        function wingo_history_select_page(p){
+            var page_s = 0;
+            if(p === ''){page_s = max_wingo_history_page - 1;}
+            if(p === '1'){page_s = 0;}
+            if(p === '+1'){page_s = this_wingo_history_page;}
+            if(p === '-1'){page_s = this_wingo_history_page - 2;}
+            socket.emit('socketio_wingo_history',
+                 {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                 'page': page_s});
+        }
+        function my_select_page(p){
+            var page_s = 0;
+            if(p === ''){page_s = max_my_page - 1;}
+            if(p === '1'){page_s = 0;}
+            if(p === '+1'){page_s = this_my_page;}
+            if(p === '-1'){page_s = this_my_page - 2;}
+            socket.emit('socketio_wingo_my_history',
+                 {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                 'page': page_s});
+        }
+
+
+        var black_area_countdown = document.getElementById('black-area-countdown');
+        var show_countdown_second_1 = document.getElementById('show-countdown-second-1');
+        var show_countdown_second_2 = document.getElementById('show-countdown-second-2');
+        function wingo_countdown(){
+            var now = new Date();
+            var utcTime = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+            var minutes = utcTime.getMinutes();
+            var seconds = 59 - utcTime.getSeconds();
+
+            var secondDigits = seconds.toString().padStart(2, '0').split('');
+            if(secondDigits[0] == 0 && secondDigits[1] == 0){
+                wingo_minute_2.innerHTML = 1;
+                wingo_second_1.innerHTML = 0;
+                wingo_second_2.innerHTML = 0;
+            }
+            else{
+                wingo_minute_2.innerHTML = 0;
+                wingo_second_1.innerHTML = secondDigits[0];
+                wingo_second_2.innerHTML = secondDigits[1];
+            }
+            show_countdown_second_1.innerHTML = secondDigits[0];
+            show_countdown_second_2.innerHTML = secondDigits[1];
+            if(seconds <= 5){
+                black_area_countdown.style.display = 'grid';
+                bet_container.style.bottom = '-310px';
+            }else{
+                black_area_countdown.style.display = 'none';
+            }
+          // Cập nhật ngay lập tức
+        }
+        setInterval(wingo_countdown, 1000);
+    </script>
+    <script type="text/javascript" charset="utf-8">
+
+    var roundnumber = document.getElementById('roundnumber');
+    var socket = io('{{ SOCKETIO_URL }}');
+        socket.emit('socketio_wingo_history',
+                 {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                 'page': 0});
+        var this_wingo_history_page = 0;
+        var max_wingo_history_page = 0;
+        function get_wingo_history(msg){
+            if(msg.status) {
+                console.log(msg)
+              this_wingo_history_page = msg.page;
+              max_wingo_history_page = msg.max_page;
+              roundnumber.innerHTML = msg.next_roundnumber;
+              bet_round_number.innerHTML = msg.next_roundnumber;
+              wingo_history(msg.data, msg.last_page, msg.next_page, msg.max_page, msg.page, msg.last_result);
+          }
+        }
+      socket.on('return_wingo_history_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+          get_wingo_history(msg);
+      });
+      socket.on('return_wingo_history', function(msg, cb){
+          get_wingo_history(msg);
+      });
+      socket.on('return_wingo_bet_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+          if(msg.status){
+            Telegram.WebApp.showAlert("{{ LANG['place_success'][user_language] }}");
+            socket.emit('socketio_wingo_my_history',
+                     {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                     'page': 0});
+            container_bet_hide();
+          }
+          else{
+            Telegram.WebApp.showAlert(msg.msg);
+          }
+      });
+
+
+        var this_my_page = 0;
+        var max_my_page = 0;
+        socket.emit('socketio_wingo_my_history',
+                 {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                 'page': 0});
+
+    var my_wingo_history_div = document.getElementById('my_history_data');
+    var my_first_page = document.getElementById('my_first_page');
+    var my_back_page = document.getElementById('my_back_page');
+    var my_next_page = document.getElementById('my_next_page');
+    var my_last_page = document.getElementById('my_last_page');
+    var my_no = document.getElementById('my_no');
+
+    socket.on('return_wingo_my_history_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+
+        this_my_page = msg.page;
+        max_my_page = msg.max_page;
+        let result = msg.result ?? null;
+        console.log(result)
+        if(result){
+            open_win_container(msg.data);
+        }
+        my_wingo_history(msg.data, msg.last_page, msg.next_page, msg.max_page, msg.page, msg.last_result);
+    });
+
+</script>
+<script>
+    function wingo_history(data, last_page, next_page, max_page, page, last_result) {
+        wingo_history_div.innerHTML = '';
+        last_ball.innerHTML =
+            "<div class='wingo-" + last_result[0] + "'></div>" +
+            "<div class='wingo-" + last_result[1] + "'></div>" +
+            "<div class='wingo-" + last_result[2] + "'></div>" +
+            "<div class='wingo-" + last_result[3] + "'></div>" +
+            "<div class='wingo-" + last_result[4] + "'></div>";
+        for (var i = 0; i < data.length; i++) {
+            var a = data[i].number[0];
+            var lonnho = null;
+            var color = null;
+            var class_number = null;
+            var class_bs = '';
+            if (a <= 4) {
+                lonnho = "{{ LANG['small'][user_language] }}";
+            } else {
+                lonnho = "{{ LANG['big'][user_language] }}";
+                class_bs = 'big_weight';
+            }
+            if (a == 1 || a == 3 || a == 7 || a == 9) {
+                color = "<div class='number-green'></div>";
+                class_number = 'his-num-green';
+            } else if (a == 2 || a == 4 || a == 6 || a == 8) {
+                color = "<div class='number-red'></div>";
+                class_number = 'his-num-red';
+            } else if (a == 0) {
+                color = "<div class='number-red'></div><div class='number-purple'></div>";
+                class_number = 'his-num-red-purple';
+            } else if (a == 5) {
+                color = "<div class='number-green'></div><div class='number-purple'></div>";
+                class_number = 'his-num-green-purple';
+
+            }
+            wingo_history_div.innerHTML += "<li class='wingo-history'><span>" + data[i].roundnumber +
+                "</span><span class='history-number " + class_number + "'>" + data[i].number[0] +
+                "</span><span class='" + class_bs + "'>" + lonnho +
+                "</span><span>" + color +
+                "</span></li>"
+        }
+        history_no.innerHTML = "<a><span class='number disabled'>" + page + "/" + max_page + "</span></a>";
+        if (page == 1) {
+            history_first_page.classList.add('disabled');
+            history_back_page.classList.add('disabled');
+            history_next_page.classList.remove('disabled');
+            history_last_page.classList.remove('disabled');
+        } else {
+            if (page == max_page) {
+                history_first_page.classList.remove('disabled');
+                history_back_page.classList.remove('disabled');
+                history_next_page.classList.add('disabled');
+                history_last_page.classList.add('disabled');
+            } else {
+                history_first_page.classList.remove('disabled');
+                history_back_page.classList.remove('disabled');
+                history_next_page.classList.remove('disabled');
+                history_last_page.classList.remove('disabled');
+            }
+        }
+    }
+    function show_my_his_info(number){
+        var list_expand = document.getElementsByClassName('expand');
+        for(var k = 0; k < list_expand.length; k++){
+            if(list_expand[k].id == 'my-his-' + number){
+                $("#" + list_expand[k].id).slideDown();
+
+            }
+            else{
+                $("#" + list_expand[k].id).slideUp();
+            }
+        }
+    }
+
+    function my_wingo_history(data, last_page, next_page, max_page, page, last_result) {
+        my_wingo_history_div.innerHTML = '';
+        for (var i = 0; i < data.length; i++) {
+            var bv = data[i].bet_value;
+            var first_content = '';
+            var first_color = '';
+            var select_name = bv;
+            if(bv == 'B'){select_name = "{{ LANG['big'][user_language] }}"; first_color = 'bg-big'; first_content = 'ct-big';}
+            if(bv == 'S'){select_name = "{{ LANG['small'][user_language] }}";first_color = 'bg-small'; first_content = 'ct-small';}
+            if(bv == 'G'){select_name = "{{ LANG['green'][user_language] }}";first_color = 'bg-green'; first_content = 'ct-green';}
+            if(bv == 'R'){select_name = "{{ LANG['red'][user_language] }}";first_color = 'bg-red'; first_content = 'ct-red';}
+            if(bv == 'P'){select_name = "{{ LANG['purple'][user_language] }}";first_color = 'bg-purple'; first_content = 'ct-purple';}
+
+            if(bv == '0'){first_color = 'bg-red-purple'; first_content = 'ct-0';}
+            if(bv == '1'){first_color = 'bg-green'; first_content = 'ct-1';}
+            if(bv == '2'){first_color = 'bg-red'; first_content = 'ct-2';}
+            if(bv == '3'){first_color = 'bg-green'; first_content = 'ct-3';}
+            if(bv == '4'){first_color = 'bg-red'; first_content = 'ct-4';}
+            if(bv == '5'){first_color = 'bg-green-purple'; first_content = 'ct-5';}
+            if(bv == '6'){first_color = 'bg-red'; first_content = 'ct-6';}
+            if(bv == '7'){first_color = 'bg-green'; first_content = 'ct-7';}
+            if(bv == '8'){first_color = 'bg-red'; first_content = 'ct-8';}
+            if(bv == '9'){first_color = 'bg-green'; first_content = 'ct-9';}
+
+            var rn = data[i].roundnumber;
+            var ot = timeConverter(data[i].ordertime);
+
+            var wi = '';
+            var pr = '';
+            if(data[i].result != ''){
+                if(data[i].profit <= 0){
+                    wi = "<a class='win-loss loss_border' style='color: var(--norm_red-color) !important;'>{{ LANG['lose'][user_language] }}</a>";
+                    pr = "<a class='right' style='color: var(--norm_red-color) !important;'>" + data[i].profit + " đ</a>";
+                }
+                else{
+                    wi = "<a class='win-loss win_border' style='color: var(--norm_green-color) !important;'>{{ LANG['win'][user_language] }}</a>";
+                    pr = "<a class='right' style='color: var(--norm_green-color) !important;'> " + data[i].profit + " đ</a>";
+                }
+            }
+            my_wingo_history_div.innerHTML += "<li class='my-wingo-history " + data[i].wallet + "-wingo' onclick='show_my_his_info(\"" + data[i].stt + "\")'>" +
+                "<span class='" + first_color + " " + first_content + "'></span>" +
+                "<span class='round-time'><a>" + rn + "</a><a>" + ot + "</a></span>" +
+                "<span class='round-time'>" + wi + pr + "</span>" +
+                "</li>" +
+                "<div class='expand' style='display: none' id='my-his-" + data[i].stt + "'>" +
+                "<li><span>{{ LANG['lottery_round'][user_language] }}</span><span>" + rn + "</span></li>" +
+                "<li><span>{{ LANG['purchase_amount'][user_language] }}</span><span>" + data[i].amount + " đ</span></li>" +
+                "<li><span>{{ LANG['tax'][user_language] }}</span><span>" + data[i].tax + " đ</span></li>" +
+                "<li><span>{{ LANG['after_tax_amount'][user_language] }}</span><span>" + parseFloat((data[i].amount - data[i].tax).toFixed(4)) + " đ</span></li>" +
+                "<li><span>{{ LANG['result'][user_language] }}</span><span>" + data[i].result + "</span></li>" +
+                "<li><span>{{ LANG['select'][user_language] }}</span><span class='" + "'>" + select_name + "</span></li>" +
+                "<li><span>{{ LANG['status'][user_language] }}</span><span>" + wi + "</span></li>" +
+                "<li><span>{{ LANG['win_lose'][user_language] }}</span><span>" + data[i].profit + " đ</span></li>" +
+                "<li><span>{{ LANG['created_time'][user_language] }}</span><span>" + ot + "</span></li>" +
+                "</div>";
+
+        }
+        my_no.innerHTML = "<a><span class='number disabled'>" + page + "/" + max_page + "</span></a>";
+        if (page == 1) {
+            my_first_page.classList.add('disabled');
+            my_back_page.classList.add('disabled');
+            my_next_page.classList.remove('disabled');
+            my_last_page.classList.remove('disabled');
+        } else {
+            if (page == max_page) {
+                my_first_page.classList.remove('disabled');
+                my_back_page.classList.remove('disabled');
+                my_next_page.classList.add('disabled');
+                my_last_page.classList.add('disabled');
+            } else {
+                my_first_page.classList.remove('disabled');
+                my_back_page.classList.remove('disabled');
+                my_next_page.classList.remove('disabled');
+                my_last_page.classList.remove('disabled');
+            }
+        }
+    }
+
+    function container_bet_show() {
+        var submit_btn = document.getElementById('submit-btn');
+        bet_container.classList = '';
+        var list_bet_container_class = 'bet-container-fade-in ';
+        if (bet_select == 'R') {
+            list_bet_container_class += 'bet_area_red';
+        }
+        if (bet_select == 'P') {
+            list_bet_container_class += 'bet_area_purple';
+        }
+        if (bet_select == 'G') {
+            list_bet_container_class += 'bet_area_green';
+        }
+        if (bet_select == 'B') {
+            list_bet_container_class += 'bet_area_big';
+        }
+        if (bet_select == 'S') {
+            list_bet_container_class += 'bet_area_small';
+        }
+        if (bet_select == '0') {
+            list_bet_container_class += 'bet_area_red_purple number_0';
+        }
+        if (bet_select == '1') {
+            list_bet_container_class += 'bet_area_green number_1';
+        }
+        if (bet_select == '2') {
+            list_bet_container_class += 'bet_area_red number_2';
+        }
+        if (bet_select == '3') {
+            list_bet_container_class += 'bet_area_green number_3';
+        }
+        if (bet_select == '4') {
+            list_bet_container_class += 'bet_area_red number_4';
+        }
+        if (bet_select == '5') {
+            list_bet_container_class += 'bet_area_green_purple number_5';
+        }
+        if (bet_select == '6') {
+            list_bet_container_class += 'bet_area_red number_6';
+        }
+        if (bet_select == '7') {
+            list_bet_container_class += 'bet_area_green number_7';
+        }
+        if (bet_select == '8') {
+            list_bet_container_class += 'bet_area_red number_8';
+        }
+        if (bet_select == '9') {
+            list_bet_container_class += 'bet_area_green number_9';
+        }
+        bet_container.classList = list_bet_container_class;
+        disable_bet_area.style.display = 'block';
+
+    }
+
+    function type_to_string(bettype){
+        if(bettype == 'B'){return "{{ LANG['big'][user_language] }}"}
+        else{if(bettype == 'S'){return "{{ LANG['small'][user_language] }}"}
+            else{if(bettype == 'G'){return "{{ LANG['green'][user_language] }}"}
+                else{if(bettype == 'R'){return "{{ LANG['red'][user_language] }}"}
+                    else{if(bettype == 'P'){return "{{ LANG['purple'][user_language] }}"}
+                        else{return "{{ LANG['number'][user_language] }}" + bettype}
+                    }
+                }
+            }
+        }
+    }
+    function container_bet_hide() {
+        bet_container.classList.remove("bet-container-fade-out");
+        bet_container.classList.add("bet-container-fade-out");
+        disable_bet_area.style.display = 'none';
+        bet_amount.value = 0;
+        add_bet_amount_value.innerHTML = "";
+    }
+
+    var bet_amount = document.getElementById('bet_amount');
+
+    var add_bet_amount_value = document.getElementById('add_bet_amount_value');
+    input_2digit(bet_amount);
+    bet_amount.addEventListener("input", update_bet_amount);
+
+    function update_bet_amount(){
+        input_2digit(bet_amount);
+        var amount = bet_amount.value;
+        add_bet_amount_value.innerHTML = " +" + amount;
+        add_bet_amount_value.style.color = "var(--color-buy)";
+    };
+    function click_change_amount(value){
+        if(value === 'ZERO'){bet_amount.value = 0;}
+        else{if(value === 'ALL'){
+            let divText = document.getElementById('amount').innerHTML;
+            let value = parseInt(divText); // chuyển về số
+            let rounded = Math.floor(value / 1000) * 1000;
+            bet_amount.value = rounded;
+            console.log(rounded)
+        }
+        else{if(value === 'DOUBLE'){bet_amount.value = parseInt(parseFloat(bet_amount.value.replace(",", "."))*2)}
+            else{if(value === "HALF"){bet_amount.value = parseInt(parseFloat(bet_amount.value.replace(",", ".")) / 2)}
+            else{
+            if(parseFloat(bet_amount.value) + value < 0){
+            bet_amount.value = 0;
+        }
+        else{
+            bet_amount.value = parseFloat(bet_amount.value) + value;
+        }
+        }}}}
+        if(bet_amount.value < 1000){bet_amount.value = 1000;}
+        update_bet_amount();
+    }
+
+</script>
+{% endblock %}

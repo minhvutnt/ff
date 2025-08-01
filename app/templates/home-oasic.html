@@ -1,0 +1,15 @@
+<link rel="stylesheet" href="../static/css/welcome.css">
+<link rel="stylesheet" href="../static/css/list_game.css">{% extends "index.html" %}
+
+{% block app_content %}
+
+<!--<div class="free_fund"><h2>{{ PROJECT_NAME }}</h2></div>-->
+<div style="display: grid; place-items: center; height: 100%;">
+    <div id="menu-index" style="width: calc(100% - 30px)">
+
+    </div>
+</div>
+<script>
+    document.getElementById('menu-index').innerHTML = document.getElementById('link-menu').innerHTML;
+</script>
+{% endblock %}

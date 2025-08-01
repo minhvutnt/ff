@@ -1,0 +1,431 @@
+
+<script src="../static/js/balance-dropdown.js"></script>
+<script src="/static/js/global-script.js"></script>
+<link rel="stylesheet" href="/static/css/level_page.css">
+<link rel="stylesheet" href="/static/css/menucss.css">
+<style>
+
+    #left-door:before{
+        content: '{{ PROJECT_NAME }}';
+    }
+</style>
+{% extends "_index_base_.html" %}
+
+{% block app_border %}
+    <div id="big-father">
+        <div class="door">
+            <div id="left-door"></div>
+            <div id="right-door"></div>
+            <script>
+                var left_door = document.getElementById('left-door');
+                var right_door = document.getElementById('right-door');
+                left_door.style.left = '0';
+                left_door.style.right = '50%';
+                right_door.style.right = '0';
+                right_door.style.left = '50%';
+            </script>
+        </div>
+
+        <div id="father-bottom-user-avatar">
+        </div>
+
+        <div id="hiden-menu">
+        </div>
+        <div id="menu">
+
+            <div class="main-index" id="menu-page" style="position: unset;">
+                <div class="container-topimage" style="border: 0; height: 60px;" onclick="load_page('{{ url_for('html_select_freeusdt') }}');">
+                    <div class="cowndow-clock-topimage" id="countdown-freeusdt-clock">
+                        <div class="background_span">
+                            <div class="left-maker"></div>
+                            <p class="div-number-countdown" id="getfree_minute1"></p>
+                            <div class="right-maker"></div>
+                        </div>
+                        <div class="background_span">
+                            <div class="left-maker"></div>
+                            <p class="div-number-countdown" id="getfree_minute2"></p>
+                            <div class="right-maker"></div>
+                        </div>
+                        <div class="background_span">
+                            <div class="left-maker"></div>
+                            <p class="div-number-countdown dotdot-padding" id="getfree_dot">:</p>
+                            <div class="right-maker"></div>
+                        </div>
+                        <div class="background_span">
+                            <div class="left-maker"></div>
+                            <p class="div-number-countdown" id="getfree_second1"></p>
+                            <div class="right-maker"></div>
+                        </div>
+                        <div class="background_span">
+                            <div class="left-maker"></div>
+                            <p class="div-number-countdown" id="getfree_second2"></p>
+                            <div class="right-maker"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="link-menu">
+                    <div class="menu-index border-bottom-light border-top-light" onclick="load_page('{{ url_for('html_select_game') }}');"><i class="fa-solid fa-dice"></i> <span>{{ LANG['transaction'][user_language] }}</span></div>
+                    <div class="menu-index border-bottom-light border-top-light" onclick="load_page('{{ url_for('html_invest') }}');"><i class="fa-solid fa-piggy-bank"></i> <span>{{ LANG['invest'][user_language] }}</span></div>
+                    <div class="menu-index border-bottom-light border-top-light" onclick="load_page('{{ url_for('html_wallet') }}');"><i class="fa-solid fa-wallet"></i> <span>{{ LANG['wallet_management'][user_language] }}</span></div>
+                    <div class="menu-index border-bottom-light border-top-light" onclick="load_page('{{ url_for('html_referrer') }}');"><i class="fa-solid fa-people-line"></i> <span>{{ LANG['marketing'][user_language] }}</span></div>
+                    <div class="menu-index border-bottom-light border-top-light" onclick="window.open('https://t.me/FreeFun_support', '_blank');"><i class="fa-solid fa-comments"></i> <span>{{ LANG['support'][user_language] }} </span></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="drop-down" class="border-top-light">
+            <div id='drop-close' class=""></div>
+            <div id="list_amount"></div>
+        </div>
+        <div class="header border-bottom-light">
+            <div id="clock" onclick="switch_to_freeusdt();">00:00:00</div>
+            <div id="title_amount">
+                <span id="amount">0</span><span> đ</span>
+            </div>
+        </div>
+        <div id="father-content">
+
+            {% block app_content %}
+            {% endblock %}
+        </div>
+        <div class="footer border-top-light">
+
+        </div>
+    </div>
+
+<!--FIRE WORK-->
+<!--    <div class="pyro">-->
+<!--      <div class="before"></div>-->
+<!--      <div class="after"></div>-->
+<!--    </div>-->
+<script data-purpose="balance">
+
+    var drop_down = document.getElementById('drop-down');
+    var drop_close = document.getElementById('drop-close');
+    var status_drop_down = 0;
+    var title_amount = document.getElementById('title_amount');
+    var list_amount = document.getElementById('list_amount');
+    var amount = document.getElementById('amount');
+    drop_close.addEventListener('click', function () {
+        $("#drop-down").slideUp();
+    })
+    title_amount.addEventListener('click', function () {
+        if(status_drop_down == 0){
+            status_drop_down = 1;
+            $("#drop-down").slideDown();
+        }else{
+            status_drop_down = 0;
+            $("#drop-down").slideUp();
+        }
+    })
+    function update_amount_title(new_amount) {
+        var last_amount = amount.innerHTML;
+        if (last_amount == '') {
+            amount.innerHTML = (new_amount*1).toFixed(0);
+            amount.classList = 'amount_up';
+        } else {
+            let count = 0;
+            let lll = last_amount*1;
+            amount.classList = '';
+            const interval = setInterval(() => {
+                count++;
+
+                if (last_amount*1 < new_amount*1) {
+                    amount.innerHTML = (lll + (new_amount*1 - last_amount*1)/(30)).toFixed(0);
+                    amount.classList = 'amount_up';
+                }
+                else{
+                    amount.innerHTML = (lll - (last_amount*1 - new_amount*1)/(30)).toFixed(0);
+                    amount.classList = 'amount_down';
+                }
+                lll = amount.innerHTML*1;
+                if(count >= 30){
+                    amount.innerHTML = (new_amount*1).toFixed(0);
+                    clearInterval(interval);
+                }
+            }, 10);
+        }
+    }
+
+
+    function select_amount_type(select) {
+        let select_type = 'real';
+        if(select == 'demo' || select == 1){
+            select_type = 'demo';
+        }
+        var amount_cl = document.getElementsByClassName('amount_cl');
+        let true_select = false;
+        for (var bue = 0; bue < amount_cl.length; bue++) {
+            if (amount_cl[bue].id === ('balance_' + select_type)) {
+                true_select = true;
+                amount_cl[bue].classList = 'amount_cl select';
+
+                var second_span = amount_cl[bue].getElementsByTagName('span')[1].innerHTML;
+                update_amount_title(second_span.replace('đ', ''));
+            } else {
+                amount_cl[bue].classList = 'amount_cl';
+            }
+        }
+        if(!true_select){
+            select_amount_type('real');
+        }
+        else{
+            if(select_type === 'real'){
+                localStorage.setItem('balance', 'real');
+                document.getElementById('title_amount').classList = 'real';
+            }else{
+                localStorage.setItem('balance', 'demo');
+                document.getElementById('title_amount').classList = 'demo';
+            }
+        }
+    }
+    function select_balance(msg, select) {
+        list_amount.innerHTML = "<li style='text-align: center;display: block;'>{{ LANG['choose_account'][user_language] }}</li>";
+        list_amount.innerHTML += "<li id='balance_real' class='amount_cl' onclick='select_amount_type(0);'><span>Tài khoản thực</span><span>" + msg.real_amount + " đ</span></li>";
+        list_amount.innerHTML += "<li id='balance_demo' class='amount_cl' onclick='select_amount_type(1);'><span>Tài khoản Demo</span><span>" + msg.demo_amount + " đ</span></li>";
+        select_amount_type(select);
+    }
+</script>
+<script>
+    var menu = document.getElementById("menu");
+    var menu_hiden = document.getElementById('hiden-menu');
+
+    function load_page(link){
+        menu.classList.remove('menu-in');
+        menu.classList.add('menu-out');
+        menu_hiden.style.display = 'none';
+
+        var left_door = document.getElementById('left-door');
+        var right_door = document.getElementById('right-door');
+        left_door.style.left = '-50%';
+        left_door.style.right = '120%';
+        right_door.style.right = '-50%';
+        right_door.style.left = '120%';
+        left_door.className = 'left-door-in';
+        right_door.className = 'right-door-in';
+        var ncuewnuacewinfwer = setInterval(
+            function (){
+                window.open(link, '_self');
+                clearInterval(ncuewnuacewinfwer)},
+            1000);
+    }
+</script>
+<script>
+    function switch_to_freeusdt(){
+        Telegram.WebApp.showPopup({
+            title  : "{{ LANG['forward'][user_language] }}",
+            message: "{{ LANG['go_to_claim_page'][user_language] }}",
+            buttons: [
+                {id: 'switch', type: 'destructive', text: "{{ LANG['forward'][user_language] }}"},
+                {type: 'cancel'},
+            ]
+        }, function (buttonId) {
+            if (buttonId === 'switch') {
+                load_page('{{ url_for('html_select_freeusdt') }}');
+            }
+        });
+    }
+</script>
+<script>
+    var user_avatar = Telegram.WebApp.initDataUnsafe.user.photo_url;
+    document.getElementById('father-bottom-user-avatar').style.backgroundImage = "url('" + user_avatar + "')";
+</script>
+<script>
+    var getfree_minute1 = document.getElementsByClassName('getfree_minute1');
+    var getfree_minute2 = document.getElementsByClassName('getfree_minute2');
+    var getfree_dot = document.getElementsByClassName('getfree_dot');
+    var getfree_second1 = document.getElementsByClassName('getfree_second1');
+    var getfree_second2 = document.getElementsByClassName('getfree_second2');
+    try {
+        var local_getfree_minute1 = document.getElementById('local_getfree_minute1');
+        var local_getfree_minute2 = document.getElementById('local_getfree_minute2');
+        var local_getfree_dot = document.getElementById('local_getfree_dot');
+        var local_getfree_second1 = document.getElementById('local_getfree_second1');
+        var local_getfree_second2 = document.getElementById('local_getfree_second2');
+    }catch (e) {}
+    var time_loop = 1000;
+    var run_entry = 0;
+    function update_countdown_free_time(x, time_target) {
+        const countDownDate = new Date(time_target).getTime();
+        const now = Date.now();
+        const distance = countDownDate - now;
+
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
+
+        const updateDigits = (prefix, min, sec) => {
+            try {
+                document.getElementById(`${prefix}_minute1`).innerText = min[0];
+                document.getElementById(`${prefix}_minute2`).innerText = min[1];
+                document.getElementById(`${prefix}_second1`).innerText = sec[0];
+                document.getElementById(`${prefix}_second2`).innerText = sec[1];
+            } catch (e) {}
+        };
+
+        const resetDigits = (prefix) => {
+            try {
+                document.getElementById(`${prefix}_minute1`).innerText = '0';
+                document.getElementById(`${prefix}_minute2`).innerText = '0';
+                document.getElementById(`${prefix}_second1`).innerText = '0';
+                document.getElementById(`${prefix}_second2`).innerText = '0';
+                if (document.getElementById(`${prefix}_dot`))
+                    document.getElementById(`${prefix}_dot`).innerText = '0';
+            } catch (e) {}
+        };
+
+        const clockElem = document.getElementById("clock");
+
+        if (!Number.isNaN(hours)) {
+            clockElem.innerText = `${hours}:${minutes}:${seconds}`;
+            clockElem.classList.remove("color-disco");
+
+            updateDigits("local_getfree", minutes, seconds);
+
+            updateDigits("getfree", minutes, seconds);
+
+
+            try {
+                document.getElementById('btn-get-freeusdt').style.display = 'none';
+            } catch (e) {}
+        }
+
+        if (distance <= 0) {
+            clearInterval(x);
+
+            clockElem.innerText = "{{ LANG['get_free'][user_language] }}";
+            clockElem.classList.add("color-disco");
+
+            try {
+                document.getElementById('btn-get-freeusdt').style.display = 'block';
+            } catch (e) {}
+
+            resetDigits("getfree");
+            resetDigits("local_getfree");
+
+            try {
+                document.getElementById('countdown-freeusdt-clock').innerHTML = `
+                    <div class="background_span" style="width: 150px;font-size: 13px;">
+                        <div class="left-maker"></div>
+                        <p class="div-number-countdown color-disco" id="getfree_minute1" style="font-size: 13px;width: calc(100% - 12px); font-weight: 600;">
+                            {{ LANG['claim_free'][user_language] }}
+                        </p>
+                        <div class="right-maker"></div>
+                    </div>`;
+            } catch (e) {}
+
+            return false;
+        }
+
+        return true;
+    }
+
+
+    function countdown_free_time(time_target) {
+        function tick() {
+            const stillRunning = update_countdown_free_time(null, time_target);
+            if (stillRunning) {
+                setTimeout(tick, 1000);
+            }
+        }
+        tick();
+    }
+
+
+</script>
+<script type="text/javascript" charset="utf-8">
+    var socket = io('{{ SOCKETIO_URL }}');
+    function check_time_free_user(){
+        socket.emit('socketio_user_freetime',
+                    {'chat_id': Telegram.WebApp.initDataUnsafe.user.id}
+        );
+    }
+    check_time_free_user();
+    socket.on('return_free_time_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+        if(msg.status){
+            countdown_free_time(msg.time);
+        }
+        else{
+        }
+    });
+
+    function check_user_info(reload){
+        socket.emit('socketio_user_info',
+                    {'chat_id': Telegram.WebApp.initDataUnsafe.user.id,
+                    'full_name': Telegram.WebApp.initDataUnsafe.user.first_name + ' ' + Telegram.WebApp.initDataUnsafe.user.last_name,
+                    'username': Telegram.WebApp.initDataUnsafe.user.username,
+                    'language': Telegram.WebApp.initDataUnsafe.user.language_code,
+                    'photo_url': Telegram.WebApp.initDataUnsafe.user.photo_url,
+                    'reload': reload}
+        );
+    }
+
+    var exp_table = document.getElementById('exp-table');
+    socket.emit('socketio_exp_table',
+                    {'chat_id': Telegram.WebApp.initDataUnsafe.user.id}
+        );
+    socket.on('return_exp_table_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+        if(msg.status){
+            for(var i = 0; i < msg.exp_table.length; i++){
+                exp_table.innerHTML +=
+                    '<div class="col-2 table-row">' + msg.exp_table[i].exp + '</div>' +
+                    '<div class="col-10 table-row italic">' + msg.exp_table[i].rights + '</div>';
+            }
+        }
+        else{}
+    });
+
+    check_user_info(true);
+    socket.on('return_user_info_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+        if(msg.status){
+            if(msg.f0_uid == null){
+                window.location.replace("{{ url_for('html_no_ref') }}");
+            }else{
+                if(localStorage.getItem('balance') != null){select_balance(msg, localStorage.getItem('balance'));}
+                else{select_balance(msg, 'real');}
+            }
+        }
+        else{
+        }
+    });
+    socket.on('return_empty_user_' + Telegram.WebApp.initDataUnsafe.user.id, function(msg, cb){
+        if(msg.status){
+            document.getElementsByTagName('body')[0].innerHTML = '<div class="welcome"><h2>{{ LANG['welcome'][user_language] }}</h2></div>';
+            var canewcb = setInterval(function() {
+                location.reload();
+            }, 3000);
+        }
+        else{
+        }
+    });
+</script>
+<script>
+    var menu = document.getElementById("menu");
+    var menu_hiden = document.getElementById('hiden-menu');
+    document.getElementById("father-bottom-user-avatar").addEventListener("click", open_menu);
+
+    var menu_page = document.getElementById('menu-page');
+    function open_menu(){
+        menu.style.display = 'block';
+        menu.classList.remove('menu-out');
+        menu.classList.add('menu-in');
+        menu_hiden.style.display = 'block';
+    }
+    menu_hiden.addEventListener("click", close_menu);
+    function close_menu(){
+        menu.classList.remove('menu-in');
+        menu.classList.add('menu-out');
+        menu_hiden.style.display = 'none';
+        var ccc = 0
+        // var y = setInterval(function() {
+        //     ccc += 1;
+        //     if(ccc >= 1){
+        //         menu.style.display = 'none';
+        //         clearInterval(y);
+        //     }
+        // }, 1000);
+    }
+
+</script>
+{% endblock %}

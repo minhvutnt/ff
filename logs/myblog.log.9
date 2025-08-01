@@ -1,0 +1,102 @@
+2025-03-27 09:46:48,046 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-27 09:46:56,510 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-29 06:53:30,289 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-29 06:53:57,257 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-29 06:54:18,097 ERROR: Exception on / [GET] [in /Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py:1744]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 2528, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1825, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1823, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/routes.py", line 30, in index
+    return render_template('home-oasic.html')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/templating.py", line 147, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/templating.py", line 128, in _render
+    app.update_template_context(context)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 997, in update_template_context
+    context.update(func())
+                   ^^^^^^
+  File "/Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/routes.py", line 24, in inject_random_style
+    SOCKETIO_URL=SOCKETIO_URL,
+                 ^^^^^^^^^^^^
+NameError: name 'SOCKETIO_URL' is not defined
+2025-03-29 06:54:38,586 ERROR: Exception on / [GET] [in /Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py:1744]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 2528, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1825, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1823, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/routes.py", line 30, in index
+    return render_template('home-oasic.html')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/templating.py", line 147, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/templating.py", line 128, in _render
+    app.update_template_context(context)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 997, in update_template_context
+    context.update(func())
+                   ^^^^^^
+  File "/Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/routes.py", line 24, in inject_random_style
+    SOCKETIO_URL=SOCKETIO_URL,
+                 ^^^^^^^^^^^^
+NameError: name 'SOCKETIO_URL' is not defined
+2025-03-29 06:55:12,321 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]
+2025-03-29 06:55:15,825 ERROR: Exception on / [GET] [in /Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py:1744]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 2528, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1825, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask_cors/extension.py", line 176, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1823, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1799, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/routes.py", line 30, in index
+    return render_template('home-oasic.html')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/templating.py", line 147, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/templating.py", line 128, in _render
+    app.update_template_context(context)
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 997, in update_template_context
+    context.update(func())
+                   ^^^^^^
+  File "/Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/routes.py", line 25, in inject_random_style
+    PROJECT_NAME=PROJECT_NAME)
+                 ^^^^^^^^^^^^
+NameError: name 'PROJECT_NAME' is not defined
+2025-03-29 06:55:25,286 INFO: Myblog startup [in /Users/minhvutnt/Documents/GitHub/project/BOT/ __WEB_HTML_TRANSPARENT_/app/__init__.py:48]

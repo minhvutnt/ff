@@ -1,0 +1,92 @@
+#chat_content{
+    position: absolute;
+    top: 40px;
+    left: 20px;
+    right: 20px;
+    bottom: 100px;
+    overflow-y: scroll;
+    padding: 10px;
+    font-size: 12px;
+}
+#chat-input{
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    bottom: 0;
+    height: 100px;
+    padding: 10px;
+}
+
+.chat-time-left{
+    position: absolute;
+    margin-top: 0px;
+    font-size: 10px;
+    color: #c3a4a4;
+}
+.chat-time-right{
+    position: absolute;
+    margin-top: 0px;
+    font-size: 10px;
+    color: #c3a4a4;
+}
+
+
+.chat-left{
+    float: left;
+    background-color: #6f7276;
+    color: #fff;
+    border-radius: 22px 22px 22px 0;
+    position: relative;
+    margin-left: 10px;
+    padding: 13px 20px;
+    max-width: 80%;
+    margin-top: 15px;
+    text-align: justify;
+}
+
+.chat-right{
+    float: right;
+    background-color: #0866ff;
+    color: #fff;
+    border-radius: 22px 22px 0 22px;
+    position: relative;
+    margin-left: 10px;
+    padding: 13px 20px;
+    max-width: 80%;
+    margin-top: 15px;
+    text-align: justify;
+}
+#chat-input-text{
+    border-radius: 10px;
+    color: black;
+    padding: 10px;
+    margin-left: 50px;
+    width: calc(100% - 100px);
+    height: 100%;
+    border: 1px solid #fff;
+    background-color: var(--color-golden-dark);
+}
+#chat_send{
+    position: absolute;
+    right: 15px;
+    width: 37px;
+    top: 10px;
+    float: right;
+    height: 37px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #fff;
+    fill: white;
+}
+#chat_send_emoji{
+    position: absolute;
+    right: 15px;
+    width: 37px;
+    top: 53px;
+    float: right;
+    height: 37px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #fff;
+    fill: white;
+}
